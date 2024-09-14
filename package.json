@@ -12,8 +12,5 @@
   "license": "ISC",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
-  },
-  "devDependencies": {  
-    "start-server": "^1.0.0" 
-  } 
+  }
 }
