@@ -12,6 +12,7 @@ const Home = () => {
     return (
         <div>
             <h1>Главная страница</h1>
+            <div>Добро пожаловать в чат!</div>
             <button onClick={handleLoginClick}>Перейти на страницу логина</button>
         </div>
     );
