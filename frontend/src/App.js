@@ -8,6 +8,8 @@ import { useSelector } from 'react-redux';
 function App() {
   const token = useSelector((state) => state.auth.token);
 
+  console.log(`token= ${JSON.stringify(token, null, 2)}`);
+
   return (
       <Routes>
         <Route 
@@ -16,7 +18,8 @@ function App() {
         />
         <Route 
           path="/login"
-          element={token ? <Navigate to="/" /> : <Login />}
+          // element={token ? <Navigate to="/" /> : <Login />}
+          element={token ? <Login /> : <Navigate to="/" /> }
         />
         <Route 
           path="*" 
