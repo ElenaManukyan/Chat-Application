@@ -4,19 +4,22 @@ import { useSelector } from 'react-redux';
 
 const Home = () => {
 
+    console.log('Компонент <Home /> рендерится!!!');
+
     const navigate = useNavigate();
     const token = useSelector((state) => state.auth.token);
 
     const handleLoginClick = () => {
+       console.log('Button clicked!');
        navigate('/login');
-       // navigate('/');
     };
 
     return (
         <div>
             <h1>Главная страница</h1>
             <div>Добро пожаловать в чат!</div>
-            <button onClick={handleLoginClick}>Перейти на страницу логина</button>
+            {console.log("Rendering Home component")}
+            <button type="button" onClick={handleLoginClick}>Перейти на страницу логина</button>
             <div>Token: {token}</div>
         </div>
     );
