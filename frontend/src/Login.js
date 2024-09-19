@@ -11,24 +11,11 @@ const LoginForm = () => {
     const handleSubmit = async (e) => {  
         e.preventDefault();   
         try {  
-            const response = axios.post('/api/v1/login', { username: 'admin', password: 'admin' });
-            /*await fetch('/api/login', {  
-                method: 'POST',  
-                headers: {  
-                    'Content-Type': 'application/json',  
-                },  
-                body: JSON.stringify({ username, password }),  
-            });*/
-
-            if (!response.ok) {  
-                throw new Error('Ошибка входа');
-            }  
-
-            const data = await response.json();  
-            localStorage.setItem('token', data.token);
+            const response = await axios.post('/api/v1/login', { username, password }); 
+            localStorage.setItem('token', response.data.token);
             navigate('/');
         } catch (err) {  
-            setError(err.message);  
+            setError(err.response?.data?.message || err.message);  
         }  
     };  
 
