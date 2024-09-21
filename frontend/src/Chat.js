@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchChannels, fetchMessages } from './store/chatSlice';
 import { useNavigate } from 'react-router-dom';
-// import { useNavigate } from 'react-router-dom';  
-// import { useLocation } from 'react-router-dom';  
+import axios from 'axios';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:5001');
 
 const Chat = () => {
     const dispatch = useDispatch();
@@ -11,13 +13,43 @@ const Chat = () => {
     const messages = useSelector((state) => state.chat.messages);
     const chatStatus = useSelector((state) => state.chat.status);
     const error = useSelector((state) => state.chat.error);
+    const [ newMessage, setNewMessage ] = useState('');
 
    useEffect(() => {
     if (chatStatus === 'idle') {
         dispatch(fetchChannels());
         dispatch(fetchMessages());
     }
+
+    // Подписка на новые сообщения
+    socket.on('newMessage', (message) => {
+        dispatch(fetchMessages()); // Обновляю сообщения при получении нового
+    });
+
+    return () => {
+        socket.off('newMessage');
+    };
    }, [chatStatus, dispatch]);
+
+   const handleSendMessage = async () => {
+    const message = {
+        body: newMessage,
+        channelId: '1', // Тут сделай динамично
+        username: 'admin', // Тут тоже динамично сделай
+    };
+
+    try {
+        await axios.post('/api/v1/messages', message, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        socket.emit('sendMessage', message);
+        setNewMessage('');
+    } catch (error) {
+        console.error('Ошибка при отправке сообщения:', error);
+    }
+   };
 
    if (chatStatus === 'loading') {
     return <div>Загрузка...</div>
@@ -50,6 +82,12 @@ const Chat = () => {
                     </div>
                 ))}
             </div>
+            <input 
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                placeholder="Введите сообщение"
+            />
+            <button type="button" onClick={handleSendMessage}>Отправить</button>
             <button type="button" onClick={handleLoginClick}>Перейти на страницу логина</button>
         </div>  
     );  

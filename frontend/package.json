@@ -19,7 +19,7 @@
     "react-router-dom": "^6.26.2",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",
-    "socket.io-client": "^4.5.2",
+    "socket.io-client": "^4.8.0",
     "web-vitals": "^2.1.4",
     "yup": "^0.32.11"
   },
@@ -49,5 +49,10 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.31.1",
     "eslint-plugin-react-hooks": "^4.6.0"
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

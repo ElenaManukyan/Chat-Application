@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "",
+  "description": "[![Actions Status](https://github.com/ElenaManukyan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ElenaManukyan/frontend-project-12/actions) ### Link to website: [https://frontend-project-12-yffa.onrender.com](https://frontend-project-12-yffa.onrender.com)",
   "main": "index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
@@ -12,6 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hexlet/chat-server": "^1.1.6"
-  }
+    "@hexlet/chat-server": "^1.1.6",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "socket.io": "^4.8.0"
+  },
+  "keywords": []
 }
