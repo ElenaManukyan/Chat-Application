@@ -14,8 +14,16 @@ const LoginForm = () => {
             const response = await axios.post('/api/v1/login', { username, password }); 
             localStorage.setItem('token', response.data.token);
             navigate('/');
-        } catch (err) {  
-            setError(err.response?.data?.message || err.message);  
+        } catch (err) {
+            // console.log(`err= ${JSON.stringify(err, null, 2)}`);
+            const status = err.response ? err.response.status : null;
+            switch (status) {
+                case 401:
+                    setError('Проблема с авторизацией: неправильный логин/пароль');
+                    break;
+                default:
+                    setError(err.response?.data?.message || err.message);
+            } 
         }  
     };  
 
