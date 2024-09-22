@@ -5,15 +5,21 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io('http://localhost:5001');
+const API_URL = 'http://localhost:5001/api/v1';
+const socket = io(API_URL);
+
 
 const Chat = () => {
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.chat.channels);
     const messages = useSelector((state) => state.chat.messages);
+    // const [ messages, setMessages ] = useState([]);
     const chatStatus = useSelector((state) => state.chat.status);
     const error = useSelector((state) => state.chat.error);
     const [ newMessage, setNewMessage ] = useState('');
+    const token = useSelector((state) => state.auth.token);
+    const username = useSelector((state) => state.auth.username);
+    const currentChanelId = chanels[0]?.id;
 
    useEffect(() => {
     if (chatStatus === 'idle') {
@@ -23,8 +29,13 @@ const Chat = () => {
 
     // Подписка на новые сообщения
     socket.on('newMessage', (message) => {
+        setMessages((prevMessages) => [...prevMessages, message]); // Обновление локального состояния
+    });
+    /*
+    socket.on('newMessage', (message) => {
         dispatch(fetchMessages()); // Обновляю сообщения при получении нового
     });
+    */
 
     return () => {
         socket.off('newMessage');
@@ -34,12 +45,12 @@ const Chat = () => {
    const handleSendMessage = async () => {
     const message = {
         body: newMessage,
-        channelId: '1', // Тут сделай динамично
-        username: 'admin', // Тут тоже динамично сделай
+        channelId: currentChanelId,
+        username: username,
     };
 
     try {
-        await axios.post('/api/v1/messages', message, {
+        await axios.post(`${API_URL}/messages`, message, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
