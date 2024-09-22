@@ -6,6 +6,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 const API_URL = 'http://localhost:5001/api/v1';
+// const API_URL = 'http://localhost:3000/api/v1';
 const socket = io(API_URL);
 
 
@@ -19,7 +20,7 @@ const Chat = () => {
     const [ newMessage, setNewMessage ] = useState('');
     const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
-    const currentChanelId = chanels[0]?.id;
+    const currentChanelId = channels[0]?.id;
 
    useEffect(() => {
     if (chatStatus === 'idle') {
