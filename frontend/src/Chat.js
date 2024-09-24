@@ -5,43 +5,48 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const API_URL = 'http://localhost:5001/api/v1';
-// const API_URL = 'http://localhost:3000/api/v1';
-const socket = io(API_URL);
-
+const socket = io();
 
 const Chat = () => {
+
+    const navigate = useNavigate();
+   const handleLoginClick = () => {
+        console.log('Button clicked!');
+        navigate('/login');
+    };
+
     const dispatch = useDispatch();
-    const channels = useSelector((state) => state.chat.channels);
+    
     const messages = useSelector((state) => state.chat.messages);
-    // const [ messages, setMessages ] = useState([]);
-    const chatStatus = useSelector((state) => state.chat.status);
+    const channelsStatus = useSelector((state) => state.chat.channelsStatus);
     const error = useSelector((state) => state.chat.error);
     const [ newMessage, setNewMessage ] = useState('');
     const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
+
+    const channels = useSelector((state) => state.chat.channels);
+    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
     const currentChanelId = channels[0]?.id;
+    
 
    useEffect(() => {
-    if (chatStatus === 'idle') {
+    if (channelsStatus === 'idle') {
         dispatch(fetchChannels());
         dispatch(fetchMessages());
     }
 
     // Подписка на новые сообщения
-    socket.on('newMessage', (message) => {
-        setMessages((prevMessages) => [...prevMessages, message]); // Обновление локального состояния
+    socket.on('newMessage', (payload) => {
+        console.log(`payload= ${JSON.stringify(payload, null, 2)}`); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
+        // setNewMessage((prevMessages) => [...prevMessages, message]); // Обновление локального состояния
     });
-    /*
-    socket.on('newMessage', (message) => {
-        dispatch(fetchMessages()); // Обновляю сообщения при получении нового
-    });
-    */
 
     return () => {
         socket.off('newMessage');
     };
-   }, [chatStatus, dispatch]);
+   }, [channelsStatus, dispatch]);
+
+   
 
    const handleSendMessage = async () => {
     const message = {
@@ -51,7 +56,7 @@ const Chat = () => {
     };
 
     try {
-        await axios.post(`${API_URL}/messages`, message, {
+        await axios.post('/api/v1/messages', message, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -63,19 +68,21 @@ const Chat = () => {
     }
    };
 
-   if (chatStatus === 'loading') {
+   if (channelsStatus === 'loading') {
     return <div>Загрузка...</div>
    }
 
-   if (chatStatus === 'failed') {
+   if (channelsStatus === 'failed') {
     return <div>Произошла ошибка: {error}</div>
    }
+
+   if (channels.length === 0) {
+        return <p>Загрузка каналов...</p>
+   }
    
-   const navigate = useNavigate();
-   const handleLoginClick = () => {
-        console.log('Button clicked!');
-        navigate('/login');
-    };
+   
+    console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+
 
     return (  
         <div>  
@@ -103,6 +110,6 @@ const Chat = () => {
             <button type="button" onClick={handleLoginClick}>Перейти на страницу логина</button>
         </div>  
     );  
-};  
+};
 
 export default Chat;

@@ -10,9 +10,8 @@ export const fetchChannels = createAsyncThunk(
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }).then((response) => {
-            console.log(response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
           });
+          console.log(response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
           return response.data;
     },
 );
@@ -21,14 +20,14 @@ export const fetchMessages = createAsyncThunk(
     'chat/fetchMessages',
     async () => {
         const token = localStorage.getItem('token');
+        console.log(`token fetchMessages= ${JSON.stringify(token, null, 2)}`);
         // Get messages
         const response = await axios.get('/api/v1/messages', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }).then((response) => {
-            console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
           });
+          console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
           return response.data;
     },
 );
@@ -49,7 +48,9 @@ const chatSlice = createSlice({
                 state.channelsStatus = 'loading';
             })
             .addCase(fetchChannels.fulfilled, (state, action) => {
+                console.log('fetchChannels.fulfilled', action.payload);
                 state.channelsStatus = 'succeeded';
+                console.log(`state.channels= ${JSON.stringify(state.channels, null, 2)}`);
                 state.channels = action.payload;
             })
             .addCase(fetchChannels.rejected, (state, action) => {

@@ -9,8 +9,12 @@ const Home = () => {
     const navigate = useNavigate();
     const token = useSelector((state) => state.auth.token);
 
+    //const channels = useSelector((state) => state.chat.channels);
+    //console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+
+
     const handleLoginClick = () => {
-       console.log('Button clicked!');
+       // console.log('Button clicked!');
        navigate('/login');
     };
 
