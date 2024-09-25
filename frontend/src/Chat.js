@@ -11,7 +11,7 @@ const Chat = () => {
 
     const navigate = useNavigate();
    const handleLoginClick = () => {
-        console.log('Button clicked!');
+        // console.log('Button clicked!');
         navigate('/login');
     };
 
@@ -20,20 +20,19 @@ const Chat = () => {
     const messages = useSelector((state) => state.chat.messages);
     const channelsStatus = useSelector((state) => state.chat.channelsStatus);
     const error = useSelector((state) => state.chat.error);
-    const [ newMessage, setNewMessage ] = useState('');
+    const [ newMessage, setNewMessage ] = useState(''); // []?
     const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
 
-    const channels = useSelector((state) => state.chat.channels);
-    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-    const currentChanelId = channels[0]?.id;
+    
+    
     
 
    useEffect(() => {
-    if (channelsStatus === 'idle') {
+    //if (channelsStatus === 'idle') {
         dispatch(fetchChannels());
         dispatch(fetchMessages());
-    }
+    //}
 
     // Подписка на новые сообщения
     socket.on('newMessage', (payload) => {
@@ -41,12 +40,18 @@ const Chat = () => {
         // setNewMessage((prevMessages) => [...prevMessages, message]); // Обновление локального состояния
     });
 
+    /*
     return () => {
         socket.off('newMessage');
     };
-   }, [channelsStatus, dispatch]);
+    */
+   }, [dispatch]);
 
-   
+
+   const channels = useSelector((state) => state.chat.channels);
+   // const [ channels, setChannel ] = useState([]);
+   console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+   const currentChanelId = channels[0]?.id;
 
    const handleSendMessage = async () => {
     const message = {
@@ -81,7 +86,7 @@ const Chat = () => {
    }
    
    
-    console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
 
 
     return (  

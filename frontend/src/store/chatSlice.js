@@ -5,6 +5,7 @@ export const fetchChannels = createAsyncThunk(
     'chat/fetchChannels',
     async () => {
         const token = localStorage.getItem('token');
+        console.log(`token fetchChannels= ${JSON.stringify(token, null, 2)}`);
         // Get channels
         const response = await axios.get('/api/v1/channels', {
             headers: {
@@ -27,7 +28,7 @@ export const fetchMessages = createAsyncThunk(
               Authorization: `Bearer ${token}`,
             },
           });
-          console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
+          // console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
           return response.data;
     },
 );
@@ -48,9 +49,9 @@ const chatSlice = createSlice({
                 state.channelsStatus = 'loading';
             })
             .addCase(fetchChannels.fulfilled, (state, action) => {
-                console.log('fetchChannels.fulfilled', action.payload);
+                // console.log('fetchChannels.fulfilled', action.payload);
                 state.channelsStatus = 'succeeded';
-                console.log(`state.channels= ${JSON.stringify(state.channels, null, 2)}`);
+                // console.log(`state.channels= ${JSON.stringify(state.channels, null, 2)}`);
                 state.channels = action.payload;
             })
             .addCase(fetchChannels.rejected, (state, action) => {
