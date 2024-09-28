@@ -20,7 +20,7 @@ const Chat = () => {
     //const messages = useSelector((state) => state.chat.messages);
     const status = useSelector((state) => state.chat.status);
     const error = useSelector((state) => state.chat.error);
-    const [ newMessage, setNewMessage ] = useState([]); // []?
+    const [ newMessage, setNewMessage ] = useState('');
     const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
     console.log(`token= ${JSON.stringify(token, null, 2)}`); 
@@ -48,13 +48,11 @@ const Chat = () => {
 
    const handleSendMessage = async () => {
     console.log(`newMessage= ${JSON.stringify(newMessage, null, 2)}`);
-    
-    // newMessage не отправляется на сервер!!!
 
     const message = {
         body: newMessage,
         channelId: currentChanelId,
-        username: username,  // HERE!!!
+        username: username,
     };
 
     try {
@@ -63,7 +61,7 @@ const Chat = () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        // socket.emit('sendMessage', message);
+        socket.emit('newMessage', message);
         setNewMessage('');
     } catch (error) {
         console.error('Ошибка при отправке сообщения:', error);
@@ -82,16 +80,6 @@ const Chat = () => {
         console.error(`Error: ${error}`); // Логируем ошибку  
         return <div>Произошла ошибка: {error}</div>;  
     }
-
-/*
-   if (channels.length === 0) {
-        return <p>Загрузка каналов...</p>
-   }
-*/
-   
-   
-    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-
 
     return (  
         <div>  
