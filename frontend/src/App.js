@@ -7,7 +7,6 @@ import NotFound from './NotFound';
 
 const App = () => {
     const token = localStorage.getItem('token');
-    console.log(`token= ${JSON.stringify(token, null, 2)}`);
     
     return (  
         <Router>  

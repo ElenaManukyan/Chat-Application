@@ -1,15 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 
-export const fetchChannels = createAsyncThunk(
-    'chat/fetchChannels',
+export const fetchData = createAsyncThunk(
+    'chat/fetchData',
     async () => {
         const token = localStorage.getItem('token');
-        console.log(`token fetchChannels= ${JSON.stringify(token, null, 2)}`);
-        // Get channels
-        const response = await axios.get('/api/v1/channels', {
+        console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
+        const response = await axios.get('api/v1/data', {
             headers: {
-              Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
             },
           });
           console.log(response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
@@ -17,56 +17,25 @@ export const fetchChannels = createAsyncThunk(
     },
 );
 
-export const fetchMessages = createAsyncThunk(
-    'chat/fetchMessages',
-    async () => {
-        const token = localStorage.getItem('token');
-        console.log(`token fetchMessages= ${JSON.stringify(token, null, 2)}`);
-        // Get messages
-        const response = await axios.get('/api/v1/messages', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          // console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
-          return response.data;
-    },
-);
-
 const chatSlice = createSlice({
     name: 'chat',
     initialState: {
-        channels: [],
-        messages: [],
-        channelsStatus: 'idle',
-        messagesStatus: 'idle',
+        data: [],
+        status: 'idle',
         error: null,
     },
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchChannels.pending, (state) => {
-                state.channelsStatus = 'loading';
+            .addCase(fetchData.pending, (state) => {
+                state.status = 'loading';
             })
-            .addCase(fetchChannels.fulfilled, (state, action) => {
-                // console.log('fetchChannels.fulfilled', action.payload);
-                state.channelsStatus = 'succeeded';
-                // console.log(`state.channels= ${JSON.stringify(state.channels, null, 2)}`);
-                state.channels = action.payload;
+            .addCase(fetchData.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.data = action.payload;
             })
-            .addCase(fetchChannels.rejected, (state, action) => {
-                state.channelsStatus = 'failed';
-                state.error = action.error.message;
-            })
-            .addCase(fetchMessages.pending, (state) => {
-                state.messagesStatus = 'loading';
-            })
-            .addCase(fetchMessages.fulfilled, (state, action) => {
-                state.messagesStatus = 'succeeded';
-                state.messages = action.payload;
-            })
-            .addCase(fetchMessages.rejected, (state, action) => {
-                state.messagesStatus = 'failed';
+            .addCase(fetchData.rejected, (state, action) => {
+                state.status = 'failed';
                 state.error = action.error.message;
             })
     },
