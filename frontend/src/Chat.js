@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, fetchData } from './store/chatSlice';
+import { setCurrentChannelId } from './store/channelsSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -13,9 +14,17 @@ const Chat = () => {
     console.log(`data= ${JSON.stringify(data, null, 2)}`);
     const status = useSelector((state) => state.chat.status);
     const token = useSelector((state) => state.auth.token);
-    console.log(`token= ${JSON.stringify(token, null, 2)}`); 
-    const username = useSelector((state) => state.auth.username);
-
+    // console.log(`token= ${JSON.stringify(token, null, 2)}`); 
+    const username = useSelector((state) => state.auth.username); // NULL!
+    console.log(`username= ${username}`);
+   // const channels = Array.isArray(data.channels) ? data.channels : [];
+   const channels = data.channels.length !== 0 ? data.channels : [];
+   // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+   // const channelId = channels[0]?.id;
+   const currentChannelId = useSelector((state) => state.channels.currentChannelId) || 1;
+   // const messages = Array.isArray(data.messages) ? data.messages : [];
+   const messages = data.messages.length !== 0 ? data.messages : [];
+   // console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
     const [ newMessage, setNewMessage ] = useState('');
 
 
@@ -43,14 +52,6 @@ const Chat = () => {
         };
     }, [dispatch]);
 
-   // const channels = Array.isArray(data.channels) ? data.channels : [];
-   const channels = data.channels.length !== 0 ? data.channels : [];
-   // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-   const currentChannelId = channels[0]?.id;
-   // const messages = Array.isArray(data.messages) ? data.messages : [];
-   const messages = data.messages.length !== 0 ? data.messages : [];
-   // console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
-
    const handleSendMessage = async () => {
         // console.log(`newMessage= ${JSON.stringify(newMessage, null, 2)}`);
         if (!newMessage.trim()) {
@@ -66,6 +67,7 @@ const Chat = () => {
             await axios.post('/api/v1/messages', message, {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    /*Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTcyNzYxOTE4M30.-ptNPLK4G9fA571YS07aRSXUIaSL7SR51RkaLPRIdVk',*/
                 },
             });
             dispatch(addMessage(message));
@@ -74,6 +76,12 @@ const Chat = () => {
         } catch (error) {
             console.error('Ошибка при отправке сообщения:', error);
         }
+   };
+
+   const handleChannelClick = (id) => {
+        console.log(`handleChannelClick id= ${id}`);
+        console.log(`handleChannelClick currentChannelId= ${currentChannelId}`);
+        dispatch(setCurrentChannelId(id));
    };
 
    if (status === 'loading') {
@@ -94,17 +102,27 @@ const Chat = () => {
             <h2>Чат</h2>
             <div>
                 <h3>Список каналов</h3>
-                {channels.map((channel) => (
-                    <div key={channel.id}>{channel.name}</div>
-                ))}
+                <ul>
+                    {channels.map((channel) => (
+                        <li 
+                            key={channel.id} 
+                            onClick={() => handleChannelClick(channel.id)}
+                            style={{ fontWeight: currentChannelId === channel.id ? 'bold' : 'normal' }}>
+                                #{channel.name}
+                        </li>
+                    ))}
+                </ul>
+                <button type="button">Добавить канал</button>
             </div>
-            <div>
-                <h3>Сообщения</h3>
-                {messages.map((message) => (
-                    <div key={message.id}>
-                        <strong>{message.username}</strong> {message.body}
-                    </div>
-                ))}
+            <div>  
+                <h3>Сообщения</h3>  
+                {messages.map((message) =>   
+                    message.channelId === currentChannelId ? (  
+                        <div key={message.id}>  
+                            <strong>{message.username}</strong> {message.body}  
+                        </div>  
+                    ) : null 
+                )}  
             </div>
             <input 
                 value={newMessage}

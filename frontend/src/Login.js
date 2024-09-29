@@ -1,18 +1,24 @@
 import React, { useState } from 'react';  
 import { useNavigate } from 'react-router-dom';
+import { addUsername } from './store/authSlice';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
-const LoginForm = () => {  
+const LoginForm = () => {
     const [username, setUsername] = useState('');  
     const [password, setPassword] = useState('');  
     const [error, setError] = useState('');  
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (e) => {  
         e.preventDefault();   
         try {  
             const response = await axios.post('/api/v1/login', { username, password }); 
             localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', response.data.username);
+            // console.log(`Login.js response.data.username= ${response.data.username}`);
+            // dispatch(addUsername(response.data.username));
             navigate('/');
         } catch (err) {
             // console.log(`err= ${JSON.stringify(err, null, 2)}`);
