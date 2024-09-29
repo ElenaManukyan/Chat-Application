@@ -15,7 +15,7 @@ const Chat = () => {
     const status = useSelector((state) => state.chat.status);
     const token = useSelector((state) => state.auth.token);
     // console.log(`token= ${JSON.stringify(token, null, 2)}`); 
-    const username = useSelector((state) => state.auth.username); // NULL!
+    const username = useSelector((state) => console.log(`state.auth.username= ${JSON.stringify(state.auth.username, null, 2)}`)); // NULL!
     console.log(`username= ${username}`);
    // const channels = Array.isArray(data.channels) ? data.channels : [];
    const channels = data.channels.length !== 0 ? data.channels : [];
