@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchData } from './store/chatSlice';
+import { addMessage, fetchData } from './store/chatSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -8,64 +8,72 @@ import io from 'socket.io-client';
 const socket = io();
 
 const Chat = () => {
+    const dispatch = useDispatch();
+    const data = useSelector((state) => state.chat.data);
+    console.log(`data= ${JSON.stringify(data, null, 2)}`);
+    const status = useSelector((state) => state.chat.status);
+    const token = useSelector((state) => state.auth.token);
+    console.log(`token= ${JSON.stringify(token, null, 2)}`); 
+    const username = useSelector((state) => state.auth.username);
+
+    const [ newMessage, setNewMessage ] = useState('');
+
 
     const navigate = useNavigate();
-   const handleLoginClick = () => {
+    const handleLoginClick = () => {
         // console.log('Button clicked!');
         navigate('/login');
     };
-
-    const dispatch = useDispatch();
-    
-    //const messages = useSelector((state) => state.chat.messages);
-    const status = useSelector((state) => state.chat.status);
     const error = useSelector((state) => state.chat.error);
-    const [ newMessage, setNewMessage ] = useState('');
-    const token = useSelector((state) => state.auth.token);
-    const username = useSelector((state) => state.auth.username);
-    console.log(`token= ${JSON.stringify(token, null, 2)}`); 
-
-   useEffect(() => {
+    useEffect(() => {
         dispatch(fetchData());
-    // Подписка на новые сообщения
-    socket.on('newMessage', (payload) => {
-        console.log(`payload= ${JSON.stringify(payload, null, 2)}`); // => { body: "new message", channelId: 7, id: 8, username: "admin" }
-    });
-   }, [dispatch]);
 
-   const data = useSelector((state) => state.chat.data);
-   console.log(`data= ${JSON.stringify(data, null, 2)}`);
+        const handleNewMessage = (payload) => {
+            // dispatch(addMessage(payload));
+            console.log(`Новое сообщение: ${JSON.stringify(payload, null, 2)}`);
+        };
 
-   const channels = data.channels;
-   console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-   const currentChanelId = channels ? channels[0]?.id : null;
-   const messages = data.messages;
-   console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
+        // Подписка на новые сообщения
+        // socket.on('newMessage', handleNewMessage);
+        socket.on('newMessage', handleNewMessage);
 
-   useEffect(() => {
-        console.log(`Data fetched: ${JSON.stringify(data, null, 2)}`);  
-    }, [data]);
+        return () => {
+            // socket.off('newMessage', handleNewMessage);
+            socket.off('newMessage', handleNewMessage);
+        };
+    }, [dispatch]);
+
+   // const channels = Array.isArray(data.channels) ? data.channels : [];
+   const channels = data.channels.length !== 0 ? data.channels : [];
+   // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+   const currentChannelId = channels[0]?.id;
+   // const messages = Array.isArray(data.messages) ? data.messages : [];
+   const messages = data.messages.length !== 0 ? data.messages : [];
+   // console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
 
    const handleSendMessage = async () => {
-    console.log(`newMessage= ${JSON.stringify(newMessage, null, 2)}`);
+        // console.log(`newMessage= ${JSON.stringify(newMessage, null, 2)}`);
+        if (!newMessage.trim()) {
+            return;
+        }
+        const message = {
+            body: newMessage,
+            channelId: currentChannelId,
+            username: username,
+        };
 
-    const message = {
-        body: newMessage,
-        channelId: currentChanelId,
-        username: username,
-    };
-
-    try {
-        await axios.post('/api/v1/messages', message, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        socket.emit('newMessage', message);
-        setNewMessage('');
-    } catch (error) {
-        console.error('Ошибка при отправке сообщения:', error);
-    }
+        try {
+            await axios.post('/api/v1/messages', message, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            dispatch(addMessage(message));
+            // socket.emit('newMessage', message);
+            setNewMessage('');
+        } catch (error) {
+            console.error('Ошибка при отправке сообщения:', error);
+        }
    };
 
    if (status === 'loading') {
@@ -86,17 +94,17 @@ const Chat = () => {
             <h2>Чат</h2>
             <div>
                 <h3>Список каналов</h3>
-                {channels ? (channels.map((channel) => (
+                {channels.map((channel) => (
                     <div key={channel.id}>{channel.name}</div>
-                ))) : null}
+                ))}
             </div>
             <div>
                 <h3>Сообщения</h3>
-                {messages ? (messages.map((message) => (
+                {messages.map((message) => (
                     <div key={message.id}>
                         <strong>{message.username}</strong> {message.body}
                     </div>
-                ))) : null}
+                ))}
             </div>
             <input 
                 value={newMessage}

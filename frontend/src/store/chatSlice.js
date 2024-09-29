@@ -20,11 +20,22 @@ export const fetchData = createAsyncThunk(
 const chatSlice = createSlice({
     name: 'chat',
     initialState: {
-        data: [],
+        /*data: [],*/
+        data: {
+            channels: [],
+            messages: [],
+        },
         status: 'idle',
         error: null,
     },
-    reducers: {},
+    reducers: {
+        addMessage(state, action) {
+            state.data.messages.push(action.payload);
+        },
+        setChannels(state, action) {
+            state.data = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchData.pending, (state) => {
@@ -32,7 +43,9 @@ const chatSlice = createSlice({
             })
             .addCase(fetchData.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.data = action.payload;
+                console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+                state.data.channels = action.payload.channels;
+                state.data.messages = action.payload.messages;
             })
             .addCase(fetchData.rejected, (state, action) => {
                 state.status = 'failed';
@@ -40,5 +53,7 @@ const chatSlice = createSlice({
             })
     },
 });
+
+export const { addMessage, setChannels } = chatSlice.actions;
 
 export default chatSlice.reducer;
