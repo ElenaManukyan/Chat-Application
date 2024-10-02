@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, fetchData } from './store/chatSlice';
+import { addMessage, fetchChannels, fetchMessages } from './store/chatSlice';
 import { setCurrentChannelId } from './store/channelsSlice';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,21 +10,23 @@ const socket = io();
 
 const Chat = () => {
     const dispatch = useDispatch();
-    const data = useSelector((state) => state.chat.data);
-    console.log(`data= ${JSON.stringify(data, null, 2)}`);
+    // const data = useSelector((state) => state.chat.data);
+    // console.log(`data= ${JSON.stringify(data, null, 2)}`);
+    const channels = useSelector((state) => state.chat.channels);
+    const messages = useSelector((state) => state.chat.messages);
     const status = useSelector((state) => state.chat.status);
     const token = useSelector((state) => state.auth.token);
     // console.log(`token= ${JSON.stringify(token, null, 2)}`); 
     // const username = useSelector((state) => console.log(`state.auth.username= ${JSON.stringify(state.auth.username, null, 2)}`)); // NULL!
     const username = useSelector((state) => state.auth.username);
-    console.log(`username= ${username}`);
+    // console.log(`username= ${username}`);
    // const channels = Array.isArray(data.channels) ? data.channels : [];
-   const channels = data.channels.length !== 0 ? data.channels : [];
+   // const channels = data.channels.length !== 0 ? data.channels : [];
    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
    // const channelId = channels[0]?.id;
-   const currentChannelId = useSelector((state) => state.channels.currentChannelId) || 1;
+   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
    // const messages = Array.isArray(data.messages) ? data.messages : [];
-   const messages = data.messages.length !== 0 ? data.messages : [];
+   // const messages = data.messages.length !== 0 ? data.messages : [];
    // console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
     const [ newMessage, setNewMessage ] = useState('');
 
@@ -36,11 +38,15 @@ const Chat = () => {
     };
     const error = useSelector((state) => state.chat.error);
     useEffect(() => {
-        dispatch(fetchData());
+        dispatch(fetchChannels());
+        dispatch(fetchMessages());
+
+        console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
+        // console.log(`currentChannelId in useEffect= ${JSON.stringify(currentChannelId, null, 2)}`);
 
         const handleNewMessage = (payload) => {
             // dispatch(addMessage(payload));
-            console.log(`Новое сообщение: ${JSON.stringify(payload, null, 2)}`);
+            //console.log(`Новое сообщение: ${JSON.stringify(payload, null, 2)}`);
         };
 
         // Подписка на новые сообщения
@@ -80,9 +86,9 @@ const Chat = () => {
    };
 
    const handleChannelClick = (id) => {
-        console.log(`handleChannelClick id= ${id}`);
-        console.log(`handleChannelClick currentChannelId= ${currentChannelId}`);
+        //console.log(`handleChannelClick id= ${id}`);
         dispatch(setCurrentChannelId(id));
+       // console.log(`handleChannelClick currentChannelId= ${currentChannelId}`);
    };
 
    if (status === 'loading') {
@@ -104,21 +110,24 @@ const Chat = () => {
             <div>
                 <h3>Список каналов</h3>
                 <ul>
-                    {channels.map((channel) => (
-                        <li 
-                            key={channel.id} 
-                            onClick={() => handleChannelClick(channel.id)}
-                            style={{ fontWeight: currentChannelId === channel.id ? 'bold' : 'normal' }}>
-                                #{channel.name}
-                        </li>
-                    ))}
+                    {channels.map((channel) => {
+                        // console.log(`channel in RENDERING= ${JSON.stringify(channel, null, 2)}`);
+                        return (
+                            <li 
+                                key={channel.id} 
+                                onClick={() => handleChannelClick(Number(channel.id))}
+                                style={{ fontWeight: currentChannelId === Number(channel.id) ? 'bold' : 'normal' }}>
+                                    #{channel.name}
+                            </li>
+                        )
+                    })}
                 </ul>
-                <button type="button">Добавить канал</button>
+                <button type="button">Управление каналом</button>
             </div>
             <div>  
                 <h3>Сообщения</h3>  
                 {messages.map((message) =>   
-                    message.channelId === currentChannelId ? (  
+                    Number(message.channelId) === currentChannelId ? (  
                         <div key={message.id}>  
                             <strong>{message.username}</strong> {message.body}  
                         </div>  

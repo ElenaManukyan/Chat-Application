@@ -41,11 +41,12 @@ const channelsSlice = createSlice({
   name: 'channels',  
   initialState: {  
     channels: [],
-    currentChannelId: null,
+    currentChannelId: 1,
   },  
   reducers: {
     setCurrentChannelId: (state, action) => {
-        state.currentChannelId = action.payload;
+      // console.log(`action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+      state.currentChannelId = action.payload;
     },
   },
   extraReducers: (builder) => {  
