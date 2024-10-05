@@ -1,0 +1,50 @@
+.chat-container {  
+    height: 100vh;  
+}  
+
+.channels {  
+    position: relative; /* Для позиционирования */  
+}  
+
+.channels .btn {  
+    margin-left: auto; /* Кнопку вправо */  
+}  
+.messages {  
+    padding: 20px;  
+}  
+
+.message-list {  
+    height: calc(100vh - 200px); /* Высота шапки и поля ввода */  
+    overflow-y: auto;  
+    border: 1px solid #dee2e6;  
+    margin-bottom: 20px;  
+    padding: 10px;  
+}  
+
+.message {  
+    margin-bottom: 10px;  
+}  
+
+.message-input {  
+    margin-top: 20px; /* Отступ сверху */  
+}  
+
+.message-input .form-control {  
+    width: 100%; /* Поле ввода занимает всю ширину */  
+    border-radius: 0; /* Убираю закругления */  
+}  
+
+.send-button {  
+    display: flex;  
+    align-items: center;  
+    justify-content: center;  
+    border: none; /* Убираю рамку */  
+    background: transparent; /* Прозрачный фон */  
+    font-size: 24px; /* Размер стрелки */  
+    margin-left: 10px; /* Отступ между полем ввода и кнопкой */  
+    cursor: pointer; /* Курсор в виде указателя */  
+}  
+
+.send-button:hover {  
+    color: #007bff; /* Цвет при наведении */  
+}

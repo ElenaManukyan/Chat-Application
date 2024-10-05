@@ -2,65 +2,47 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, fetchChannels, fetchMessages } from './store/chatSlice';
 import { setCurrentChannelId } from './store/channelsSlice';
+import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
+import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar } from 'react-bootstrap';
+import './Chat.css';
 
 const socket = io();
 
 const Chat = () => {
     const dispatch = useDispatch();
-    // const data = useSelector((state) => state.chat.data);
-    // console.log(`data= ${JSON.stringify(data, null, 2)}`);
     const channels = useSelector((state) => state.chat.channels);
+    // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.chat.messages);
     const status = useSelector((state) => state.chat.status);
     const token = useSelector((state) => state.auth.token);
-    // console.log(`token= ${JSON.stringify(token, null, 2)}`); 
-    // const username = useSelector((state) => console.log(`state.auth.username= ${JSON.stringify(state.auth.username, null, 2)}`)); // NULL!
     const username = useSelector((state) => state.auth.username);
-    // console.log(`username= ${username}`);
-   // const channels = Array.isArray(data.channels) ? data.channels : [];
-   // const channels = data.channels.length !== 0 ? data.channels : [];
-   // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-   // const channelId = channels[0]?.id;
-   const currentChannelId = useSelector((state) => state.channels.currentChannelId);
-   // const messages = Array.isArray(data.messages) ? data.messages : [];
-   // const messages = data.messages.length !== 0 ? data.messages : [];
-   // console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
-    const [ newMessage, setNewMessage ] = useState('');
-
-
+    const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+    // console.log(`typeof currentChannelId= ${typeof currentChannelId}`);
+    // console.log(`typeof channels[0].id= ${typeof channels[0].id}`);
+    const [newMessage, setNewMessage] = useState('');
+    const [isFormVisible, setFormVisible] = useState(false);
     const navigate = useNavigate();
-    const handleLoginClick = () => {
-        // console.log('Button clicked!');
-        navigate('/login');
-    };
     const error = useSelector((state) => state.chat.error);
+
     useEffect(() => {
         dispatch(fetchChannels());
         dispatch(fetchMessages());
 
-        console.log(`messages= ${JSON.stringify(messages, null, 2)}`);
-        // console.log(`currentChannelId in useEffect= ${JSON.stringify(currentChannelId, null, 2)}`);
-
         const handleNewMessage = (payload) => {
-            // dispatch(addMessage(payload));
-            //console.log(`Новое сообщение: ${JSON.stringify(payload, null, 2)}`);
+            dispatch(addMessage(payload));
         };
 
-        // Подписка на новые сообщения
-        // socket.on('newMessage', handleNewMessage);
         socket.on('newMessage', handleNewMessage);
 
         return () => {
-            // socket.off('newMessage', handleNewMessage);
             socket.off('newMessage', handleNewMessage);
         };
     }, [dispatch]);
 
-   const handleSendMessage = async () => {
-        // console.log(`newMessage= ${JSON.stringify(newMessage, null, 2)}`);
+    const handleSendMessage = async () => {
         if (!newMessage.trim()) {
             return;
         }
@@ -74,75 +56,112 @@ const Chat = () => {
             await axios.post('/api/v1/messages', message, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    /*Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsImlhdCI6MTcyNzYxOTE4M30.-ptNPLK4G9fA571YS07aRSXUIaSL7SR51RkaLPRIdVk',*/
                 },
             });
-            dispatch(addMessage(message));
-            // socket.emit('newMessage', message);
             setNewMessage('');
         } catch (error) {
             console.error('Ошибка при отправке сообщения:', error);
         }
-   };
+    };
 
-   const handleChannelClick = (id) => {
-        //console.log(`handleChannelClick id= ${id}`);
+    const handleChannelClick = (id) => {
         dispatch(setCurrentChannelId(id));
-       // console.log(`handleChannelClick currentChannelId= ${currentChannelId}`);
-   };
+    };
 
-   if (status === 'loading') {
-    return <div>Загрузка...</div>
-   }
+    const handleOpenForm = () => {
+        setFormVisible(true);
+    };
 
-   if (status === 'failed') {
-    return <div>Произошла ошибка: {error}</div>
-   }
+    const handleCloseForm = () => {
+        setFormVisible(false);
+    };
 
-    if (status === 'failed') {  
-        console.error(`Error: ${error}`); // Логируем ошибку  
-        return <div>Произошла ошибка: {error}</div>;  
+    const handleLogout = () => {
+        // Логика выхода из системы  
+        navigate('/login');
+    };
+
+    if (status === 'loading') {
+        return <Spinner animation="border" />;
     }
 
+    if (status === 'failed') {
+        return <Alert variant="danger">Ошибка: {error}</Alert>;
+    }
+
+    const getMessageCountText = (count) => {
+        if (count === 0) return 'нет сообщений';
+        if (count === 1) return 'сообщение';
+        if (count > 1 && count < 5) return 'сообщения';
+        return 'сообщений';
+    };
+
     return (  
-        <div>  
-            <h2>Чат</h2>
-            <div>
-                <h3>Список каналов</h3>
-                <ul>
-                    {channels.map((channel) => {
-                        // console.log(`channel in RENDERING= ${JSON.stringify(channel, null, 2)}`);
-                        return (
-                            <li 
-                                key={channel.id} 
-                                onClick={() => handleChannelClick(Number(channel.id))}
-                                style={{ fontWeight: currentChannelId === Number(channel.id) ? 'bold' : 'normal' }}>
-                                    #{channel.name}
-                            </li>
-                        )
-                    })}
-                </ul>
-                <button type="button">Управление каналом</button>
-            </div>
-            <div>  
-                <h3>Сообщения</h3>  
-                {messages.map((message) =>   
-                    Number(message.channelId) === currentChannelId ? (  
-                        <div key={message.id}>  
-                            <strong>{message.username}</strong> {message.body}  
+        <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>  
+            <Navbar bg="light" expand="lg" style={{ boxShadow: '0 1px 20px rgba(0, 0, 0, 0.1)' }}>  
+                <Navbar.Brand>Hexlet Chat</Navbar.Brand>  
+                <Navbar.Collapse className="justify-content-end">  
+                    <Button variant="primary" onClick={handleLogout}>Выйти</Button>  
+                </Navbar.Collapse>  
+            </Navbar>  
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>  
+                <Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>  
+                    <Col xs={3} className="channels" style={{ maxHeight: '100%', overflowY: 'auto', borderRight: '1px solid #dee2e6' }}>  
+                        <div className="d-flex justify-content-between align-items-center mt-2">  
+                            <h5 className="mb-0">Каналы</h5>  
+                            <Button onClick={handleOpenForm} variant="outline-primary" size="sm">+</Button>  
                         </div>  
-                    ) : null 
-                )}  
-            </div>
-            <input 
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Введите сообщение"
-            />
-            <button type="button" onClick={handleSendMessage}>Отправить</button>
-            <button type="button" onClick={handleLoginClick}>Перейти на страницу логина</button>
-        </div>  
-    );  
+                        <ListGroup className="mt-2">  
+                            {channels.map((channel) => (  
+                                <ListGroup.Item  
+                                    key={channel.id}  
+                                    onClick={() => handleChannelClick(Number(channel.id))}  
+                                    active={currentChannelId === Number(channel.id)}  
+                                >  
+                                    #{channel.name}  
+                                </ListGroup.Item>  
+                            ))}  
+                        </ListGroup>  
+                        {isFormVisible && (  
+                            <div className="mt-2">  
+                                <AddChannelForm />  
+                                <Button onClick={handleCloseForm} variant="secondary">Закрыть</Button>  
+                            </div>  
+                        )}  
+                    </Col>  
+                    <Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>  
+                        <h5>  
+                            #{channels.find(channel => Number(channel.id) === currentChannelId)?.name || 'Выберите канал'}  
+                        </h5>  
+                        <div>  
+                            {messages.filter(message => Number(message.channelId) === currentChannelId).length}  
+                            {getMessageCountText(messages.filter(message => Number(message.channelId) === currentChannelId).length)}  
+                        </div>  
+                        <div className="message-list" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>  
+                            {messages.map((message) =>  
+                                Number(message.channelId) === currentChannelId ? (  
+                                    <div key={message.id} className="message">  
+                                        <strong>{message.username}</strong>: {message.body}  
+                                    </div>  
+                                ) : null  
+                            )}  
+                        </div>  
+                        <Form className="message-input">  
+                            <Form.Group>  
+                                <Form.Control  
+                                    type="text"  
+                                    value={newMessage}  
+                                    onChange={(e) => setNewMessage(e.target.value)}  
+                                    placeholder="Введите сообщение..."  
+                                />  
+                            </Form.Group>  
+                            <Button onClick={handleSendMessage} variant="primary">Отправить</Button>  
+                        </Form>  
+                    </Col>  
+                </Row>  
+            </div>  
+        </Container>  
+    );
 };
 
 export default Chat;
