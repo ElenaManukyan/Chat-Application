@@ -134,7 +134,7 @@ const Chat = () => {
                             #{channels.find(channel => Number(channel.id) === currentChannelId)?.name || 'Выберите канал'}  
                         </h5>  
                         <div>  
-                            {messages.filter(message => Number(message.channelId) === currentChannelId).length}  
+                            {Array.isArray(messages) ? messages.filter(message => Number(message.channelId) === currentChannelId).length : null}  
                             {getMessageCountText(messages.filter(message => Number(message.channelId) === currentChannelId).length)}  
                         </div>  
                         <div className="message-list" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>  
