@@ -97,8 +97,8 @@ const Chat = () => {
     };
 
     return (  
-        <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>  
-            <Navbar bg="light" expand="lg" style={{ boxShadow: '0 1px 20px rgba(0, 0, 0, 0.1)' }}>  
+        <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>  
+            <Navbar bg="light" expand="lg" style={{ width: '100%', height: '5%', display: 'flex', justifyContent: 'space-between', padding: '0 5%', boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)' }}>   
                 <Navbar.Brand>Hexlet Chat</Navbar.Brand>  
                 <Navbar.Collapse className="justify-content-end">  
                     <Button variant="primary" onClick={handleLogout}>Выйти</Button>  
