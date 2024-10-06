@@ -149,12 +149,12 @@ const Chat = () => {
                             isOpen={isModalOpen}
                             onClose={handleCloseModal}
                             onSubmit={handleAddChannel}
-                            existingChannels={channels.map((ch) => ch.name)}
+                            existingChannels={Array.isArray(channels) ? channels.map((ch) => ch.name) : null}
                         />
                     </Col>
                     <Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
                         <h5>
-                            #{channels.find(channel => Number(channel.id) === currentChannelId)?.name || 'Выберите канал'}
+                            #{Array.isArray(channels) ? channels.find(channel => Number(channel.id) === currentChannelId)?.name : null}
                         </h5>
                         <div>
                             {Array.isArray(messages) ? messages.filter(message => Number(message.channelId) === currentChannelId).length : null}
