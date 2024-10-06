@@ -1,44 +1,79 @@
-import React from 'react';  
-import { Formik, Form, Field, ErrorMessage } from 'formik';  
-import * as Yup from 'yup';  
-import { useDispatch } from 'react-redux';  
-import { addChannel } from './store/channelsSlice';  
+// import React from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
+import * as yup from 'yup';
+import React, { useEffect } from 'react';
 
-const AddChannelForm = () => {  
-  const dispatch = useDispatch();  
+/*
+const TextInput = React.forwardRef((props, ref) => (  
+  <Form.Control {...props} ref={ref} />  
+));
+*/
 
-  const validationSchema = Yup.object().shape({  
-    name: Yup.string()  
-      .min(3, 'Должно быть минимум 3 символа')  
-      .max(20, 'Должно быть максимум 20 символов')  
-      .required('Это поле обязательно')  
-      .test('unique', 'Имя канала должно быть уникальным', (value, context) => {  
-        // Здесь логика, проверяющая уникальность имени
+const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
-        
-        console.log(`value in validationSchema= ${JSON.stringify(value, null, 2)}`);
-        console.log(`context in validationSchema= ${JSON.stringify(context, null, 2)}`);
-      }),  
-  });  
+  const validationSchema = yup.object().shape({
+    name: yup
+      .string()
+      .min(3, 'Имя должно содержать минимум 3 символа')
+      .max(20, 'Имя должно содержать не более 20 символов')
+      .required('Имя обязательно')
+      .notOneOf(existingChannels, 'Имя канала должно быть уникальным'),
+  });
 
-  return (  
-    <Formik  
-      initialValues={{ name: '' }}  
-      validationSchema={validationSchema}  
-      onSubmit={(values, { setSubmitting }) => {  
-        dispatch(addChannel({ name: values.name }));  
-        setSubmitting(false);  
-      }}  
-    >  
-      {({ isSubmitting }) => (  
-        <Form>  
-          <Field name="name" placeholder="Название канала" />  
-          <ErrorMessage name="name" component="div" />  
-          <button type="submit" disabled={isSubmitting}>Добавить канал</button>  
-        </Form>  
-      )}  
-    </Formik>  
-  );  
-};  
+  useEffect(() => {  
+    if (isOpen) {  
+      // Ждем, пока модальное окно будет открыто  
+      const inputElement = document.getElementById('channelNameInput');  
+      if (inputElement) {  
+        inputElement.focus();  
+      }  
+    }  
+  }, [isOpen]); // Запускаем эффект, когда состояние модального окна меняется  
+
+  return (
+    <Modal show={isOpen} onHide={onClose} centered>
+      <Modal.Header closeButton>
+        <Modal.Title>Добавить канал</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+      <Formik  
+          initialValues={{ name: '' }}  
+          validationSchema={validationSchema}  
+          onSubmit={(values, { resetForm }) => {  
+            onSubmit(values.name); 
+            resetForm();  
+            onClose();  
+          }}  
+        >
+          {({ errors, touched }) => (
+            <FormikForm>
+              <Form.Group className="mb-2">
+                <Form.Label>Имя канала</Form.Label>
+                <Field  
+                  name="name"  
+                  id="channelNameInput" // Уникальный ID для элемента  
+                  as={Form.Control}  
+                  isInvalid={touched.name && !!errors.name}  
+                /> 
+                <Form.Control.Feedback type="invalid">
+                  <ErrorMessage name="name" />
+                </Form.Control.Feedback>
+              </Form.Group>
+              <div className="d-flex justify-content-end">
+                <Button variant="secondary" onClick={onClose} className="me-2">
+                  Отменить
+                </Button>
+                <Button type="submit" variant="primary">
+                  Отправить
+                </Button>
+              </div>
+            </FormikForm>
+          )}
+        </Formik>
+      </Modal.Body>
+    </Modal>
+  );
+};
 
 export default AddChannelForm;

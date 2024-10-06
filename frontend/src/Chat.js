@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, fetchChannels, fetchMessages } from './store/chatSlice';
+import { addMessage, fetchMessages } from './store/chatSlice';
+import { fetchChannels } from './store/channelsSlice';
 import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
@@ -8,12 +9,14 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar } from 'react-bootstrap';
 import './Chat.css';
+import { addChannel } from './store/channelsSlice';
+import ChannelCreationNotification from './NotificationComponent';
 
 const socket = io();
 
 const Chat = () => {
     const dispatch = useDispatch();
-    const channels = useSelector((state) => state.chat.channels);
+    const channels = useSelector((state) => state.channels.channels);
     // console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.chat.messages);
     const status = useSelector((state) => state.chat.status);
@@ -23,9 +26,11 @@ const Chat = () => {
     // console.log(`typeof currentChannelId= ${typeof currentChannelId}`);
     // console.log(`typeof channels[0].id= ${typeof channels[0].id}`);
     const [newMessage, setNewMessage] = useState('');
-    const [isFormVisible, setFormVisible] = useState(false);
+    const [isModalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const error = useSelector((state) => state.chat.error);
+    // const [isNotificationVisible, setNotificationVisible] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         dispatch(fetchChannels());
@@ -41,6 +46,13 @@ const Chat = () => {
             socket.off('newMessage', handleNewMessage);
         };
     }, [dispatch]);
+
+    useEffect(() => {
+        if (showNotification) {
+            console.log(`showNotification= ${showNotification}`);
+
+        }
+    }, [showNotification]);
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) {
@@ -68,13 +80,10 @@ const Chat = () => {
         dispatch(setCurrentChannelId(id));
     };
 
-    const handleOpenForm = () => {
-        setFormVisible(true);
-    };
+    const handleOpenModal = () => setModalOpen(true);
+    const handleCloseModal = () => setModalOpen(false);
 
-    const handleCloseForm = () => {
-        setFormVisible(false);
-    };
+    
 
     const handleLogout = () => {
         // Логика выхода из системы  
@@ -90,77 +99,96 @@ const Chat = () => {
     }
 
     const getMessageCountText = (count) => {
-        if (count === 0) return 'нет сообщений';
-        if (count === 1) return 'сообщение';
-        if (count > 1 && count < 5) return 'сообщения';
-        return 'сообщений';
+        if (count === 0) return ' сообщений';
+        if (count === 1) return ' сообщение';
+        if (count > 1 && count < 5) return ' сообщения';
+        return ' сообщений';
     };
 
-    return (  
-        <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>  
-            <Navbar bg="light" expand="lg" style={{ width: '100%', height: '5%', display: 'flex', justifyContent: 'space-between', padding: '0 5%', boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)' }}>   
-                <Navbar.Brand>Hexlet Chat</Navbar.Brand>  
-                <Navbar.Collapse className="justify-content-end">  
-                    <Button variant="primary" onClick={handleLogout}>Выйти</Button>  
-                </Navbar.Collapse>  
-            </Navbar>  
-            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>  
-                <Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>  
-                    <Col xs={3} className="channels" style={{ maxHeight: '100%', overflowY: 'auto', borderRight: '1px solid #dee2e6' }}>  
-                        <div className="d-flex justify-content-between align-items-center mt-2">  
-                            <h5 className="mb-0">Каналы</h5>  
-                            <Button onClick={handleOpenForm} variant="outline-primary" size="sm">+</Button>  
-                        </div>  
-                        <ListGroup className="mt-2">  
-                            {channels.map((channel) => (  
-                                <ListGroup.Item  
-                                    key={channel.id}  
-                                    onClick={() => handleChannelClick(Number(channel.id))}  
-                                    active={currentChannelId === Number(channel.id)}  
-                                >  
-                                    #{channel.name}  
-                                </ListGroup.Item>  
-                            ))}  
-                        </ListGroup>  
-                        {isFormVisible && (  
-                            <div className="mt-2">  
-                                <AddChannelForm />  
-                                <Button onClick={handleCloseForm} variant="secondary">Закрыть</Button>  
-                            </div>  
-                        )}  
-                    </Col>  
-                    <Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>  
-                        <h5>  
-                            #{channels.find(channel => Number(channel.id) === currentChannelId)?.name || 'Выберите канал'}  
-                        </h5>  
-                        <div>  
-                            {Array.isArray(messages) ? messages.filter(message => Number(message.channelId) === currentChannelId).length : null}  
-                            {getMessageCountText(messages.filter(message => Number(message.channelId) === currentChannelId).length)}  
-                        </div>  
-                        <div className="message-list" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>  
-                            {messages.map((message) =>  
-                                Number(message.channelId) === currentChannelId ? (  
-                                    <div key={message.id} className="message">  
-                                        <strong>{message.username}</strong>: {message.body}  
-                                    </div>  
-                                ) : null  
-                            )}  
-                        </div>  
-                        <Form className="message-input">  
-                            <Form.Group>  
-                                <Form.Control  
-                                    type="text"  
-                                    value={newMessage}  
-                                    onChange={(e) => setNewMessage(e.target.value)}  
-                                    placeholder="Введите сообщение..."  
-                                />  
-                            </Form.Group>  
-                            <Button onClick={handleSendMessage} variant="primary">Отправить</Button>  
-                        </Form>  
-                    </Col>  
-                </Row>  
-            </div>  
-        </Container>  
+    const handleAddChannel = (channelName) => {
+        const newChannel = { id: Date.now(), name: channelName, removable: true };
+        dispatch(addChannel(newChannel));
+        setShowNotification(true);
+        
+        
+        // setShowNotification(false);
+        // return newChannel;
+    };
+
+
+
+
+    return (
+        <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>
+            <Navbar bg="light" expand="lg" style={{ width: '100%', height: '5%', display: 'flex', justifyContent: 'space-between', padding: '0 5%', boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)' }}>
+                <Navbar.Brand>Hexlet Chat</Navbar.Brand>
+                <Navbar.Collapse className="justify-content-end">
+                    <Button variant="primary" onClick={handleLogout}>Выйти</Button>
+                </Navbar.Collapse>
+            </Navbar>
+            <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
+                    <Col xs={3} className="channels" style={{ maxHeight: '100%', overflowY: 'auto', borderRight: '1px solid #dee2e6' }}>
+                        <div className="d-flex justify-content-between align-items-center mt-2">
+                            <h5 className="mb-0">Каналы</h5>
+                            <Button onClick={handleOpenModal} variant="outline-primary" size="sm">+</Button>
+                        </div>
+                        <ListGroup className="mt-2">
+                            {Array.isArray(channels) ? channels.map((channel) => (
+                                <ListGroup.Item
+                                    key={channel.id}
+                                    onClick={() => handleChannelClick(Number(channel.id))}
+                                    active={currentChannelId === Number(channel.id)}
+                                >
+                                    #{channel.name}
+                                </ListGroup.Item>
+                            )) : null}
+                        </ListGroup>
+
+                        <AddChannelForm
+                            isOpen={isModalOpen}
+                            onClose={handleCloseModal}
+                            onSubmit={handleAddChannel}
+                            existingChannels={channels.map((ch) => ch.name)}
+                        />
+                    </Col>
+                    <Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
+                        <h5>
+                            #{channels.find(channel => Number(channel.id) === currentChannelId)?.name || 'Выберите канал'}
+                        </h5>
+                        <div>
+                            {Array.isArray(messages) ? messages.filter(message => Number(message.channelId) === currentChannelId).length : null}
+                            {Array.isArray(messages) ? getMessageCountText(messages.filter(message => Number(message.channelId) === currentChannelId).length) : null}
+                        </div>
+                        <div className="message-list" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>
+                            {Array.isArray(messages) ? messages.map((message) =>
+                                Number(message.channelId) === currentChannelId ? (
+                                    <div key={message.id} className="message">
+                                        <strong>{message.username}</strong>: {message.body}
+                                    </div>
+                                ) : null
+                            ) : null}
+                        </div>
+                        <Form className="message-input">
+                            <Form.Group className="d-flex align-items-center">
+                                <Form.Control
+                                    type="text"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                    placeholder="Введите сообщение..."
+                                    className="me-2"
+                                />
+                                <Button onClick={handleSendMessage} variant="primary">Отправить</Button>
+                            </Form.Group>
+                        </Form>
+                    </Col>
+                </Row>
+            </div>
+            <ChannelCreationNotification
+                show={showNotification}
+                onClose={() => setShowNotification(false)}
+            />
+        </Container>
     );
 };
 
