@@ -9,7 +9,7 @@ const ChannelCreationNotification = ({ show, onClose }) => {
   const intervalRef = useRef(null);  
   const timeoutRef = useRef(null);
   // const [isFirstShow, setIsFirstShow] = useState(true);
-  console.log(`show in ChannelCreationNotification= ${show}`);
+  // console.log(`show in ChannelCreationNotification= ${show}`);
 
   useEffect(() => {  
     if (show) {  
@@ -29,11 +29,13 @@ const ChannelCreationNotification = ({ show, onClose }) => {
             return prev + (100 / (duration / 100));   
           });  
         }  
-      }, 100);  
+      }, 100);
+      
+     
 
       return () => {
         clearInterval(intervalRef.current); 
-        clearTimeout(timeoutRef.current); 
+        //clearTimeout(timeoutRef.current); 
       };
     }  
   }, [show, /*isHovered,*/ onClose]); 
@@ -55,12 +57,13 @@ const ChannelCreationNotification = ({ show, onClose }) => {
 
       return () => {
         clearInterval(intervalRef.current); 
-        clearTimeout(timeoutRef.current); 
+        // clearTimeout(timeoutRef.current); 
       };
     }  
   }, [isHovered]);
 
   useEffect(() => {
+    // console.log(`progress= ${progress}`);
     if (progress >= 100) {
       onClose(); 
     }
@@ -85,7 +88,7 @@ const ChannelCreationNotification = ({ show, onClose }) => {
           setIsHovered(true);
           // setProgress(progress);
           clearInterval(intervalRef.current); 
-          clearTimeout(timeoutRef.current); 
+          //clearTimeout(timeoutRef.current); 
         }}  
         onMouseLeave={() => {
           setIsHovered(false);

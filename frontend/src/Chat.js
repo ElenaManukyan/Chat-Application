@@ -47,12 +47,14 @@ const Chat = () => {
         };
     }, [dispatch]);
 
+    /*
     useEffect(() => {
         if (showNotification) {
             console.log(`showNotification= ${showNotification}`);
 
         }
     }, [showNotification]);
+    */
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) {
@@ -106,11 +108,18 @@ const Chat = () => {
     };
 
     const handleAddChannel = (channelName) => {
-        const newChannel = { id: Date.now(), name: channelName, removable: true };
+        
+
+        // HERE!!
+        //console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
+        const newId = channels.length + 1;
+
+        const newChannel = { id: newId, name: channelName, removable: true };
         dispatch(addChannel(newChannel));
         setShowNotification(true);
         
-        
+        console.log(`newChannel= ${JSON.stringify(newChannel, null, 2)}`);
+        dispatch(setCurrentChannelId(newChannel.id));
         // setShowNotification(false);
         // return newChannel;
     };
