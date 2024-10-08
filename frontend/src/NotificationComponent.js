@@ -18,7 +18,8 @@ const ChannelCreationNotification = ({ show, onClose }) => {
           setProgress((prev) => {  
             if (prev >= 100) {  
               clearInterval(intervalRef.current);  
-              onClose(); 
+              onClose();
+              //setProgress(0); 
               return 100;  
             }  
             return prev + (100 / (duration / 100));  
