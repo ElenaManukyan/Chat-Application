@@ -7,67 +7,40 @@ const ChannelCreationNotification = ({ show, onClose }) => {
   const [progress, setProgress] = useState(0);  
   const duration = 3000;   
   const intervalRef = useRef(null);  
-  const timeoutRef = useRef(null);
-  // const [isFirstShow, setIsFirstShow] = useState(true);
-  // console.log(`show in ChannelCreationNotification= ${show}`);
+  const timeoutRef = useRef(null);  
 
   useEffect(() => {  
     if (show) {  
-      //if (isFirstShow) {
-        setProgress(0); // Сброс прогресса 
-        //setIsFirstShow(false); 
-      //}  
+      setProgress(0);   
 
-      
       intervalRef.current = setInterval(() => {  
         if (!isHovered) {  
           setProgress((prev) => {  
             if (prev >= 100) {  
               clearInterval(intervalRef.current);  
+              onClose(); 
               return 100;  
             }  
-            return prev + (100 / (duration / 100));   
+            return prev + (100 / (duration / 100));  
           });  
         }  
-      }, 100);
-      
-     
+      }, 100);  
 
-      return () => {
-        clearInterval(intervalRef.current); 
-        //clearTimeout(timeoutRef.current); 
-      };
+      return () => {  
+        clearInterval(intervalRef.current);   
+        clearTimeout(timeoutRef.current);  
+      };  
     }  
-  }, [show, /*isHovered,*/ onClose]); 
+  }, [show, isHovered, onClose]);   
+
   
   useEffect(() => {  
-    if (show) {
-
-      intervalRef.current = setInterval(() => {  
-        if (!isHovered) {  
-          setProgress((prev) => {  
-            if (prev >= 100) {  
-              clearInterval(intervalRef.current);  
-              return 100;  
-            }  
-            return prev + (100 / (duration / 100));   
-          });  
-        }  
-      }, 100);
-
-      return () => {
-        clearInterval(intervalRef.current); 
-        // clearTimeout(timeoutRef.current); 
-      };
+    if (progress >= 100) {  
+      clearTimeout(timeoutRef.current);
+      onClose();  
     }  
-  }, [isHovered]);
+  }, [progress, onClose]);
 
-  useEffect(() => {
-    // console.log(`progress= ${progress}`);
-    if (progress >= 100) {
-      onClose(); 
-    }
-  }, [progress, onClose]); 
 
   return (  
     <div  
@@ -82,20 +55,20 @@ const ChannelCreationNotification = ({ show, onClose }) => {
     >  
       <Toast  
         onClose={onClose}  
-        show={show} 
+        show={show}   
         style={{ width: '300px', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}   
-        onMouseEnter={() => {
-          setIsHovered(true);
-          // setProgress(progress);
-          clearInterval(intervalRef.current); 
-          //clearTimeout(timeoutRef.current); 
-        }}  
-        onMouseLeave={() => {
-          setIsHovered(false);
+        onMouseEnter={() => {  
+          setIsHovered(true);  
           
-          timeoutRef.current = setTimeout(() => {
-            onClose(); 
-          }, duration - (progress * duration) / 100); 
+          clearTimeout(timeoutRef.current);  
+        }}  
+        onMouseLeave={() => {  
+          setIsHovered(false);  
+          if (progress < 100) {
+            timeoutRef.current = setTimeout(() => {
+              onClose();
+            }, duration - (progress * duration) / 100); 
+          } 
         }}  
       >   
         <Toast.Header>  
@@ -107,12 +80,12 @@ const ChannelCreationNotification = ({ show, onClose }) => {
             style={{  
               height: '4px',  
               backgroundColor: 'green',  
-              width: `${progress}%`, 
+              width: `${progress}%`,   
               transition: 'width 0.1s',  
-              position: 'absolute', 
-              bottom: 0, 
-              left: 0, 
-              borderRadius: '8px', 
+              position: 'absolute',   
+              bottom: 0,   
+              left: 0,  
+              borderRadius: '8px',  
             }}  
           />  
         </Toast.Body>  
@@ -122,7 +95,6 @@ const ChannelCreationNotification = ({ show, onClose }) => {
 };  
 
 export default ChannelCreationNotification;
-
 
 
 

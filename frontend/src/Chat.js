@@ -118,7 +118,7 @@ const Chat = () => {
         dispatch(addChannel(newChannel));
         setShowNotification(true);
         
-        console.log(`newChannel= ${JSON.stringify(newChannel, null, 2)}`);
+        //console.log(`newChannel= ${JSON.stringify(newChannel, null, 2)}`);
         dispatch(setCurrentChannelId(newChannel.id));
         // setShowNotification(false);
         // return newChannel;
