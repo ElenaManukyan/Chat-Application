@@ -4,13 +4,10 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
 
-/*
-const TextInput = React.forwardRef((props, ref) => (  
-  <Form.Control {...props} ref={ref} />  
-));
-*/
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
+
+  console.log(`existingChannels in AddChannelForm= ${JSON.stringify(existingChannels, null, 2)}`);
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -23,13 +20,12 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
   useEffect(() => {  
     if (isOpen) {  
-      // Ждем, пока модальное окно будет открыто  
       const inputElement = document.getElementById('channelNameInput');  
       if (inputElement) {  
         inputElement.focus();  
       }  
     }  
-  }, [isOpen]); // Запускаем эффект, когда состояние модального окна меняется  
+  }, [isOpen]);  
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>
@@ -52,7 +48,7 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
                 <Form.Label>Имя канала</Form.Label>
                 <Field  
                   name="name"  
-                  id="channelNameInput" // Уникальный ID для элемента  
+                  id="channelNameInput"  
                   as={Form.Control}  
                   isInvalid={touched.name && !!errors.name}  
                 /> 

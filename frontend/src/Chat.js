@@ -7,10 +7,10 @@ import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import io from 'socket.io-client';
-import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar } from 'react-bootstrap';
+import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar, Dropdown } from 'react-bootstrap';
 import './Chat.css';
 import { addChannel } from './store/channelsSlice';
-import ChannelCreationNotification from './NotificationComponent';
+import { showNotification, Notification } from './NotificationComponent';
 
 const socket = io();
 
@@ -30,7 +30,7 @@ const Chat = () => {
     const navigate = useNavigate();
     const error = useSelector((state) => state.chat.error);
     // const [isNotificationVisible, setNotificationVisible] = useState(false);
-    const [showNotification, setShowNotification] = useState(false);
+    // const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         dispatch(fetchChannels());
@@ -85,7 +85,7 @@ const Chat = () => {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
 
-    
+
 
     const handleLogout = () => {
         // Логика выхода из системы  
@@ -107,22 +107,38 @@ const Chat = () => {
         return ' сообщений';
     };
 
-    const handleAddChannel = (channelName) => {
-        
+    const handleAddChannel = async (channelName) => {
 
-        // HERE!!
-        //console.log(`channels= ${JSON.stringify(channels, null, 2)}`);
-        const newId = channels.length + 1;
+        try {
+            const newId = channels.length + 1;
 
-        const newChannel = { id: newId, name: channelName, removable: true };
-        dispatch(addChannel(newChannel));
-        setShowNotification(true);
+            const newChannel = { id: newId, name: channelName, removable: true };
+            //dispatch(addChannel(newChannel));
+            
+            // setShowNotification(true);
+            
+    
+            //console.log(`newChannel= ${JSON.stringify(newChannel, null, 2)}`);
+            const resultAction = await dispatch(addChannel(newChannel));
         
-        //console.log(`newChannel= ${JSON.stringify(newChannel, null, 2)}`);
-        dispatch(setCurrentChannelId(newChannel.id));
-        // setShowNotification(false);
-        // return newChannel;
+            dispatch(setCurrentChannelId(newChannel.id));
+            if (addChannel.fulfilled.match(resultAction)) {
+                showNotification('Канал создан', 'success');
+            } else {
+                showNotification('Канал не создан', 'error');
+            }
+        } catch (error) {
+            console.error('Error during channel addition:', error);
+        }
     };
+
+    const handleRenameChannel = (channelId) => {  
+        // Логика для переименования канала  
+    };  
+    
+    const handleDeleteChannel = (channelId) => {  
+        // Логика для удаления канала  
+    }; 
 
 
 
@@ -146,14 +162,25 @@ const Chat = () => {
                             {Array.isArray(channels) ? channels.map((channel) => (
                                 <ListGroup.Item
                                     key={channel.id}
-                                    onClick={() => handleChannelClick(Number(channel.id))}
                                     active={currentChannelId === Number(channel.id)}
+                                    className="d-flex justify-content-between align-items-center"
                                 >
-                                    #{channel.name}
+                                    <span onClick={() => handleChannelClick(Number(channel.id))}>
+                                        #{channel.name}
+                                    </span>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="link" id={`dropdown-${channel.id}`}>
+                                            ▼
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Dropdown.Item onClick={() => handleRenameChannel(channel.id)}>Переименовать</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleDeleteChannel(channel.id)}>Удалить</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                 </ListGroup.Item>
                             )) : null}
                         </ListGroup>
-
+                        {console.log(`channels in Chat.js= ${JSON.stringify(channels, null, 2)}`)}
                         <AddChannelForm
                             isOpen={isModalOpen}
                             onClose={handleCloseModal}
@@ -193,10 +220,6 @@ const Chat = () => {
                     </Col>
                 </Row>
             </div>
-            <ChannelCreationNotification
-                show={showNotification}
-                onClose={() => setShowNotification(false)}
-            />
         </Container>
     );
 };
