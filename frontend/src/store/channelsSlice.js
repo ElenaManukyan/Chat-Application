@@ -14,27 +14,29 @@ export const addChannel = createAsyncThunk(
 });
 
 export const editChannel = createAsyncThunk(
-    'channels/editChannel', 
-    async (editedChannel) => {
-        const token = localStorage.getItem('token');
-        const response = await axios.patch('/api/v1/channels/3', editedChannel, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        return response.data;  
-}); 
+  'channels/editChannel', 
+  async ({ id, editedChannel }) => {
+      const token = localStorage.getItem('token');
+      const response = await axios.patch(`/api/v1/channels/${id}`, editedChannel, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+      });
+      return response.data;  
+  }
+);
+
 
 export const removeChannel = createAsyncThunk(
     'channels/removeChannel', 
-    async () => {
+    async (id) => {
         const token = localStorage.getItem('token');
-        const response = axios.delete('/api/v1/channels/3', {
+        const response = await axios.delete(`/api/v1/channels/${id}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
         });
-        return response.data;  
+        return response.data.id;  
 });
 
 export const fetchChannels = createAsyncThunk(
@@ -70,19 +72,21 @@ const channelsSlice = createSlice({
             state.channels.push(action.payload);  
         })
         .addCase(editChannel.fulfilled, (state, action) => {
-            console.log(`channelsSlice editChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-            // state.channels.push(action.payload);  
-        })
-        .addCase(removeChannel.fulfilled, (state, action) => {
-            console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-            // state.channels.push(action.payload);
-            const index = state.channels.findIndex((channel) => channel.id === action.payload);
-            if (index >= 0) {
-                state.channels.splice(index, 1);
-            }
-        })
-        .addCase(fetchChannels.pending, (state) => {
-          state.status = 'loading';
+          const index = state.channels.findIndex(channel => channel.id === action.payload.id);
+          if (index >= 0) {
+              state.channels[index] = action.payload; // Обновление существующего канала
+          }
+      })
+      .addCase(removeChannel.fulfilled, (state, action) => {
+          console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+          console.log(`removeChannel.fulfilled action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+          const index = state.channels.findIndex((channel) => channel.id === action.payload);
+          if (index >= 0) {
+              state.channels.splice(index, 1);
+          }
+      })
+      .addCase(fetchChannels.pending, (state) => {
+        state.status = 'loading';
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
           state.status = 'succeeded';

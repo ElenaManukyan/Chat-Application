@@ -16,30 +16,35 @@ export const fetchMessages = createAsyncThunk(
     },
 );
 
+export const addMessage = createAsyncThunk(
+    'chat/addMessage',
+    async (newMessage) => {
+        const token = localStorage.getItem('token');
+        // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
+        const response = await axios.post('/api/v1/messages', newMessage, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          return response.data;
+    },
+);
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState: {
-        /*data: [],*/
-        // data: {
         channels: [],
         messages: [],
-        // },
         status: 'idle',
         error: null,
     },
     reducers: {
-        addMessage(state, action) {
+        addMessageReducers(state, action) {
             state.messages.push(action.payload);
         },
-        /*
-        setChannels(state, action) {
-            state.data = action.payload;
-        },
-        */
     },
     extraReducers: (builder) => {
         builder
-            
             .addCase(fetchMessages.pending, (state) => {
                 state.status = 'loading';
             })
@@ -52,9 +57,21 @@ const chatSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.error.message;
             })
+            .addCase(addMessage.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(addMessage.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+                state.messages.push(action.payload);
+            })
+            .addCase(addMessage.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
     },
 });
 
-export const { addMessage/*, setChannels */ } = chatSlice.actions;
+export const { addMessageReducers } = chatSlice.actions;
 
 export default chatSlice.reducer;

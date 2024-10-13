@@ -7,7 +7,7 @@ import React, { useEffect } from 'react';
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
-  console.log(`existingChannels in AddChannelForm= ${JSON.stringify(existingChannels, null, 2)}`);
+  // console.log(`existingChannels in AddChannelForm= ${JSON.stringify(existingChannels, null, 2)}`);
 
   const validationSchema = yup.object().shape({
     name: yup
