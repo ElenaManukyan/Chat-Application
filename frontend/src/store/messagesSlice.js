@@ -33,7 +33,6 @@ export const addMessage = createAsyncThunk(
 const chatSlice = createSlice({
     name: 'chat',
     initialState: {
-        channels: [],
         messages: [],
         status: 'idle',
         error: null,

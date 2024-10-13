@@ -23,6 +23,7 @@ const socket = io();
 const Chat = () => {
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.channels.channels);
+    console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.messages.messages);
     const status = useSelector((state) => state.messages.status);
     const token = useSelector((state) => state.auth.token);
@@ -58,17 +59,13 @@ const Chat = () => {
         if (!newMessage.trim()) {
             return;
         }
-
         const message = {
             body: newMessage,
             channelId: currentChannelId,
             username: username,
         };
-
-        // socket.emit('newMessage', message)
-        
+        // socket.emit('newMessage', message)    
         dispatch(addMessage(message));
-
         setNewMessage('');
     };
 
