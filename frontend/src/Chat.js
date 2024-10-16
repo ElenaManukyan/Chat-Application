@@ -6,7 +6,6 @@ import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import io from 'socket.io-client';
 import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar } from 'react-bootstrap';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -16,11 +15,14 @@ import { addChannel, removeChannel, editChannel } from './store/channelsSlice';
 import { showNotification } from './NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
+import io from 'socket.io-client';
+
 
 
 const socket = io();
 
 const Chat = () => {
+
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.channels.channels);
     console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
@@ -43,16 +45,21 @@ const Chat = () => {
         dispatch(fetchChannels());
         dispatch(fetchMessages());
 
+        /*
         const handleNewMessage = (payload) => {
             // dispatch(addMessageReducers(payload));
             dispatch(addMessage(payload));
         };
+        
 
         socket.on('newMessage', handleNewMessage);
 
+        
         return () => {
             socket.off('newMessage', handleNewMessage);
         };
+        */
+    
     }, [dispatch]);
 
     const handleSendMessage = () => {
@@ -65,7 +72,9 @@ const Chat = () => {
             username: username,
         };
         // socket.emit('newMessage', message)    
-        dispatch(addMessage(message));
+        // dispatch(addMessage(message));
+        
+        socket.emit('newMessage', message);
         setNewMessage('');
     };
 
