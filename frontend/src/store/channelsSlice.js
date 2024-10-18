@@ -78,8 +78,8 @@ const channelsSlice = createSlice({
           }
       })
       .addCase(removeChannel.fulfilled, (state, action) => {
-          console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-          console.log(`removeChannel.fulfilled action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+          //console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+          //console.log(`removeChannel.fulfilled action.payload= ${JSON.stringify(action.payload, null, 2)}`);
           const index = state.channels.findIndex((channel) => channel.id === action.payload);
           if (index >= 0) {
               state.channels.splice(index, 1);

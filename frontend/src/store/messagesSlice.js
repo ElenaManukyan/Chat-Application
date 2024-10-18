@@ -30,6 +30,19 @@ export const addMessage = createAsyncThunk(
     },
 );
 
+export const removeMessage = createAsyncThunk(
+    'chat/removeMessage',
+    async (id) => {
+        const token = localStorage.getItem('token');
+        const response = await axios.delete(`/api/v1/messages/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          return response.data;
+    },
+);
+
 const chatSlice = createSlice({
     name: 'chat',
     initialState: {
@@ -65,6 +78,23 @@ const chatSlice = createSlice({
                 state.messages.push(action.payload);
             })
             .addCase(addMessage.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(removeMessage.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(removeMessage.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+                
+                const index = state.messages.findIndex((message) => message.id === action.payload);
+                if (index >= 0) {
+                    state.messages.splice(index, 1);
+                }
+                
+            })
+            .addCase(removeMessage.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
             })

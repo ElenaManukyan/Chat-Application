@@ -8,32 +8,18 @@ import store from './store/store';
 import { Notification } from './NotificationComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import store from './store/store';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { addMessage } from './store/messagesSlice';
+// import { socket } from './Chat';
 
-
-
+const socket = io();
 
 const init = () => {
-  const socket = io();
-
+  
   socket.on('newMessage', (payload) => {
+    console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
     store.dispatch(addMessage(payload));
   });
- 
-  /*
-  useEffect(() => {
-    const handleNewMessage = (payload) => {
-        store.dispatch(addMessage(payload));
-    };
-     socket.on('newMessage', handleNewMessage);
-    return () => {
-        socket.off('newMessage', handleNewMessage);
-    };
-}, []);
-*/
-
-
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -54,6 +40,4 @@ init();
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-// init();
-
-export default init;
+export default socket;

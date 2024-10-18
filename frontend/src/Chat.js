@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, fetchMessages, addMessageReducers } from './store/messagesSlice';
+import { addMessage, fetchMessages, removeMessage } from './store/messagesSlice';
 import { fetchChannels } from './store/channelsSlice';
 import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
@@ -15,17 +15,15 @@ import { addChannel, removeChannel, editChannel } from './store/channelsSlice';
 import { showNotification } from './NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
-import io from 'socket.io-client';
+import socket from './index';
+// import { io } from 'socket.io-client';
 
-
-
-const socket = io();
 
 const Chat = () => {
 
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.channels.channels);
-    console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
+    // console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.messages.messages);
     const status = useSelector((state) => state.messages.status);
     const token = useSelector((state) => state.auth.token);
@@ -43,26 +41,14 @@ const Chat = () => {
 
     useEffect(() => {
         dispatch(fetchChannels());
-        dispatch(fetchMessages());
-
-        /*
-        const handleNewMessage = (payload) => {
-            // dispatch(addMessageReducers(payload));
-            dispatch(addMessage(payload));
-        };
-        
-
-        socket.on('newMessage', handleNewMessage);
-
-        
-        return () => {
-            socket.off('newMessage', handleNewMessage);
-        };
-        */
-    
+        dispatch(fetchMessages());    
     }, [dispatch]);
 
     const handleSendMessage = () => {
+
+        // HERE!!!
+        console.log(`handleSendMessage currentChannelId= ${currentChannelId}`);
+
         if (!newMessage.trim()) {
             return;
         }
@@ -71,10 +57,12 @@ const Chat = () => {
             channelId: currentChannelId,
             username: username,
         };
-        // socket.emit('newMessage', message)    
+        //io.on("connection", (socket) => {
+            socket.emit('newMessage', message)
+        //});
         // dispatch(addMessage(message));
         
-        socket.emit('newMessage', message);
+        //socket.emit('newMessage', message);
         setNewMessage('');
     };
 
@@ -111,6 +99,9 @@ const Chat = () => {
             const newId = channels.length + 1;
 
             const newChannel = { id: newId, name: channelName, removable: true };
+            
+            console.log(`newChannel in handleAddChannel= ${JSON.stringify(newChannel, null, 2)}`);
+
             const resultAction = await dispatch(addChannel(newChannel));
         
             dispatch(setCurrentChannelId(newChannel.id));
@@ -141,7 +132,15 @@ const Chat = () => {
     
     const handleDeleteChannel = (channelId) => {
         console.log(`channelId in handleDeleteChannel= ${channelId}`);
+        const toDeletemessages = messages.filter((message) => message.channelId === channelId);
+        
+        toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
+
         dispatch(removeChannel(channelId));
+
+        console.log(`messages in handleDeleteChannel= ${JSON.stringify(messages, null, 2)}`);
+       
+
         showNotification('Канал удалён', 'success');
     }; 
 
