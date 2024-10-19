@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, fetchMessages, removeMessage } from './store/messagesSlice';
 import { fetchChannels } from './store/channelsSlice';
-import { setCurrentChannelId } from './store/channelsSlice';
+// import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -23,32 +23,57 @@ const Chat = () => {
 
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.channels.channels);
-    // console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
+    //console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.messages.messages);
+    //console.log(`messages in Chat= ${JSON.stringify(messages, null, 2)}`);
     const status = useSelector((state) => state.messages.status);
-    const token = useSelector((state) => state.auth.token);
+    // const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
-    const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+    // const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+    //console.log(`currentChannelId= ${currentChannelId}`);
+    const [currentChannelId, setCurrentChannelId] = useState(1);
     const [newMessage, setNewMessage] = useState('');
     const [isModalOpen, setModalOpen] = useState(false);
     const [isModalRemoveOpen, setModalRemoveOpen] = useState(false);
     const [isModalRenameOpen, setModalRenameOpen] = useState(false);
     const [channelId, setChannelId] = useState(null);
+    //console.log(`channelId= ${channelId}`);
+
     const [currChannelName, setCurrChannelName] = useState('');
     //const [newChannelName, setNewChannelName] = useState(null);
     const navigate = useNavigate();
     const error = useSelector((state) => state.messages.error);
+    const inputRef = useRef(null);
+
+
+    
+
 
     useEffect(() => {
         dispatch(fetchChannels());
-        dispatch(fetchMessages());    
+        dispatch(fetchMessages()); 
+        
+        
+
     }, [dispatch]);
 
+
+    useEffect(() => {
+
+        console.log(`inputRef.current= ${inputRef.current}`);
+        if (inputRef.current) {
+            setTimeout(() => {
+                // inputRef.current.focus();
+            }, 0);
+            
+
+        }
+    }, []);
+
+    
+
     const handleSendMessage = () => {
-
         // HERE!!!
-        console.log(`handleSendMessage currentChannelId= ${currentChannelId}`);
-
         if (!newMessage.trim()) {
             return;
         }
@@ -57,17 +82,18 @@ const Chat = () => {
             channelId: currentChannelId,
             username: username,
         };
+        //console.log(`message in handleSendMessage= ${JSON.stringify(message, null, 2)}`);
+
         //io.on("connection", (socket) => {
-            socket.emit('newMessage', message)
+            //socket.emit('newMessage', message);
         //});
-        // dispatch(addMessage(message));
-        
-        //socket.emit('newMessage', message);
+        dispatch(addMessage(message));
         setNewMessage('');
     };
 
     const handleChannelClick = (id) => {
-        dispatch(setCurrentChannelId(id));
+        //console.log('handleChannelClick is working!');
+        setCurrentChannelId(id);
     };
 
     const handleOpenModal = () => setModalOpen(true);
@@ -94,19 +120,13 @@ const Chat = () => {
     };
 
     const handleAddChannel = async (channelName) => {
-
         try {
-            const newId = channels.length + 1;
-
-            const newChannel = { id: newId, name: channelName, removable: true };
-            
-            console.log(`newChannel in handleAddChannel= ${JSON.stringify(newChannel, null, 2)}`);
-
+            const newChannel = { name: channelName };
             const resultAction = await dispatch(addChannel(newChannel));
-        
-            dispatch(setCurrentChannelId(newChannel.id));
             if (addChannel.fulfilled.match(resultAction)) {
                 showNotification('Канал создан', 'success');
+                //console.log(`resultAction.payload.id= ${resultAction.payload.id}`);
+                handleChannelClick(resultAction.payload.id);
             } else {
                 showNotification('Канал не создан', 'error');
             }
@@ -114,8 +134,6 @@ const Chat = () => {
             console.error('Error during channel addition:', error);
         }
     };
-
-    
 
     const handleOpenRenameChannelModal = (channelId) => { 
         setModalRenameOpen(true);
@@ -129,19 +147,12 @@ const Chat = () => {
         showNotification('Канал переименован', 'success');
     };
     
-    
     const handleDeleteChannel = (channelId) => {
-        console.log(`channelId in handleDeleteChannel= ${channelId}`);
-        const toDeletemessages = messages.filter((message) => message.channelId === channelId);
-        
+        const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
         toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
-
         dispatch(removeChannel(channelId));
-
-        console.log(`messages in handleDeleteChannel= ${JSON.stringify(messages, null, 2)}`);
-       
-
         showNotification('Канал удалён', 'success');
+        handleChannelClick(1);
     }; 
 
     const handleOpenRemoveModal = (channelId) => { 
@@ -154,11 +165,10 @@ const Chat = () => {
     const handleCloseRenameModal = () => setModalRenameOpen(false);
 
     const handleMessageSubmit = (e) => {
+        // console.log(`messages in handleMessageSubmit= ${JSON.stringify(messages, null, 2)}`);
         e.preventDefault();
         handleSendMessage();
     };
-
-
 
     return (
         <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>
@@ -177,40 +187,40 @@ const Chat = () => {
                         </div>
                         <ListGroup className="mt-2">
                             {channels.map((channel) => ( 
-                            
-                            <ListGroup.Item
-                                key={channel.id}
-                                className="d-flex justify-content-between align-items-center"
-                                variant='light'
-                                onClick={() => handleChannelClick(Number(channel.id))}
-                                action 
-                           >
-                            <span>
-                                #{channel.name}
-                            </span>
-
-                            {channel.id >= 3 &&
-                            (
-                                <DropdownButton
-                                    key={`dropdown-${channel.id}`}
-                                    id={`dropdown-variants-${channel.id}`}
+                                <ListGroup.Item
+                                    key={channel.id}
+                                    className="d-flex justify-content-between align-items-center"
                                     variant='light'
-                                    title=''
+                                    onClick={() => handleChannelClick(Number(channel.id))}
+                                    action
+                                    active={Number(channel.id) === Number(currentChannelId)}
                                 >
-                                    <Dropdown.Item 
-                                        eventKey="1"
-                                        onClick={() => handleOpenRemoveModal(channel.id)}
+                                <span>
+                                    # {channel.name}
+                                </span>
+
+                                {channel.id >= 3 &&
+                                (
+                                    <DropdownButton
+                                        key={`dropdown-${channel.id}`}
+                                        id={`dropdown-variants-${channel.id}`}
+                                        variant='light'
+                                        title=''
                                     >
-                                        Удалить
-                                    </Dropdown.Item>
-                                    <Dropdown.Item 
-                                        eventKey="2"
-                                        onClick={() => handleOpenRenameChannelModal(channel.id)}
-                                    >
-                                        Переименовать
-                                    </Dropdown.Item>
-                                </DropdownButton>
-                            )}
+                                        <Dropdown.Item 
+                                            eventKey="1"
+                                            onClick={() => handleOpenRemoveModal(channel.id)}
+                                        >
+                                            Удалить
+                                        </Dropdown.Item>
+                                        <Dropdown.Item 
+                                            eventKey="2"
+                                            onClick={() => handleOpenRenameChannelModal(channel.id)}
+                                        >
+                                            Переименовать
+                                        </Dropdown.Item>
+                                    </DropdownButton>
+                                )}
                                 </ListGroup.Item>
                             ))}
                         </ListGroup>
@@ -233,7 +243,7 @@ const Chat = () => {
                             onRename={handleRenameChannel}
                             channelId={channelId}
                             currChannelName={currChannelName}
-                            
+                            existingChannels={channels.map((ch) => ch.name)}
                         />
                     </Col>
                     <Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -256,13 +266,14 @@ const Chat = () => {
                         <Form className="message-input" onSubmit={handleMessageSubmit}>
                             <Form.Group className="d-flex align-items-center">
                                 <Form.Control
+                                    ref={inputRef}
                                     type="text"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
                                     placeholder="Введите сообщение..."
                                     className="me-2"
                                 />
-                                <Button onClick={handleMessageSubmit} variant="primary">Отправить</Button>
+                                <Button type="submit" variant="primary">Отправить</Button>
                             </Form.Group>
                         </Form>
                     </Col>

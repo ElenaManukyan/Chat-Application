@@ -62,7 +62,7 @@ const channelsSlice = createSlice({
   },  
   reducers: {
     setCurrentChannelId: (state, action) => {
-      // console.log(`action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+       console.log(`action.payload in setCurrentChannelId= ${JSON.stringify(action.payload, null, 2)}`);
       state.currentChannelId = action.payload;
     },
   },
@@ -72,7 +72,7 @@ const channelsSlice = createSlice({
             state.channels.push(action.payload);  
         })
         .addCase(editChannel.fulfilled, (state, action) => {
-          const index = state.channels.findIndex(channel => channel.id === action.payload.id);
+          const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
           if (index >= 0) {
               state.channels[index] = action.payload; // Обновление существующего канала
           }
@@ -80,7 +80,7 @@ const channelsSlice = createSlice({
       .addCase(removeChannel.fulfilled, (state, action) => {
           //console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
           //console.log(`removeChannel.fulfilled action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-          const index = state.channels.findIndex((channel) => channel.id === action.payload);
+          const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload));
           if (index >= 0) {
               state.channels.splice(index, 1);
           }

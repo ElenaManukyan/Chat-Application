@@ -86,9 +86,10 @@ const chatSlice = createSlice({
             })
             .addCase(removeMessage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
+                //console.log(`messagesSlice removeMessage action.payload= ${JSON.stringify(action.payload, null, 2)}`);
                 
-                const index = state.messages.findIndex((message) => message.id === action.payload);
+                const index = state.messages.findIndex((message) => Number(message.id) === Number(action.payload.id));
+                //console.log(`messagesSlice removeMessage index= ${index}`);
                 if (index >= 0) {
                     state.messages.splice(index, 1);
                 }

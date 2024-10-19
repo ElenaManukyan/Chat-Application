@@ -7,6 +7,7 @@ import React, { useEffect } from 'react';
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
+  //console.log(`currChannelId in AddChannelForm= ${currChannelId}`);
   // console.log(`existingChannels in AddChannelForm= ${JSON.stringify(existingChannels, null, 2)}`);
 
   const validationSchema = yup.object().shape({
@@ -38,8 +39,11 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
           validationSchema={validationSchema}  
           onSubmit={(values, { resetForm }) => {  
             onSubmit(values.name); 
+
             resetForm();  
-            onClose();  
+            
+            onClose();
+             
           }}  
         >
           {({ errors, touched }) => (

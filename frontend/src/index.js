@@ -18,7 +18,7 @@ const init = () => {
   
   socket.on('newMessage', (payload) => {
     console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
-    store.dispatch(addMessage(payload));
+    // store.dispatch(addMessage(payload));
   });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
