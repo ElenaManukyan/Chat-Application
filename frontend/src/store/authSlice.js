@@ -1,4 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const login = createAsyncThunk(
+    'auth/login',
+    async ({ username, password }) => {
+        const response = await axios.post('/api/v1/login', { username, password });
+        return response.data;
+});
+
 
 const authSlice = createSlice({
     name: 'auth',
@@ -7,18 +16,25 @@ const authSlice = createSlice({
         token: localStorage.getItem('token') || null,
     },
     reducers: {
-        setToken(state, action) {
-            state.token = action.payload;
-        },
-        addUsername(state, action) {
-            state.username = action.payload;
-        },
-        clearToken(state) {
-            state.token = null;
-            localStorage.removeItem('token');
-        },
+
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(login.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(login.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.token = action.payload.token;
+                localStorage.setItem('token', action.payload.token);
+                state.username = action.payload.username;
+                localStorage.setItem('username', action.payload.username);
+            })
+            .addCase(login.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
     },
 });
 
-export const { setToken, clearToken, addUsername } = authSlice.actions;
 export default authSlice.reducer;

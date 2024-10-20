@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/store';
-import { Notification } from './NotificationComponent';
+import { Notification } from './Pages/NotificationComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 // import store from './store/store';
 import { io } from 'socket.io-client';

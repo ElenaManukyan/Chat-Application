@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, fetchMessages, removeMessage } from './store/messagesSlice';
-import { fetchChannels } from './store/channelsSlice';
+import { addMessage, fetchMessages, removeMessage } from '../store/messagesSlice';
+import { fetchChannels } from '../store/channelsSlice';
 // import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +11,11 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import './Chat.css';
-import { addChannel, removeChannel, editChannel } from './store/channelsSlice';
+import { addChannel, removeChannel, editChannel } from '../store/channelsSlice';
 import { showNotification } from './NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
-import socket from './index';
+import socket from '../index';
 // import { io } from 'socket.io-client';
 
 
@@ -23,54 +23,33 @@ const Chat = () => {
 
     const dispatch = useDispatch();
     const channels = useSelector((state) => state.channels.channels);
-    //console.log(`channels in Chat= ${JSON.stringify(channels, null, 2)}`);
     const messages = useSelector((state) => state.messages.messages);
-    //console.log(`messages in Chat= ${JSON.stringify(messages, null, 2)}`);
     const status = useSelector((state) => state.messages.status);
-    // const token = useSelector((state) => state.auth.token);
     const username = useSelector((state) => state.auth.username);
-    // const currentChannelId = useSelector((state) => state.channels.currentChannelId);
-    //console.log(`currentChannelId= ${currentChannelId}`);
     const [currentChannelId, setCurrentChannelId] = useState(1);
     const [newMessage, setNewMessage] = useState('');
     const [isModalOpen, setModalOpen] = useState(false);
     const [isModalRemoveOpen, setModalRemoveOpen] = useState(false);
     const [isModalRenameOpen, setModalRenameOpen] = useState(false);
     const [channelId, setChannelId] = useState(null);
-    //console.log(`channelId= ${channelId}`);
-
     const [currChannelName, setCurrChannelName] = useState('');
-    //const [newChannelName, setNewChannelName] = useState(null);
     const navigate = useNavigate();
     const error = useSelector((state) => state.messages.error);
     const inputRef = useRef(null);
 
-
-    
-
-
     useEffect(() => {
         dispatch(fetchChannels());
         dispatch(fetchMessages()); 
-        
-        
-
     }, [dispatch]);
 
-
     useEffect(() => {
-
         console.log(`inputRef.current= ${inputRef.current}`);
         if (inputRef.current) {
             setTimeout(() => {
                 // inputRef.current.focus();
             }, 0);
-            
-
         }
     }, []);
-
-    
 
     const handleSendMessage = () => {
         // HERE!!!
