@@ -12,11 +12,12 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import './Chat.css';
 import { addChannel, removeChannel, editChannel } from '../store/channelsSlice';
-import { showNotification } from './NotificationComponent';
+import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
 import socket from '../index';
 // import { io } from 'socket.io-client';
+import { setAuthorized } from '../store/authSlice';
 
 
 const Chat = () => {
@@ -36,14 +37,18 @@ const Chat = () => {
     const navigate = useNavigate();
     const error = useSelector((state) => state.messages.error);
     const inputRef = useRef(null);
+    
 
+    //const navigate = useNavigate();
+    
+     
     useEffect(() => {
         dispatch(fetchChannels());
         dispatch(fetchMessages()); 
     }, [dispatch]);
 
     useEffect(() => {
-        console.log(`inputRef.current= ${inputRef.current}`);
+        //console.log(`inputRef.current= ${inputRef.current}`);
         if (inputRef.current) {
             setTimeout(() => {
                 // inputRef.current.focus();
@@ -78,10 +83,12 @@ const Chat = () => {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
 
+    /*
     const handleLogout = () => {
         // Логика выхода из системы  
         navigate('/login');
     };
+    */
 
     if (status === 'loading') {
         return <Spinner animation="border" />;
@@ -149,14 +156,16 @@ const Chat = () => {
         handleSendMessage();
     };
 
+    // HERE!!!
+    /*
+    const handleBrandClick = () => {
+        // navigate('...');
+    };
+    */
+
     return (
         <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>
-            <Navbar bg="light" expand="lg" style={{ width: '100%', height: '5%', display: 'flex', justifyContent: 'space-between', padding: '0 5%', boxShadow: '0 5px 10px rgba(0, 0, 0, 0.1)' }}>
-                <Navbar.Brand>Hexlet Chat</Navbar.Brand>
-                <Navbar.Collapse className="justify-content-end">
-                    <Button variant="primary" onClick={handleLogout}>Выйти</Button>
-                </Navbar.Collapse>
-            </Navbar>
+            
             <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
                     <Col xs={3} className="channels" style={{ width: '20%', maxHeight: '100%', overflowY: 'auto', borderRight: '1px solid #dee2e6' }}>

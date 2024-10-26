@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';  
 import axios from 'axios';
 
+
 export const addChannel = createAsyncThunk(
     'channels/addChannel', 
     async (newChannel) => {
@@ -43,13 +44,11 @@ export const fetchChannels = createAsyncThunk(
   'chat/fetchChannels',
   async () => {
       const token = localStorage.getItem('token');
-      // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
       const response = await axios.get('/api/v1/channels', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        //console.log(response.data); // =>[{ id: '1', name: 'general', removable: false }, ...]
         return response.data;
   },
 );
@@ -61,10 +60,12 @@ const channelsSlice = createSlice({
     currentChannelId: 1,
   },  
   reducers: {
+    /*
     setCurrentChannelId: (state, action) => {
-       console.log(`action.payload in setCurrentChannelId= ${JSON.stringify(action.payload, null, 2)}`);
+       // console.log(`action.payload in setCurrentChannelId= ${JSON.stringify(action.payload, null, 2)}`);
       state.currentChannelId = action.payload;
     },
+    */
   },
   extraReducers: (builder) => {  
     builder  

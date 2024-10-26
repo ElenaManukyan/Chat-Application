@@ -1,16 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './store/store';
-import { Notification } from './Pages/NotificationComponent';
+import { Notification } from './DefaulltComponents/NotificationComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import store from './store/store';
 import { io } from 'socket.io-client';
-import { addMessage } from './store/messagesSlice';
-// import { socket } from './Chat';
+
 
 const socket = io();
 
