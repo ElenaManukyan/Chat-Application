@@ -1,0 +1,52 @@
+{
+    "errors": {
+        "loginAuthErr": "Проблема с авторизацией: неправильный логин/пароль",
+        "signupUserUnique": "Такой пользователь уже существует",
+        "validation": {
+            "usernameRequired": "Имя пользователя обязательно",
+            "usernameMinLength": "Имя пользователя должно содержать минимум 3 символа",
+            "usernameMaxLength": "Имя пользователя не должно превышать 20 символов",
+            "passwdRequired": "Пароль обязателен",
+            "passwdMinLength": "Пароль должен содержать минимум 6 символов",
+            "confirmPasswdRequired": "Подтверждение пароля обязательно",
+            "confirmPasswdConfirm": "Пароли должны совпадать"
+        },
+        "error": "Ошибка"
+    },
+    "navbar": {
+        "logo": "Hexlet Chat",
+        "logout": "Выйти"
+    },
+    "login": {
+        "enter": "Войти",
+        "yourNickname": "Ваш ник",
+        "password": "Пароль",
+        "doYouHaveAccount": "Нет аккаунта?",
+        "signup": "Регистрация"
+    },
+    "signup": {
+        "username": "Имя пользователя",
+        "confirmPasswd": "Подтвердите пароль",
+        "signup": "Зарегистрироваться",
+        "input": "Вход"
+    },
+    "chat": {
+        "messages": {
+            "count_zero": "{{count}} сообщений",
+            "count_one": "{{count}} сообщение",
+            "count_few": "{{count}} сообщения",
+            "count_many": "{{count}} сообщений",
+            "enterMessage": "Введите сообщение...",
+            "sendMessage": "Отправить"
+        },
+        "channels": {
+            "channelCreate": "Канал создан",
+            "channelNotCreate": "Канал не создан",
+            "channelIsRenamed": "Канал переименован",
+            "channelIsRemoved": "Канал удалён",
+            "channels": "Каналы",
+            "remove": "Удалить",
+            "rename": "Переименовать"
+        }
+    }
+}

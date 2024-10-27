@@ -18,6 +18,7 @@ import RenameChannel from './RenameChannel';
 import socket from '../index';
 // import { io } from 'socket.io-client';
 import { setAuthorized } from '../store/authSlice';
+import { useTranslation } from 'react-i18next';
 
 
 const Chat = () => {
@@ -34,13 +35,9 @@ const Chat = () => {
     const [isModalRenameOpen, setModalRenameOpen] = useState(false);
     const [channelId, setChannelId] = useState(null);
     const [currChannelName, setCurrChannelName] = useState('');
-    const navigate = useNavigate();
     const error = useSelector((state) => state.messages.error);
     const inputRef = useRef(null);
-    
-
-    //const navigate = useNavigate();
-    
+    const { t } = useTranslation();
      
     useEffect(() => {
         dispatch(fetchChannels());
@@ -83,26 +80,16 @@ const Chat = () => {
     const handleOpenModal = () => setModalOpen(true);
     const handleCloseModal = () => setModalOpen(false);
 
-    /*
-    const handleLogout = () => {
-        // Логика выхода из системы  
-        navigate('/login');
-    };
-    */
-
     if (status === 'loading') {
         return <Spinner animation="border" />;
     }
 
     if (status === 'failed') {
-        return <Alert variant="danger">Ошибка: {error}</Alert>;
+        return <Alert variant="danger">{t("errors.error")}: {error}</Alert>;
     }
 
     const getMessageCountText = (count) => {
-        if (count === 0) return ' сообщений';
-        if (count === 1) return ' сообщение';
-        if (count > 1 && count < 5) return ' сообщения';
-        return ' сообщений';
+       return t('chat.messages.count', { count });
     };
 
     const handleAddChannel = async (channelName) => {
@@ -110,11 +97,10 @@ const Chat = () => {
             const newChannel = { name: channelName };
             const resultAction = await dispatch(addChannel(newChannel));
             if (addChannel.fulfilled.match(resultAction)) {
-                showNotification('Канал создан', 'success');
-                //console.log(`resultAction.payload.id= ${resultAction.payload.id}`);
+                showNotification(`${t('chat.channels.channelCreate')}`, 'success');
                 handleChannelClick(resultAction.payload.id);
             } else {
-                showNotification('Канал не создан', 'error');
+                showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
             }
         } catch (error) {
             console.error('Error during channel addition:', error);
@@ -130,14 +116,14 @@ const Chat = () => {
 
     const handleRenameChannel = (channelId, editedChannel) => {  
         dispatch(editChannel({ id: channelId, editedChannel })); // Изменение здесь
-        showNotification('Канал переименован', 'success');
+        showNotification(`${t('chat.channels.channelIsRenamed')}`, 'success');
     };
     
     const handleDeleteChannel = (channelId) => {
         const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
         toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
         dispatch(removeChannel(channelId));
-        showNotification('Канал удалён', 'success');
+        showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
         handleChannelClick(1);
     }; 
 
@@ -151,17 +137,9 @@ const Chat = () => {
     const handleCloseRenameModal = () => setModalRenameOpen(false);
 
     const handleMessageSubmit = (e) => {
-        // console.log(`messages in handleMessageSubmit= ${JSON.stringify(messages, null, 2)}`);
         e.preventDefault();
         handleSendMessage();
     };
-
-    // HERE!!!
-    /*
-    const handleBrandClick = () => {
-        // navigate('...');
-    };
-    */
 
     return (
         <Container fluid className="chat-container" style={{ height: '100vh', display: 'flex', flexDirection: 'column', padding: '0' }}>
@@ -170,7 +148,7 @@ const Chat = () => {
                 <Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
                     <Col xs={3} className="channels" style={{ width: '20%', maxHeight: '100%', overflowY: 'auto', borderRight: '1px solid #dee2e6' }}>
                         <div className="d-flex justify-content-between align-items-center mt-2">
-                            <h5 className="mb-0">Каналы</h5>
+                            <h5 className="mb-0">{t('chat.channels.channels')}</h5>
                             <Button onClick={handleOpenModal} variant="outline-primary" size="sm">+</Button>
                         </div>
                         <ListGroup className="mt-2">
@@ -199,13 +177,13 @@ const Chat = () => {
                                             eventKey="1"
                                             onClick={() => handleOpenRemoveModal(channel.id)}
                                         >
-                                            Удалить
+                                            {t('chat.channels.remove')}
                                         </Dropdown.Item>
                                         <Dropdown.Item 
                                             eventKey="2"
                                             onClick={() => handleOpenRenameChannelModal(channel.id)}
                                         >
-                                            Переименовать
+                                            {t('chat.channels.rename')}
                                         </Dropdown.Item>
                                     </DropdownButton>
                                 )}
@@ -239,7 +217,7 @@ const Chat = () => {
                             #{channels.find(channel => Number(channel.id) === currentChannelId)?.name}
                         </h5>
                         <div>
-                            {messages.filter(message => Number(message.channelId) === currentChannelId).length}
+                            {/*messages.filter(message => Number(message.channelId) === currentChannelId).length*/}
                             {getMessageCountText(messages.filter(message => Number(message.channelId) === currentChannelId).length)}
                         </div>
                         <div className="message-list" style={{ flex: 1, overflowY: 'auto', marginBottom: '10px' }}>
@@ -258,10 +236,10 @@ const Chat = () => {
                                     type="text"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
-                                    placeholder="Введите сообщение..."
+                                    placeholder={t('chat.messages.enterMessage')}
                                     className="me-2"
                                 />
-                                <Button type="submit" variant="primary">Отправить</Button>
+                                <Button type="submit" variant="primary">{t('chat.messages.sendMessage')}</Button>
                             </Form.Group>
                         </Form>
                     </Col>

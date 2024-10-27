@@ -8,6 +8,10 @@ import store from './store/store';
 import { Notification } from './DefaulltComponents/NotificationComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { io } from 'socket.io-client';
+import './i18n'
+import i18n from './i18n';
+import { I18nextProvider } from 'react-i18next';
+
 
 
 const socket = io();
@@ -15,7 +19,7 @@ const socket = io();
 const init = () => {
   
   socket.on('newMessage', (payload) => {
-    console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
+    //console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
     // store.dispatch(addMessage(payload));
   });
 
@@ -23,8 +27,10 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Notification />
-      <App />
+      <I18nextProvider i18n={i18n}>
+        <Notification />
+        <App />
+      </I18nextProvider>
     </Provider>
   </React.StrictMode>
 );

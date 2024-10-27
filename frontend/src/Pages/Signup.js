@@ -7,55 +7,53 @@ import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap'
 import * as formik from 'formik';
 import * as yup from 'yup';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useTranslation } from 'react-i18next';
 
 const Signup = () => {
 
     const { Formik } = formik;
+    const { t } = useTranslation();
 
     const validationSchema = yup.object().shape({
         username: yup
             .string()
-            .required('Имя пользователя обязательно')
-            .min(3, 'Имя пользователя должно содержать минимум 3 символа')
-            .max(20, 'Имя пользователя не должно превышать 20 символов'),
+            .required(`${t('errors.validation.usernameRequired')}`)
+            .min(3, `${t('errors.validation.usernameMinLength')}`)
+            .max(20, `${t('errors.validation.usernameMaxLength')}`),
 
         password: yup
             .string()
-            .required('Пароль обязателен')
-            .min(6, 'Пароль должен содержать минимум 6 символов'),
+            .required(`${t('errors.validation.passwdRequired')}`)
+            .min(6, `${t('errors.validation.passwdMinLength')}`),
 
         confirmPassword: yup
             .string()
-            .required('Подтверждение пароля обязательно')
-            .oneOf([yup.ref('password'), null], 'Пароли должны совпадать'),
+            .required(`${t('errors.validation.confirmPasswdRequired')}`)
+            .oneOf([yup.ref('password'), null], `${t('errors.validation.confirmPasswdConfirm')}`),
     });
 
-    //const [username, setUsername] = useState('');
-    //const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    //const error = useSelector((state) => state.auth.error);
     const status = useSelector((state) => state.auth.status);
+    
 
     
     const handleSubmitClick = async (values) => { 
-        //console.log(error);
-        //try {  
-            dispatch(signup({ username: values.username, password: values.password }))
-                .unwrap()
-                .then(() => {
-                    navigate('/');
-                })
-                .catch((err) => {
-                    
-                    if (Number(err.message) === 409) {
-                        setError('Такой пользователь уже существует');
-                    } else {
-                        setError(err.response?.data?.message || err.message);
-                    }
-                });
+
+        dispatch(signup({ username: values.username, password: values.password }))
+            .unwrap()
+            .then(() => {
+                navigate('/');
+            })
+            .catch((err) => {
+                
+                if (Number(err.message) === 409) {
+                    setError(`${t('errors.signupUserUnique')}`);
+                } else {
+                    setError(err.response?.data?.message || err.message);
+                }
+            });
     };
     
 
@@ -73,7 +71,7 @@ const Signup = () => {
                     >
                         <Card.Body>
 
-                            <h1 className="text-center" style={{ marginBottom: '20px' }}>Регистрация</h1>
+                            <h1 className="text-center" style={{ marginBottom: '20px' }}>{t('login.signup')}</h1>
                             {status === 'failed' && error && <Alert variant="danger">{error}</Alert>}
                             <Formik
                                 validationSchema={validationSchema}
@@ -101,7 +99,7 @@ const Signup = () => {
                                                 name="username"
                                                 value={values.username}
                                                 onChange={handleChange}
-                                                placeholder="Имя пользователя"
+                                                placeholder={t('signup.username')}
                                                 isInvalid={!!errors.username}
                                                 style={{ height: '50px' }}
                                             />
@@ -123,7 +121,7 @@ const Signup = () => {
                                                 name="password"
                                                 value={values.password}
                                                 onChange={handleChange}
-                                                placeholder="Пароль"
+                                                placeholder={t('login.password')}
                                                 isInvalid={!!errors.password}
                                                 style={{ height: '50px' }}
                                             />
@@ -143,7 +141,7 @@ const Signup = () => {
                                                 value={values.confirmPassword}
                                                 type="password"
                                                 name="confirmPassword"
-                                                placeholder="Подтвердите пароль"
+                                                placeholder={t('signup.confirmPasswd')}
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.confirmPassword}
                                                 style={{ height: '50px' }}
@@ -163,7 +161,7 @@ const Signup = () => {
                                                 className="mt-4"
                                                 style={{ height: '50px' }}
                                             >
-                                                Зарегистрироваться
+                                                {t('signup.signup')}
                                             </Button>
                                         </div>
                                     </Form>
@@ -177,7 +175,7 @@ const Signup = () => {
                                     onClick={handleClickLogin}
                                     style={{ cursor: 'pointer' }}
                                 >
-                                    Вход
+                                    {t('signup.input')}
                                 </Card.Link>
                             </span>
                         </Card.Footer>

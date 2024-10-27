@@ -1,17 +1,25 @@
 import { Container, Button, Navbar } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthorized } from "../store/authSlice";
+import { useTranslation } from "react-i18next";
 
 
 const NavbarComponent = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isAuthorized = useSelector((state) => state.auth.isAuthorized);
-    // console.log(`isAuthorized= ${isAuthorized}`);
     const token = localStorage.getItem('token');
-    console.log(`token= ${token}`);
+    const { t } = useTranslation(); 
+
+    useEffect(() => {
+        if (token) {
+            dispatch(setAuthorized(true));
+        } else {
+            dispatch(setAuthorized(false));
+        }
+    }, [dispatch, token]);
 
     const handleLogout = () => {
         // Логика выхода из системы 
@@ -35,9 +43,9 @@ const NavbarComponent = () => {
                     onClick={handleBrandClick}
                     style={{ cursor: 'pointer' }}
                 >
-                    Hexlet Chat
+                    {t('navbar.logo')}
                 </Navbar.Brand>
-                {isAuthorized ? (<Button variant="primary" onClick={handleLogout}>Выйти</Button>) : null}
+                {isAuthorized ? (<Button variant="primary" onClick={handleLogout}>{t('navbar.logout')}</Button>) : null}
             </Container>
         </Navbar>
     );

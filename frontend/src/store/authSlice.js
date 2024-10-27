@@ -5,7 +5,6 @@ export const login = createAsyncThunk(
     'auth/login',
     async (data) => {
         const response = await axios.post('/api/v1/login', data);
-        console.log(response.data);
         return response.data;
         
 });
@@ -33,12 +32,15 @@ const authSlice = createSlice({
     initialState: {
         username: localStorage.getItem('username') || null,
         token: localStorage.getItem('token') || null,
-        isAuthorized: false,
+        isAuthorized: !!localStorage.getItem('token'),
+        status: 'idle',
+        error: null,
     },
     reducers: {
         setAuthorized: (state, action) => {
             state.isAuthorized = action.payload;
         },
+
     },
     extraReducers: (builder) => {
         builder
@@ -46,12 +48,11 @@ const authSlice = createSlice({
                 state.status = 'loading';
             })
             .addCase(login.fulfilled, (state, action) => {
-                //console.log(`action.payload= ${JSON.stringify(action.payload, null, 2)}`);
                 state.status = 'succeeded';
-                state.token = action.payload.token;
                 localStorage.setItem('token', action.payload.token);
-                state.username = action.payload.username;
+                state.token = action.payload.token;
                 localStorage.setItem('username', action.payload.username);
+                state.username = action.payload.username;
                 state.isAuthorized = true;
             })
             .addCase(login.rejected, (state, action) => {
@@ -72,7 +73,6 @@ const authSlice = createSlice({
             .addCase(signup.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message;
-                // console.log(state.error); // type string
             })
     },
 });

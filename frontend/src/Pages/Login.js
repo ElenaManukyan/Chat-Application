@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';  
+import React, { useState } from 'react';  
 import { useNavigate } from 'react-router-dom';
 import { login } from '../store/authSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
+import { useDispatch } from 'react-redux';
 import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { setAuthorized } from '../store/authSlice';
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
@@ -13,36 +13,26 @@ const LoginForm = () => {
     const [error, setError] = useState('');  
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
-    const isAuthorized = useSelector((state) => state.auth.isAuthorized);
-    //console.log(`isAuthorized= ${isAuthorized}`);
-    
-    useEffect(() => {
-        if (!isAuthorized) {
-            navigate('/login');
-        }
-    }, [dispatch, isAuthorized]);
+    const { t } = useTranslation();  
 
     const handleSubmit = async (e) => {  
-        e.preventDefault();   
-            dispatch(login({ username, password }))
-                .unwrap()
-                .then(() => {
-                    dispatch(setAuthorized(true));
-                    navigate('/');
-                })
-                .catch((err) => {
-                    //console.log(err);
-                    const status = err ? Number(err.message.slice(-3)) : null;
-                    //console.log(`status= ${status}`);
-                    switch (status) {
-                        case 401:
-                            setError('Проблема с авторизацией: неправильный логин/пароль');
-                            break;
-                        default:
-                            setError(err.response?.data?.message || err.message);
-                }})
-            
+        e.preventDefault();
+        dispatch(login({ username, password }))
+            .unwrap()
+            .then(() => {
+                dispatch(setAuthorized(true));
+                navigate('/');
+                
+            })
+            .catch((err) => {
+                const status = err ? Number(err.message.slice(-3)) : null;
+                switch (status) {
+                    case 401:
+                        setError(`${t('errors.loginAuthErr')}`);
+                        break;
+                    default:
+                        setError(err.response?.data?.message || err.message);
+            }});       
     };
     
     const handleSignupClick = () => {
@@ -59,7 +49,7 @@ const LoginForm = () => {
                     >
                         <Card.Body>
                             <div className="mb-2 mt-2">
-                                <h1 className="text-center" style={{ marginBottom: '20px' }}>Войти</h1>  
+                                <h1 className="text-center" style={{ marginBottom: '20px' }}>{t('login.enter')}</h1>  
                                 {error && <Alert variant="danger">{error}</Alert>}  
                                 <Form onSubmit={handleSubmit}>  
                                     <Form.Group 
@@ -71,7 +61,7 @@ const LoginForm = () => {
                                             value={username}  
                                             onChange={(e) => setUsername(e.target.value)}  
                                             required
-                                            placeholder="Ваш ник"
+                                            placeholder={t('login.yourNickname')}
                                             style={{ height: '50px' }} 
                                         />  
                                     </Form.Group>  
@@ -84,31 +74,28 @@ const LoginForm = () => {
                                             value={password}  
                                             onChange={(e) => setPassword(e.target.value)}  
                                             required
-                                            placeholder="Пароль"
+                                            placeholder={t('login.password')}
                                             style={{ height: '50px' }}
                                         />  
                                     </Form.Group>
-                                    <div className="d-grid">
-                                        <Button 
-                                            variant="primary" 
-                                            type="submit" 
-                                            className="mt-3"
-                                            style={{ height: '50px' }}
-                                        >  
-                                            Войти  
-                                        </Button>
-                                    </div> 
+                                    <Button 
+                                        variant="primary" 
+                                        type="submit"
+                                        style={{ height: '50px', width: '100%' }}
+                                    >  
+                                        {t('login.enter')}  
+                                    </Button>
                                 </Form>
                             </div>
                         </Card.Body>
                         <Card.Footer className="text-center">
-                             Нет аккаунта?
+                             {t('login.doYouHaveAccount')}
                                 <span style={{ marginLeft: '8px' }}>
                                     <Card.Link 
                                         onClick={handleSignupClick}
                                         style={{ cursor: 'pointer' }}
                                     >
-                                        Регистрация
+                                        {t('login.signup')}
                                     </Card.Link>
                                 </span>
                         </Card.Footer>

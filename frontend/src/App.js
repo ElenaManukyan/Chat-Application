@@ -1,4 +1,4 @@
-import React from 'react';  
+import React, { useEffect, useState } from 'react';  
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';  
 import Chat from './Pages/Chat';
 import Login from './Pages/Login';
@@ -6,13 +6,21 @@ import Home from './Pages/Home';
 import NotFound from './Pages/NotFound';
 import Signup from './Pages/Signup';
 import NavbarComponent from './DefaulltComponents/Navbar';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setAuthorized } from './store/authSlice';
 
 const App = () => {
-    const token = localStorage.getItem('token');
-    // console.log(`token= ${token}`);
+    const dispatch = useDispatch();
+    const token = useSelector((state) => state.auth.token);
 
-    
+    useEffect(() => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            dispatch(setAuthorized(true));
+        } else {
+            dispatch(setAuthorized(false));
+        }
+    }, [dispatch, token]);  
     
     return (  
         <Router>  
