@@ -11,7 +11,16 @@
             "confirmPasswdRequired": "Подтверждение пароля обязательно",
             "confirmPasswdConfirm": "Пароли должны совпадать"
         },
-        "error": "Ошибка"
+        "error": "Ошибка",
+        "authErr": "Ошибка авторизации",
+        "signupErr": "Ошибка регистрации",
+        "fetchMessagesErr": "Ошибка получения данных: список сообщений не получен",
+        "addMessageErr": "Ошибка добавления сообщения",
+        "removeMessageErr": "Ошибка удаления сообщения",
+        "addChannelErr": "Ошибка добавления канала",
+        "editChannelErr": "Ошибка в изменении имени канала",
+        "removeChannelErr": "Ошибка удаления канала",
+        "fetchChannelsErr": "Ошибка получения данных: список каналов недоступен"
     },
     "navbar": {
         "logo": "Hexlet Chat",

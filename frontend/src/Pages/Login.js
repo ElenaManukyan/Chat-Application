@@ -1,11 +1,12 @@
-import React, { useState } from 'react';  
+import React, { useState, useEffect } from 'react';  
 import { useNavigate } from 'react-router-dom';
-import { login } from '../store/authSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { setAuthorized } from '../store/authSlice';
+import { setAuthorized, login, clearAuthError } from '../store/authSlice';
 import { useTranslation } from 'react-i18next';
+import { showNotification } from '../DefaulltComponents/NotificationComponent';
+
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
@@ -13,7 +14,16 @@ const LoginForm = () => {
     const [error, setError] = useState('');  
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { t } = useTranslation();  
+    const { t } = useTranslation();
+    const authError = useSelector((state) => state.auth.error);
+
+    useEffect(() => {
+        if (authError) {
+            showNotification(`${authError}`, 'error');
+            dispatch(clearAuthError());
+        }
+    }, [authError, dispatch]);
+
 
     const handleSubmit = async (e) => {  
         e.preventDefault();
@@ -25,13 +35,14 @@ const LoginForm = () => {
                 
             })
             .catch((err) => {
-                const status = err ? Number(err.message.slice(-3)) : null;
+                console.log(err);
+                const status = err ? Number(err.slice(-3)) : null;
                 switch (status) {
                     case 401:
                         setError(`${t('errors.loginAuthErr')}`);
                         break;
                     default:
-                        setError(err.response?.data?.message || err.message);
+                        setError(err);
             }});       
     };
     

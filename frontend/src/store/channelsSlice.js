@@ -1,64 +1,85 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';  
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 
 export const addChannel = createAsyncThunk(
-    'channels/addChannel', 
-    async (newChannel) => {
-        const token = localStorage.getItem('token');
-        const response = await axios.post('/api/v1/channels', newChannel, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-        return response.data;  
-});
+  'channels/addChannel',
+  async (newChannel, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('/api/v1/channels', newChannel, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Ошибка добавления канала');
+    }
+
+  });
 
 export const editChannel = createAsyncThunk(
-  'channels/editChannel', 
-  async ({ id, editedChannel }) => {
+  'channels/editChannel',
+  async ({ id, editedChannel }, { rejectWithValue }) => {
+    try {
       const token = localStorage.getItem('token');
       const response = await axios.patch(`/api/v1/channels/${id}`, editedChannel, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-      return response.data;  
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Ошибка в изменении имени канала');
+    }
   }
 );
 
 
 export const removeChannel = createAsyncThunk(
-    'channels/removeChannel', 
-    async (id) => {
-        const token = localStorage.getItem('token');
-        const response = await axios.delete(`/api/v1/channels/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-        });
-        return response.data.id;  
-});
+  'channels/removeChannel',
+  async (id, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.delete(`/api/v1/channels/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data.id;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Ошибка удаления канала');
+    }
+
+  });
 
 export const fetchChannels = createAsyncThunk(
   'chat/fetchChannels',
-  async () => {
+  async (_, { rejectWithValue }) => {
+    try {
       const token = localStorage.getItem('token');
       const response = await axios.get('/api/v1/channels', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return response.data;
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message || 'Ошибка получения данных: список каналов недоступен');
+    }
+
   },
 );
 
-const channelsSlice = createSlice({  
-  name: 'channels',  
-  initialState: {  
+const channelsSlice = createSlice({
+  name: 'channels',
+  initialState: {
     channels: [],
     currentChannelId: 1,
-  },  
+    status: 'idle',
+    error: null,
+  },
   reducers: {
     /*
     setCurrentChannelId: (state, action) => {
@@ -66,40 +87,68 @@ const channelsSlice = createSlice({
       state.currentChannelId = action.payload;
     },
     */
+    clearChannelError(state) {
+      state.error = null;
+    },
   },
-  extraReducers: (builder) => {  
-    builder  
-        .addCase(addChannel.fulfilled, (state, action) => {  
-            state.channels.push(action.payload);  
-        })
-        .addCase(editChannel.fulfilled, (state, action) => {
-          const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
-          if (index >= 0) {
-              state.channels[index] = action.payload; // Обновление существующего канала
-          }
+  extraReducers: (builder) => {
+    builder
+      .addCase(addChannel.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(addChannel.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.channels.push(action.payload);
+      })
+      .addCase(addChannel.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(editChannel.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(editChannel.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
+        if (index >= 0) {
+          state.channels[index] = action.payload; // Обновление существующего канала
+        }
+      })
+      .addCase(editChannel.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(removeChannel.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
       })
       .addCase(removeChannel.fulfilled, (state, action) => {
-          //console.log(`channelsSlice removeChannel action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-          //console.log(`removeChannel.fulfilled action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-          const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload));
-          if (index >= 0) {
-              state.channels.splice(index, 1);
-          }
+        state.status = 'succeeded';
+        const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload));
+        if (index >= 0) {
+          state.channels.splice(index, 1);
+        }
+      })
+      .addCase(removeChannel.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
       })
       .addCase(fetchChannels.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
-          state.status = 'succeeded';
-          //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-          state.channels = action.payload;
+        state.status = 'succeeded';
+        state.channels = action.payload;
       })
       .addCase(fetchChannels.rejected, (state, action) => {
-          state.status = 'failed';
-          state.error = action.error.message;
+        state.status = 'failed';
+        state.error = action.payload;
       })
-  },  
-});  
+  },
+});
 
-export const { setCurrentChannelId } = channelsSlice.actions;
+export const { clearChannelError } = channelsSlice.actions;
 export default channelsSlice.reducer;

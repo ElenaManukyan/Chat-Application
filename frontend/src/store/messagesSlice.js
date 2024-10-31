@@ -1,45 +1,58 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
 
+
 export const fetchMessages = createAsyncThunk(
     'chat/fetchMessages',
-    async () => {
-        const token = localStorage.getItem('token');
-        // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
-        const response = await axios.get('/api/v1/messages', {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          //console.log(response.data); // =>[{ id: '1', body: 'text message', channelId: '1', username: 'admin }, ...]
-          return response.data;
+    async (_, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get('/api/v1/messages', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message || 'Ошибка получения данных: список сообщений не получен');
+        }
     },
 );
 
 export const addMessage = createAsyncThunk(
     'chat/addMessage',
-    async (newMessage) => {
-        const token = localStorage.getItem('token');
-        // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
-        const response = await axios.post('/api/v1/messages', newMessage, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          return response.data;
+    async (newMessage, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
+            const response = await axios.post('/api/v1/messages', newMessage, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message || 'Ошибка добавления сообщения');
+        }
+
     },
 );
 
 export const removeMessage = createAsyncThunk(
     'chat/removeMessage',
-    async (id) => {
-        const token = localStorage.getItem('token');
-        const response = await axios.delete(`/api/v1/messages/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          return response.data;
+    async (id, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.delete(`/api/v1/messages/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data;
+        } catch (error) {
+            return rejectWithValue(error.message || 'Ошибка удаления сообщения');
+        }
+        
     },
 );
 
@@ -54,54 +67,55 @@ const chatSlice = createSlice({
         addMessageReducers(state, action) {
             state.messages.push(action.payload);
         },
+        clearMessageError(state) {
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchMessages.pending, (state) => {
                 state.status = 'loading';
+                state.error = null;
             })
             .addCase(fetchMessages.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
                 state.messages = action.payload;
             })
             .addCase(fetchMessages.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload;
             })
             .addCase(addMessage.pending, (state) => {
                 state.status = 'loading';
+                state.error = null;
             })
             .addCase(addMessage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                //console.log(`chatSlice action.payload= ${JSON.stringify(action.payload, null, 2)}`);
                 state.messages.push(action.payload);
             })
             .addCase(addMessage.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload;
             })
             .addCase(removeMessage.pending, (state) => {
                 state.status = 'loading';
+                state.error = null;
             })
             .addCase(removeMessage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                //console.log(`messagesSlice removeMessage action.payload= ${JSON.stringify(action.payload, null, 2)}`);
-                
                 const index = state.messages.findIndex((message) => Number(message.id) === Number(action.payload.id));
-                //console.log(`messagesSlice removeMessage index= ${index}`);
                 if (index >= 0) {
                     state.messages.splice(index, 1);
                 }
-                
+
             })
             .addCase(removeMessage.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.error = action.payload;
             })
     },
 });
 
-export const { addMessageReducers } = chatSlice.actions;
+export const { addMessageReducers, clearMessageError } = chatSlice.actions;
 
 export default chatSlice.reducer;

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signup } from '../store/authSlice';
+import { signup, clearAuthError } from '../store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
@@ -13,6 +13,7 @@ const Signup = () => {
 
     const { Formik } = formik;
     const { t } = useTranslation();
+    
 
     const validationSchema = yup.object().shape({
         username: yup
@@ -36,6 +37,15 @@ const Signup = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const status = useSelector((state) => state.auth.status);
+    const signupError = useSelector((state) => state.auth.error);
+    
+
+    useEffect(() => {
+        if (signupError) {
+            showNotification(`${signupError}`, 'error');
+            dispatch(clearAuthError());
+        }
+    }, [signupError, dispatch]);
     
 
     
@@ -47,11 +57,11 @@ const Signup = () => {
                 navigate('/');
             })
             .catch((err) => {
-                
-                if (Number(err.message) === 409) {
+                //console.log(err);
+                if (Number(err.slice(-3)) === 409) {
                     setError(`${t('errors.signupUserUnique')}`);
                 } else {
-                    setError(err.response?.data?.message || err.message);
+                    setError(err);
                 }
             });
     };

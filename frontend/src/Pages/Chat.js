@@ -1,24 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, fetchMessages, removeMessage } from '../store/messagesSlice';
-import { fetchChannels } from '../store/channelsSlice';
-// import { setCurrentChannelId } from './store/channelsSlice';
 import AddChannelForm from './AddNewChanel';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, Navbar } from 'react-bootstrap';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import './Chat.css';
-import { addChannel, removeChannel, editChannel } from '../store/channelsSlice';
+import { addChannel, removeChannel, editChannel, fetchChannels } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
 import socket from '../index';
 // import { io } from 'socket.io-client';
-import { setAuthorized } from '../store/authSlice';
 import { useTranslation } from 'react-i18next';
+import { clearMessageError } from '../store/messagesSlice';
+import { clearChannelError } from '../store/channelsSlice';
 
 
 const Chat = () => {
@@ -38,6 +34,23 @@ const Chat = () => {
     const error = useSelector((state) => state.messages.error);
     const inputRef = useRef(null);
     const { t } = useTranslation();
+    const messageError = useSelector((state) => state.messages.error);
+    const channelError = useSelector((state) => state.channels.error);
+
+    useEffect(() => {
+        if (messageError) {
+            showNotification(`${messageError}`, 'error');
+            dispatch(clearMessageError());
+        }
+    }, [messageError, dispatch]);
+
+    useEffect(() => {
+        if (channelError) {
+            showNotification(`${channelError}`, 'error');
+            dispatch(clearChannelError());
+        }
+    }, [channelError, dispatch]);
+
      
     useEffect(() => {
         dispatch(fetchChannels());
