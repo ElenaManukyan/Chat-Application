@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+import i18next from 'i18next';
 
 export const addChannel = createAsyncThunk(
   'channels/addChannel',
@@ -14,7 +14,7 @@ export const addChannel = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Ошибка добавления канала');
+      return rejectWithValue(error.message || i18next.t('errors.addChannelErr'));
     }
 
   });
@@ -31,7 +31,7 @@ export const editChannel = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Ошибка в изменении имени канала');
+      return rejectWithValue(error.message || i18next.t('errors.editChannelErr'));
     }
   }
 );
@@ -49,7 +49,7 @@ export const removeChannel = createAsyncThunk(
       });
       return response.data.id;
     } catch (error) {
-      return rejectWithValue(error.message || 'Ошибка удаления канала');
+      return rejectWithValue(error.message || i18next.t('errors.removeChannelErr'));
     }
 
   });
@@ -66,7 +66,7 @@ export const fetchChannels = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || 'Ошибка получения данных: список каналов недоступен');
+      return rejectWithValue(error.message || i18next.t('errors.fetchChannelsErr'));
     }
 
   },

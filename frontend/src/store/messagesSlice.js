@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from 'axios';
-
+import i18next from "i18next";
 
 export const fetchMessages = createAsyncThunk(
     'chat/fetchMessages',
@@ -14,7 +14,7 @@ export const fetchMessages = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message || 'Ошибка получения данных: список сообщений не получен');
+            return rejectWithValue(error.message || i18next.t('errors.fetchMessagesErr'));
         }
     },
 );
@@ -32,7 +32,7 @@ export const addMessage = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message || 'Ошибка добавления сообщения');
+            return rejectWithValue(error.message || i18next.t('errors.addMessageErr'));
         }
 
     },
@@ -50,7 +50,7 @@ export const removeMessage = createAsyncThunk(
             });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message || 'Ошибка удаления сообщения');
+            return rejectWithValue(error.message || i18next.t('errors.removeMessageErr'));
         }
         
     },

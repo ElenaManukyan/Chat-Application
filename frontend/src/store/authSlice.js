@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import i18next from 'i18next';
 
 export const login = createAsyncThunk(
     'auth/login',
@@ -8,7 +9,7 @@ export const login = createAsyncThunk(
             const response = await axios.post('/api/v1/login', data);
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message || 'Ошибка авторизации');
+            return rejectWithValue(error.message || i18next.t('errors.authErr'));
         }
     });
 
@@ -19,16 +20,7 @@ export const signup = createAsyncThunk(
             const response = await axios.post('/api/v1/signup', { username, password });
             return response.data;
         } catch (error) {
-            return rejectWithValue(error.message || 'Ошибка регистрации');
-            /*
-            console.log(error);
-            if (error.response) {
-                throw new Error(error.response.data.statusCode || 'Ошибка при регистрации');
-            } else {
-                // Ошибка при настройке запроса
-                throw new Error('Ошибка сети');
-            }
-            */
+            return rejectWithValue(error.message || i18next.t('errors.signupErr'));
         }
     });
 
