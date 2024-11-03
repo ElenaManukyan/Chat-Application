@@ -5,6 +5,7 @@
   "proxy": "http://127.0.0.1:5001",
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.5",
+    "@rollbar/react": "^0.12.0-beta",
     "axios": "^0.27.2",
     "bootstrap": "^5.3.3",
     "eslint": "^8.23.0",
