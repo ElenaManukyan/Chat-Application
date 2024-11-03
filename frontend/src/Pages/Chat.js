@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
 import { clearChannelError } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
-import rollbar from '../../rollbar';
+import rollbar from '../rollbar';
 
 const Chat = () => {
 

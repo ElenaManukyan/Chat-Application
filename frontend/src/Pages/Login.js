@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { setAuthorized, login, clearAuthError } from '../store/authSlice';
 import { useTranslation } from 'react-i18next';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
-import rollbar from '../../rollbar';
+import rollbar from '../rollbar';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
