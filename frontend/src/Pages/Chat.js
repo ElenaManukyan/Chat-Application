@@ -18,6 +18,8 @@ import { clearChannelError } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
 import rollbar from '../rollbar';
 
+// Как в компоненте обрабатывать ошибки через RollBar?
+
 const Chat = () => {
 
     const dispatch = useDispatch();

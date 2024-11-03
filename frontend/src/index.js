@@ -29,10 +29,13 @@ const rollbarConfig = {
   environment: 'testenv',
 };
 
+// Эта функция генерирует ошибку для проверки сервиса Rollbar
+/*
 function TestError() {
   const a = null;
   return a.hello();
 }
+  */
 
 const init = () => {
   
@@ -48,7 +51,7 @@ root.render(
       <I18nextProvider i18n={i18n}>
         <RollbarProvider config={rollbarConfig}>
           <ErrorBoundary>
-            <TestError />
+            {/*<TestError />*/}
             <Notification />
             <App />
           </ErrorBoundary>
