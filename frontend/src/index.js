@@ -11,7 +11,8 @@ import { io } from 'socket.io-client';
 import './i18n'
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
-import rollbarConfig from './rollbar';
+//import { Provider, ErrorBoundary } from '@rollbar/react'; // Provider imports 'rollbar'
+// import rollbarConfig from './rollbar';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 //import Rollbar from 'rollbar';
 
@@ -22,6 +23,16 @@ function TestError() {
   throw new Error('Test Error!');
 }
   */
+
+const rollbarConfig = {
+  accessToken: '5c1bb74732e54c9a9054a8c03f8aaa96',
+  environment: 'testenv',
+};
+
+function TestError() {
+  const a = null;
+  return a.hello();
+}
 
 const init = () => {
   
@@ -37,6 +48,7 @@ root.render(
       <I18nextProvider i18n={i18n}>
         <RollbarProvider config={rollbarConfig}>
           <ErrorBoundary>
+            <TestError />
             <Notification />
             <App />
           </ErrorBoundary>
@@ -47,12 +59,12 @@ root.render(
 );
 };
 
-
+/*
 // Глобальный обработчик ошибок
 window.onerror = function (message, source, lineno, colno, error) {
   rollbar.error(message, { source, lineno, colno, error });
 };
-
+*/
 
 init();
 
