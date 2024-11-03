@@ -18,8 +18,7 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 const socket = io();
 
 function TestError() {
-  const a = null;
-  return a.hello();
+  throw new Error('Test Error!');
 }
 
 const init = () => {
