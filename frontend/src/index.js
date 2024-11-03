@@ -17,9 +17,11 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 
 const socket = io();
 
+/*
 function TestError() {
   throw new Error('Test Error!');
 }
+  */
 
 const init = () => {
   
@@ -37,7 +39,6 @@ root.render(
           <ErrorBoundary>
             <Notification />
             <App />
-            <TestError />
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
@@ -46,12 +47,12 @@ root.render(
 );
 };
 
-/*
+
 // Глобальный обработчик ошибок
 window.onerror = function (message, source, lineno, colno, error) {
   rollbar.error(message, { source, lineno, colno, error });
 };
-*/
+
 
 init();
 
