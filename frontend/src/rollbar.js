@@ -1,7 +1,7 @@
 import Rollbar from "rollbar";
 
 const rollbarConfig = new Rollbar({
-    accessToken: '73803d993060485290c35ad93831d8a0',
+    accessToken: 'dd1711e68e6442f9a86a4a62f1bc3145',
     environment: 'testenv',
     captureUncaught: true,
     captureUnhandledRejections: true,
