@@ -15,7 +15,7 @@ import socket from '../index';
 import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
 import { clearChannelError } from '../store/channelsSlice';
-
+import leoProfanity from 'leo-profanity';
 
 const Chat = () => {
 
@@ -71,8 +71,15 @@ const Chat = () => {
         if (!newMessage.trim()) {
             return;
         }
+
+        leoProfanity.loadDictionary('ru');
+        let cleanMessage = leoProfanity.clean(newMessage);
+        leoProfanity.loadDictionary('en');
+        cleanMessage = leoProfanity.clean(cleanMessage);
+
+        
         const message = {
-            body: newMessage,
+            body: cleanMessage,
             channelId: currentChannelId,
             username: username,
         };
@@ -107,7 +114,14 @@ const Chat = () => {
 
     const handleAddChannel = async (channelName) => {
         try {
-            const newChannel = { name: channelName };
+
+            leoProfanity.loadDictionary('ru');
+            let cleanChannelName = leoProfanity.clean(channelName);
+            leoProfanity.loadDictionary('en');
+            cleanChannelName = leoProfanity.clean(cleanChannelName);
+
+            // const cleanChannelName = leoProfanity.clean(channelName);
+            const newChannel = { name: cleanChannelName };
             const resultAction = await dispatch(addChannel(newChannel));
             if (addChannel.fulfilled.match(resultAction)) {
                 showNotification(`${t('chat.channels.channelCreate')}`, 'success');
