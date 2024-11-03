@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { setAuthorized, login, clearAuthError } from '../store/authSlice';
 import { useTranslation } from 'react-i18next';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
-
+import rollbar from '../../rollbar';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
@@ -35,6 +35,7 @@ const LoginForm = () => {
                 
             })
             .catch((err) => {
+                rollbar.error('Ошибка при авторизации:', error);
                 console.log(err);
                 const status = err ? Number(err.slice(-3)) : null;
                 switch (status) {

@@ -4,9 +4,8 @@
   "description": "[![Actions Status](https://github.com/ElenaManukyan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ElenaManukyan/frontend-project-12/actions) ### Link to website: [https://frontend-project-12-yffa.onrender.com](https://frontend-project-12-yffa.onrender.com)",
   "main": "index.js",
   "scripts": {
-    "build": "npm run build --prefix frontend",
     "start": "start-server -s ./frontend/build",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build --prefix frontend",
     "postinstall": "cd frontend && npm ci"
   },
   "author": "",

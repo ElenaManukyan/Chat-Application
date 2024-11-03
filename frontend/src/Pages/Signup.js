@@ -8,6 +8,7 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useTranslation } from 'react-i18next';
+import rollbar from '../../rollbar';
 
 const Signup = () => {
 
@@ -57,6 +58,7 @@ const Signup = () => {
                 navigate('/');
             })
             .catch((err) => {
+                rollbar.error('Ошибка при регистрации:', error);
                 //console.log(err);
                 if (Number(err.slice(-3)) === 409) {
                     setError(`${t('errors.signupUserUnique')}`);

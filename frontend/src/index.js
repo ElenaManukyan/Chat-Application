@@ -11,8 +11,7 @@ import { io } from 'socket.io-client';
 import './i18n'
 import i18n from './i18n';
 import { I18nextProvider } from 'react-i18next';
-
-
+import rollbar from '../rollbar';
 
 const socket = io();
 
@@ -34,7 +33,11 @@ root.render(
     </Provider>
   </React.StrictMode>
 );
+};
 
+// Глобальный обработчик ошибок
+window.onerror = function (message, source, lineno, colno, error) {
+  rollbar.error(message, { source, lineno, colno, error });
 };
 
 init();
