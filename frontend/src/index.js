@@ -17,6 +17,11 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 
 const socket = io();
 
+function TestError() {
+  const a = null;
+  return a.hello();
+}
+
 const init = () => {
   
   socket.on('newMessage', (payload) => {
@@ -33,6 +38,7 @@ root.render(
           <ErrorBoundary>
             <Notification />
             <App />
+            <TestError />
           </ErrorBoundary>
         </RollbarProvider>
       </I18nextProvider>
