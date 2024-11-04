@@ -31,7 +31,7 @@ function TestError() {
 }
 */
 
-/*
+
 const InitComponent = () => {
   const dispatch = useDispatch();
   
@@ -41,13 +41,12 @@ const InitComponent = () => {
       console.log(`payload in socket.on in init func= ${JSON.stringify(payload, null, 2)}`);
       
       // Добавляю полученнное через сокет сообщение в стор ( dispatch )
-      dispatch(addMessage(payload));
+      // dispatch(addMessage(payload));
     });
   }, [dispatch]);
 
   return null;
 };
-*/
 
 const init = () => {
   

@@ -93,9 +93,10 @@ const Chat = () => {
         //io.on("connection", (socket) => {
             //socket.emit('newMessage', message);
         //});
-        //dispatch(addMessage(message));
+        
+        dispatch(addMessage(message));
 
-        socket.emit('newMessage', message);
+        // socket.emit('newMessage', message);
 
         setNewMessage('');
     };
