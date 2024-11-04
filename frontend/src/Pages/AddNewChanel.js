@@ -3,12 +3,11 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
-
+import { useRollbar } from '@rollbar/react';
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
-  //console.log(`currChannelId in AddChannelForm= ${currChannelId}`);
-  // console.log(`existingChannels in AddChannelForm= ${JSON.stringify(existingChannels, null, 2)}`);
+  const rollbar = useRollbar();
 
   const validationSchema = yup.object().shape({
     name: yup
@@ -37,13 +36,14 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
       <Formik  
           initialValues={{ name: '' }}  
           validationSchema={validationSchema}  
-          onSubmit={(values, { resetForm }) => {  
-            onSubmit(values.name); 
-
-            resetForm();  
-            
-            onClose();
-             
+          onSubmit={async (values, { resetForm }) => {
+            try {
+              await onSubmit(values.name); // Тут onSubmit должен возвращать промис
+              resetForm();       
+              onClose();
+            } catch (error) {
+              rollbar.error('Ошибка при добавлении канала:', error);
+            }      
           }}  
         >
           {({ errors, touched }) => (

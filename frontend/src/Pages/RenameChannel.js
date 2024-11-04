@@ -2,12 +2,14 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';  
 import Modal from 'react-bootstrap/Modal';  
 import React, { useEffect, useRef, useState } from 'react';  
-import * as yup from 'yup';  
+import * as yup from 'yup';
+import { useRollbar } from '@rollbar/react';
 
 const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, existingChannels }) => {  
     const [newChannelName, setNewChannelName] = useState(currChannelName || '');  
     const [errors, setErrors] = useState({});  
-    const inputRef = useRef(null);  
+    const inputRef = useRef(null);
+    const rollbar = useRollbar();
 
     const validationSchema = yup.object().shape({  
         name: yup  
@@ -32,14 +34,13 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
 
     const handleSubmit = async (e) => {  
         e.preventDefault();  
-
         setErrors({});  
-
         try { 
             await validationSchema.validate({ name: newChannelName });  
             onRename(channelId, { name: newChannelName });  
             onClose();  
-        } catch (err) {  
+        } catch (err) {
+            rollbar.error('Ошибка при переименовании канала', err);
             setErrors({ name: err.message });  
         }  
     };  

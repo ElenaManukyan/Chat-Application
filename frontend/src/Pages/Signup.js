@@ -8,13 +8,15 @@ import * as formik from 'formik';
 import * as yup from 'yup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useTranslation } from 'react-i18next';
-import rollbar from '../rollbar';
+//import rollbar from '../rollbar';
+import { useRollbar } from '@rollbar/react';
+import { showNotification } from '../DefaulltComponents/NotificationComponent';
 
 const Signup = () => {
 
     const { Formik } = formik;
     const { t } = useTranslation();
-    
+    const rollbar = useRollbar();
 
     const validationSchema = yup.object().shape({
         username: yup

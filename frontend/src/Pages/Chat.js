@@ -16,7 +16,8 @@ import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
 import { clearChannelError } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
-import rollbar from '../rollbar';
+// import rollbar from '../rollbar';
+import { useRollbar } from '@rollbar/react';
 
 // Как в компоненте обрабатывать ошибки через RollBar?
 
@@ -39,6 +40,7 @@ const Chat = () => {
     const { t } = useTranslation();
     const messageError = useSelector((state) => state.messages.error);
     const channelError = useSelector((state) => state.channels.error);
+    const rollbar = useRollbar();
 
     useEffect(() => {
         if (messageError) {
@@ -132,7 +134,14 @@ const Chat = () => {
             } else {
                 showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
             }
+            /*
+            if (addChannel.rejected.match(resultAction)) {
+                console.log('Error!!');
+                rollbar.error('Error during channel addition:', `${t('chat.channels.channelNotCreate')}`);
+            }
+                */
         } catch (error) {
+
             rollbar.error('Error during channel addition:', error);
             console.error('Error during channel addition:', error);
         }
@@ -151,11 +160,16 @@ const Chat = () => {
     };
     
     const handleDeleteChannel = (channelId) => {
-        const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
-        toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
-        dispatch(removeChannel(channelId));
-        showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
-        handleChannelClick(1);
+        try {
+            const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
+            toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
+            dispatch(removeChannel(channelId));
+            showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
+            handleChannelClick(1);
+        } catch (error) {
+            rollbar.error('Ошибка при удалении канала:', error);
+        }
+        
     }; 
 
     const handleOpenRemoveModal = (channelId) => { 

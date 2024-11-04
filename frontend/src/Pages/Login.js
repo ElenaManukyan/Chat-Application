@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { setAuthorized, login, clearAuthError } from '../store/authSlice';
 import { useTranslation } from 'react-i18next';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
-import rollbar from '../rollbar';
+// import rollbar from '../rollbar';
+import { useRollbar } from '@rollbar/react';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
@@ -16,18 +17,23 @@ const LoginForm = () => {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const authError = useSelector((state) => state.auth.error);
+    const rollbar = useRollbar();
 
     useEffect(() => {
         if (authError) {
-            showNotification(`${authError}`, 'error');
-            dispatch(clearAuthError());
+            try {
+                showNotification(authError, 'error');
+                dispatch(clearAuthError());
+            } catch (authError) {
+                rollbar.error('Clear authentification error', authError);
+            }
         }
     }, [authError, dispatch]);
 
 
     const handleSubmit = async (e) => {  
         e.preventDefault();
-        dispatch(login({ username, password }))
+        await dispatch(login({ username, password }))
             .unwrap()
             .then(() => {
                 dispatch(setAuthorized(true));
@@ -35,7 +41,7 @@ const LoginForm = () => {
                 
             })
             .catch((err) => {
-                rollbar.error('Ошибка при авторизации:', error);
+                rollbar.error('Ошибка при авторизации:', `${t('errors.loginAuthErr')}`);
                 console.log(err);
                 const status = err ? Number(err.slice(-3)) : null;
                 switch (status) {
@@ -43,7 +49,7 @@ const LoginForm = () => {
                         setError(`${t('errors.loginAuthErr')}`);
                         break;
                     default:
-                        setError(err);
+                        setError(`${t('errors.loginAuthErr')}`);
             }});       
     };
     
