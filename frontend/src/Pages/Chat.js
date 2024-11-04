@@ -96,6 +96,12 @@ const Chat = () => {
         
         dispatch(addMessage(message));
 
+        socket.on('newMessage', (message) => {
+            console.log('Новое сообщение:', message);
+            // Здесь можно обновить пользовательский интерфейс для отображения нового сообщения
+            
+        });
+
         // socket.emit('newMessage', message);
 
         setNewMessage('');
