@@ -10,13 +10,14 @@ import { addChannel, removeChannel, editChannel, fetchChannels } from '../store/
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
-import socket from '../index';
+//import socket from '../index';
 // import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
 import { clearChannelError } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
 // import rollbar from '../rollbar';
+import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
 
 // Как в компоненте обрабатывать ошибки через RollBar?
@@ -71,7 +72,7 @@ const Chat = () => {
         }
     }, []);
 
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         // HERE!!!
         if (!newMessage.trim()) {
             return;
@@ -88,23 +89,44 @@ const Chat = () => {
             channelId: currentChannelId,
             username: username,
         };
+
+        // await axios.post('/api/v1/messages', message);
+
+        try {
+            const token = localStorage.getItem('token');
+            // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
+            await axios.post('/api/v1/messages', message, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setNewMessage('');
+        } catch (error) {
+            // return rejectWithValue(error.message || i18next.t('errors.addMessageErr'));
+            rollbar.error('Error during message addition:', error);
+            console.error('Error during message addition:', error);
+        }
+
+
+        
+
         //console.log(`message in handleSendMessage= ${JSON.stringify(message, null, 2)}`);
 
         //io.on("connection", (socket) => {
             //socket.emit('newMessage', message);
         //});
         
-        dispatch(addMessage(message));
+        //dispatch(addMessage(message));
 
+        /*
         socket.on('newMessage', (message) => {
             console.log('Новое сообщение:', message);
             // Здесь можно обновить пользовательский интерфейс для отображения нового сообщения
             
         });
+        */
 
         // socket.emit('newMessage', message);
-
-        setNewMessage('');
     };
 
     const handleChannelClick = (id) => {

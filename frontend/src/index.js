@@ -31,7 +31,7 @@ function TestError() {
 }
 */
 
-
+/*
 const InitComponent = () => {
   const dispatch = useDispatch();
   
@@ -47,15 +47,17 @@ const InitComponent = () => {
 
   return null;
 };
+*/
 
 const init = () => {
   
-  /*
+  
   socket.on('newMessage', (payload) => {
-    //console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
-    // store.dispatch(addMessage(payload));
+    console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
+    // Если раскомментировать - то зацикливается отправка сообщения
+    // store.dispatch(addMessage(payload)); 
   });
-  */
+  
 
   /*
   const dispatch = useDispatch();
@@ -81,7 +83,7 @@ const init = () => {
             <ErrorBoundary>
               {/*<TestError />*/}
               <Notification />
-              <InitComponent />
+              {/*<InitComponent />*/}
               <App />
             </ErrorBoundary>
           </RollbarProvider>
@@ -105,4 +107,4 @@ init();
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-export default socket;
+//export default socket;
