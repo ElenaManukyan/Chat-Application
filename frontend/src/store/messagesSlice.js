@@ -64,7 +64,7 @@ const chatSlice = createSlice({
         error: null,
     },
     reducers: {
-        addMessageReducers(state, action) {
+        addMessageToStore(state, action) {
             state.messages.push(action.payload);
         },
         clearMessageError(state) {
@@ -91,7 +91,7 @@ const chatSlice = createSlice({
             })
             .addCase(addMessage.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.messages.push(action.payload);
+                // state.messages.push(action.payload);
             })
             .addCase(addMessage.rejected, (state, action) => {
                 state.status = 'failed';
@@ -116,6 +116,6 @@ const chatSlice = createSlice({
     },
 });
 
-export const { addMessageReducers, clearMessageError } = chatSlice.actions;
+export const { addMessageToStore, clearMessageError } = chatSlice.actions;
 
 export default chatSlice.reducer;

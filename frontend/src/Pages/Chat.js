@@ -90,8 +90,12 @@ const Chat = () => {
             username: username,
         };
 
+        await dispatch(addMessage(message));
+        setNewMessage('');
+
         // await axios.post('/api/v1/messages', message);
 
+        /*
         try {
             const token = localStorage.getItem('token');
             // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
@@ -106,9 +110,7 @@ const Chat = () => {
             rollbar.error('Error during message addition:', error);
             console.error('Error during message addition:', error);
         }
-
-
-        
+            */
 
         //console.log(`message in handleSendMessage= ${JSON.stringify(message, null, 2)}`);
 

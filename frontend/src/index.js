@@ -14,6 +14,7 @@ import { I18nextProvider } from 'react-i18next';
 import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 //import Rollbar from 'rollbar';
 import { addMessage } from './store/messagesSlice';
+import { addMessageToStore } from './store/messagesSlice';
 
 
 const socket = io();
@@ -56,6 +57,7 @@ const init = () => {
     console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
     // Если раскомментировать - то зацикливается отправка сообщения
     // store.dispatch(addMessage(payload)); 
+    store.dispatch(addMessageToStore(payload));
   });
   
 
