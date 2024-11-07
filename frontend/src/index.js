@@ -15,6 +15,9 @@ import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
 //import Rollbar from 'rollbar';
 import { addMessage } from './store/messagesSlice';
 import { addMessageToStore } from './store/messagesSlice';
+import { addChannelToStore } from './store/channelsSlice';
+import { removeChannelFromStore } from './store/channelsSlice';
+import { renameChannelFromStore } from './store/channelsSlice';
 
 
 const socket = io();
@@ -24,57 +27,31 @@ const rollbarConfig = {
   environment: 'testenv',
 };
 
-// Эта функция генерирует ошибку для проверки сервиса Rollbar
-/*
-function TestError() {
-  const a = null;
-  return a.hello();
-}
-*/
-
-/*
-const InitComponent = () => {
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    // Подписываюсь 1 раз на новые сообщения
-    socket.on('newMessage', (payload) => {
-      console.log(`payload in socket.on in init func= ${JSON.stringify(payload, null, 2)}`);
-      
-      // Добавляю полученнное через сокет сообщение в стор ( dispatch )
-      // dispatch(addMessage(payload));
-    });
-  }, [dispatch]);
-
-  return null;
-};
-*/
-
 const init = () => {
-  
-  
+
+  // subscribe new messages
   socket.on('newMessage', (payload) => {
-    console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
-    // Если раскомментировать - то зацикливается отправка сообщения
-    // store.dispatch(addMessage(payload)); 
+    // console.log(`payload in socket.on in init function= ${JSON.stringify(payload, null, 2)}`);
     store.dispatch(addMessageToStore(payload));
   });
-  
 
-  /*
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    // Подписываюсь 1 раз на новые сообщения
-    socket.on('newMessage', (payload) => {
-      console.log(`payload in socket.on in init func= ${JSON.stringify(payload, null, 2)}`);
-      
-      // Добавляю полученнное через сокет сообщение в стор ( dispatch )
-      dispatch(addMessage(payload));
-    });
-  }, [dispatch]);
-  */
+  // subscribe new channel
+  socket.on('newChannel', (payload) => {
+    // console.log(payload) // { id: 6, name: "new channel", removable: true }
+    store.dispatch(addChannelToStore(payload));
+  });
 
+  // subscribe remove channel
+  socket.on('removeChannel', (payload) => {
+    // console.log(payload); // { id: 6 };
+    store.dispatch(removeChannelFromStore(payload));
+  });
+
+  // subscribe rename channel
+  socket.on('renameChannel', (payload) => {
+    console.log(payload); // { id: 7, name: "new name channel", removable: true }
+    store.dispatch(renameChannelFromStore(payload));
+  });
 
   const root = ReactDOM.createRoot(document.getElementById('root'));
   root.render(
@@ -95,18 +72,9 @@ const init = () => {
   );
 };
 
-/*
-// Глобальный обработчик ошибок
-window.onerror = function (message, source, lineno, colno, error) {
-  rollbar.error(message, { source, lineno, colno, error });
-};
-*/
-
 init();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
-
-//export default socket;

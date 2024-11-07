@@ -20,6 +20,7 @@ import leoProfanity from 'leo-profanity';
 import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
 
+
 // Как в компоненте обрабатывать ошибки через RollBar?
 
 const Chat = () => {
@@ -92,43 +93,6 @@ const Chat = () => {
 
         await dispatch(addMessage(message));
         setNewMessage('');
-
-        // await axios.post('/api/v1/messages', message);
-
-        /*
-        try {
-            const token = localStorage.getItem('token');
-            // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
-            await axios.post('/api/v1/messages', message, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setNewMessage('');
-        } catch (error) {
-            // return rejectWithValue(error.message || i18next.t('errors.addMessageErr'));
-            rollbar.error('Error during message addition:', error);
-            console.error('Error during message addition:', error);
-        }
-            */
-
-        //console.log(`message in handleSendMessage= ${JSON.stringify(message, null, 2)}`);
-
-        //io.on("connection", (socket) => {
-            //socket.emit('newMessage', message);
-        //});
-        
-        //dispatch(addMessage(message));
-
-        /*
-        socket.on('newMessage', (message) => {
-            console.log('Новое сообщение:', message);
-            // Здесь можно обновить пользовательский интерфейс для отображения нового сообщения
-            
-        });
-        */
-
-        // socket.emit('newMessage', message);
     };
 
     const handleChannelClick = (id) => {
@@ -159,7 +123,6 @@ const Chat = () => {
             leoProfanity.loadDictionary('en');
             cleanChannelName = leoProfanity.clean(cleanChannelName);
 
-            // const cleanChannelName = leoProfanity.clean(channelName);
             const newChannel = { name: cleanChannelName };
             const resultAction = await dispatch(addChannel(newChannel));
             if (addChannel.fulfilled.match(resultAction)) {
@@ -168,12 +131,6 @@ const Chat = () => {
             } else {
                 showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
             }
-            /*
-            if (addChannel.rejected.match(resultAction)) {
-                console.log('Error!!');
-                rollbar.error('Error during channel addition:', `${t('chat.channels.channelNotCreate')}`);
-            }
-                */
         } catch (error) {
 
             rollbar.error('Error during channel addition:', error);
@@ -188,16 +145,16 @@ const Chat = () => {
         setCurrChannelName(currentChannelName);
     };
 
-    const handleRenameChannel = (channelId, editedChannel) => {  
-        dispatch(editChannel({ id: channelId, editedChannel })); // Изменение здесь
+    const handleRenameChannel = async (channelId, editedChannel) => {  
+        await dispatch(editChannel({ id: channelId, editedChannel })); // Изменение здесь
         showNotification(`${t('chat.channels.channelIsRenamed')}`, 'success');
     };
     
-    const handleDeleteChannel = (channelId) => {
+    const handleDeleteChannel = async (channelId) => {
         try {
             const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
             toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
-            dispatch(removeChannel(channelId));
+            await dispatch(removeChannel(channelId));
             showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
             handleChannelClick(1);
         } catch (error) {

@@ -81,14 +81,25 @@ const channelsSlice = createSlice({
     error: null,
   },
   reducers: {
-    /*
-    setCurrentChannelId: (state, action) => {
-       // console.log(`action.payload in setCurrentChannelId= ${JSON.stringify(action.payload, null, 2)}`);
-      state.currentChannelId = action.payload;
+    addChannelToStore(state, action) {
+      state.channels.push(action.payload);
     },
-    */
     clearChannelError(state) {
       state.error = null;
+    },
+    removeChannelFromStore(state, action) {
+      // console.log(`action.payload in removeChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
+      const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload.id));
+        if (index >= 0) {
+          state.channels.splice(index, 1);
+        }
+    },
+    renameChannelFromStore(state, action) {
+      console.log(`action.payload in renameChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
+      const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
+        if (index >= 0) {
+          state.channels[index] = action.payload; // Обновление существующего канала
+        }
     },
   },
   extraReducers: (builder) => {
@@ -99,7 +110,7 @@ const channelsSlice = createSlice({
       })
       .addCase(addChannel.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.channels.push(action.payload);
+        // state.channels.push(action.payload);
       })
       .addCase(addChannel.rejected, (state, action) => {
         state.status = 'failed';
@@ -111,10 +122,12 @@ const channelsSlice = createSlice({
       })
       .addCase(editChannel.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        /*
         const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
         if (index >= 0) {
           state.channels[index] = action.payload; // Обновление существующего канала
         }
+          */
       })
       .addCase(editChannel.rejected, (state, action) => {
         state.status = 'failed';
@@ -126,10 +139,12 @@ const channelsSlice = createSlice({
       })
       .addCase(removeChannel.fulfilled, (state, action) => {
         state.status = 'succeeded';
+        /*
         const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload));
         if (index >= 0) {
           state.channels.splice(index, 1);
         }
+          */
       })
       .addCase(removeChannel.rejected, (state, action) => {
         state.status = 'failed';
@@ -150,5 +165,5 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { clearChannelError } = channelsSlice.actions;
+export const { clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
 export default channelsSlice.reducer;
