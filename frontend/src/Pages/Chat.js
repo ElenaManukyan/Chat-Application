@@ -14,7 +14,7 @@ import RenameChannel from './RenameChannel';
 // import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
-import { clearChannelError } from '../store/channelsSlice';
+import { clearChannelError, setCurrentChannelIdInStore } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
 // import rollbar from '../rollbar';
 import axios from 'axios';
@@ -30,7 +30,8 @@ const Chat = () => {
     const messages = useSelector((state) => state.messages.messages);
     const status = useSelector((state) => state.messages.status);
     const username = useSelector((state) => state.auth.username);
-    const [currentChannelId, setCurrentChannelId] = useState(1);
+   // const [currentChannelId, setCurrentChannelId] = useState(1);
+    const currentChannelId = useSelector((state) => state.channels.currentChannelId);
     const [newMessage, setNewMessage] = useState('');
     const [isModalOpen, setModalOpen] = useState(false);
     const [isModalRemoveOpen, setModalRemoveOpen] = useState(false);
@@ -95,9 +96,10 @@ const Chat = () => {
         setNewMessage('');
     };
 
-    const handleChannelClick = (id) => {
+    const handleChannelClick = async (id) => {
         //console.log('handleChannelClick is working!');
-        setCurrentChannelId(id);
+        //setCurrentChannelId(id);
+        await dispatch(setCurrentChannelIdInStore(id));
     };
 
     const handleOpenModal = () => setModalOpen(true);
@@ -157,6 +159,15 @@ const Chat = () => {
             await dispatch(removeChannel(channelId));
             showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
             handleChannelClick(1);
+
+
+            // СДЕЛАЙ ТАК, ЧТОБЫ ДРУГИХ ЮЗЕРОВ ВЫБРАСЫВАЛО 
+            // ИЗ УДАЛЕННОГО КАНАЛА В КАНАЛ GENERAL! 
+
+
+            
+
+
         } catch (error) {
             rollbar.error('Ошибка при удалении канала:', error);
         }

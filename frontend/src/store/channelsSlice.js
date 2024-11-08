@@ -101,6 +101,10 @@ const channelsSlice = createSlice({
           state.channels[index] = action.payload; // Обновление существующего канала
         }
     },
+    setCurrentChannelIdInStore(state, action) {
+      console.log(`action.payload in setCurrentChannelIdInStore= ${JSON.stringify(action.payload, null, 2)}`);
+      state.currentChannelId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -165,5 +169,5 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
+export const { setCurrentChannelIdInStore, clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
 export default channelsSlice.reducer;

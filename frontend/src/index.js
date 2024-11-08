@@ -18,6 +18,7 @@ import { addMessageToStore } from './store/messagesSlice';
 import { addChannelToStore } from './store/channelsSlice';
 import { removeChannelFromStore } from './store/channelsSlice';
 import { renameChannelFromStore } from './store/channelsSlice';
+import { setCurrentChannelIdInStore } from './store/channelsSlice';
 
 
 const socket = io();
@@ -44,12 +45,21 @@ const init = () => {
   // subscribe remove channel
   socket.on('removeChannel', (payload) => {
     // console.log(payload); // { id: 6 };
+    const removedChannelId = payload.id;
+    const state = store.getState();
+    console.log(`state in socket.on('removeChannel'= ${JSON.stringify(state, null, 2)}`);
+    
+    if (Number(state.channels.currentChannelId) === Number(removedChannelId)) {
+      const firstChannelId = state.channels.channels[0].id;
+      store.dispatch(setCurrentChannelIdInStore(firstChannelId));
+    }
+    
     store.dispatch(removeChannelFromStore(payload));
   });
 
   // subscribe rename channel
   socket.on('renameChannel', (payload) => {
-    console.log(payload); // { id: 7, name: "new name channel", removable: true }
+    //console.log(payload); // { id: 7, name: "new name channel", removable: true }
     store.dispatch(renameChannelFromStore(payload));
   });
 
