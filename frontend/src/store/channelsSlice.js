@@ -95,14 +95,14 @@ const channelsSlice = createSlice({
         }
     },
     renameChannelFromStore(state, action) {
-      console.log(`action.payload in renameChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
+      //console.log(`action.payload in renameChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
       const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
         if (index >= 0) {
           state.channels[index] = action.payload; // Обновление существующего канала
         }
     },
     setCurrentChannelIdInStore(state, action) {
-      console.log(`action.payload in setCurrentChannelIdInStore= ${JSON.stringify(action.payload, null, 2)}`);
+      //console.log(`action.payload in setCurrentChannelIdInStore= ${JSON.stringify(action.payload, null, 2)}`);
       state.currentChannelId = action.payload;
     },
   },

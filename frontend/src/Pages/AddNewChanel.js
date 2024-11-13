@@ -25,7 +25,7 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
         inputElement.focus();  
       }  
     }  
-  }, [isOpen]);  
+  }, [isOpen]);
 
   return (
     <Modal show={isOpen} onHide={onClose} centered>

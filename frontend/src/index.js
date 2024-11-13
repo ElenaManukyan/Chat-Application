@@ -47,7 +47,7 @@ const init = () => {
     // console.log(payload); // { id: 6 };
     const removedChannelId = payload.id;
     const state = store.getState();
-    console.log(`state in socket.on('removeChannel'= ${JSON.stringify(state, null, 2)}`);
+    //console.log(`state in socket.on('removeChannel'= ${JSON.stringify(state, null, 2)}`);
     
     if (Number(state.channels.currentChannelId) === Number(removedChannelId)) {
       const firstChannelId = state.channels.channels[0].id;
