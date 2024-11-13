@@ -1,28 +1,20 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage, fetchMessages, removeMessage } from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
-import { Container, Row, Col, ListGroup, Form, Button, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-// import './Chat.css';
 import { addChannel, removeChannel, editChannel, fetchChannels } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
-//import socket from '../index';
-// import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import { clearMessageError } from '../store/messagesSlice';
 import { clearChannelError, setCurrentChannelIdInStore } from '../store/channelsSlice';
 import leoProfanity from 'leo-profanity';
-// import rollbar from '../rollbar';
-import axios from 'axios';
 import { useRollbar } from '@rollbar/react';
 import { Plus } from 'react-bootstrap-icons';
-
-
-// Как в компоненте обрабатывать ошибки через RollBar?
+import { Form } from 'react-bootstrap';
 
 const Chat = () => {
 
@@ -45,8 +37,6 @@ const Chat = () => {
     const channelError = useSelector((state) => state.channels.error);
     const rollbar = useRollbar();
 
-    // const [manualRendering, setManualRendering] = useState(false);
-
     useEffect(() => {
         if (messageError) {
             showNotification(`${messageError}`, 'error');
@@ -62,35 +52,17 @@ const Chat = () => {
     }, [channelError, dispatch]);
 
     useEffect(() => {
-        /*
-        const setFocus = () => {
-            if (inputRef.current) {
-                inputRef.current.focus();
-            }
-        };
-        */
         dispatch(fetchChannels());//.then(setFocus);
         dispatch(fetchMessages());//.then(setFocus);        
     }, [dispatch]);
 
-
     // ПОСЛЕ ДОБАВЛЕНИЯ КАНАЛА В НОВОМ ЧАТЕ НЕ УСТАНАВЛИВАЕТСЯ ФОКУС
     // НА ИНПУТЕ НОВОГО ЧАТА!!!
     useEffect(() => {
-        //console.log(`isModalOpen in useEffect= ${isModalOpen}`);
-        //console.log('inputRef.current in useEffect', inputRef.current);
         if (inputRef.current && !isModalOpen) {
             inputRef.current.focus();
         }
     });
-
-    /*
-    useEffect(() => {
-        if (inputRef.current && !isModalOpen) {
-            inputRef.current.focus();
-        }
-    }, [isModalOpen]);
-    */
 
     const handleSendMessage = async () => {
         if (!newMessage.trim()) {
@@ -114,46 +86,19 @@ const Chat = () => {
     };
 
     const handleChannelClick = async (id) => {
-        // console.log('id', id);
-        //setCurrentChannelId(id);
-        // inputRef.current.focus();
         await dispatch(setCurrentChannelIdInStore(id));
-        /*
-        if (inputRef.current) {
-            console.log('handleChannelClick inputRef.current.focus() is working');
-            inputRef.current.focus();
-        }
-            */
     };
 
     const handleOpenModal = () => {
-        //console.log(`isModalOpen in handleOpenModal= ${isModalOpen}`);
-        //inputRef.current.blur();
         setModalOpen(true);
-        //setManualRendering(false);
     };
 
     const handleCloseModal = () => {
-        //console.log(`isModalOpen in handleCloseModal= ${isModalOpen}`);
-
         setModalOpen(false);
 
         if (inputRef.current) {
-            console.log('handleCloseModal inputRef.current.focus() is working');
-            console.log('inputRef.current', inputRef.current);
             inputRef.current.focus();
         }
-
-        //setTimeout(() => {
-        /*
-    if (inputRef.current) { // && !isModalOpen
-        console.log(`isModalOpen in handleCloseModal= ${isModalOpen}`);
-        console.log('inputRef.current in handleCloseModal', inputRef.current);
-        inputRef.current.focus();
-    }
-        */
-        //}, 0);
-
     };
 
     if (status === 'loading') {
@@ -183,15 +128,7 @@ const Chat = () => {
             if (addChannel.fulfilled.match(resultAction)) {
                 showNotification(`${t('chat.channels.channelCreate')}`, 'success');
                 await handleChannelClick(Number(resultAction.payload.id));
-                
-                
-                
-                //inputRef.current.focus();
-                //console.log(`currentChannelId in handleAddChannel= ${currentChannelId}`);
-
-                // inputRef.current.focus();
-                //setManualRendering(true);
-            } else {
+                            } else {
                 showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
             }
         } catch (error) {
@@ -237,13 +174,11 @@ const Chat = () => {
 
     const handleMessageSubmit = (e) => {
         e.preventDefault();
-        // inputRef.current.focus();
         handleSendMessage();
     };
 
     return (
         <Container className="mt-4">
-            {/*<Row style={{ height: '88vh', width: '88vw', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>*/}
             <Row style={{ height: '90vh', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
                 <Col xs={2} lg={2} className="border-end" style={{ borderColor: 'lightgray' }}>
                     <div
@@ -276,7 +211,6 @@ const Chat = () => {
                             />
                         </Button>
                     </div>
-                    {/* ВОТ ТУТ КНОПКИ ДОДЕЛАТЬ НУЖНО! */}
                     <ButtonGroup 
                         vertical 
                         className='w-100'
@@ -341,7 +275,6 @@ const Chat = () => {
                             )
                         ))}
                     </ButtonGroup>
-                    {/*console.log(`channels in Chat.js= ${JSON.stringify(channels, null, 2)}`)*/}
                     <AddChannelForm
                         isOpen={isModalOpen}
                         onClose={handleCloseModal}
@@ -363,7 +296,6 @@ const Chat = () => {
                         existingChannels={channels.map((ch) => ch.name)}
                     />
                 </Col>
-                {/*<Col xs={9} className="messages" style={{ maxHeight: '100%', display: 'flex', flexDirection: 'column' }}>*/}
                 <Col xs={10} lg={10} className="d-flex flex-column p-0">
                     <div className="w-100" style={{ padding: '16px' }} >
                         <h5>
