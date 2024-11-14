@@ -11,12 +11,15 @@ import { useTranslation } from 'react-i18next';
 //import rollbar from '../rollbar';
 import { useRollbar } from '@rollbar/react';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
+import './Signup.css';
 
 const Signup = () => {
 
     const { Formik } = formik;
     const { t } = useTranslation();
     const rollbar = useRollbar();
+
+    
 
     const validationSchema = yup.object().shape({
         username: yup
@@ -48,6 +51,7 @@ const Signup = () => {
             showNotification(`${signupError}`, 'error');
             dispatch(clearAuthError());
         }
+        //console.log(`t('signup.username')= ${t('signup.username')}`);
     }, [signupError, dispatch]);
     
 
@@ -101,22 +105,24 @@ const Signup = () => {
                                     <Form 
                                         noValidate 
                                         onSubmit={handleSubmit}
-                                        
                                     >
                                         <Form.Group
-               
                                             controlId="formUsername"
                                             className="position-relative mb-4"
                                         >
+                                            
                                             <Form.Control
                                                 type="text"
                                                 name="username"
                                                 value={values.username}
                                                 onChange={handleChange}
-                                                placeholder={t('signup.username')}
+                                                placeholder=' '
                                                 isInvalid={!!errors.username}
-                                                style={{ height: '50px' }}
+                                                style={{ 
+                                                    height: '50px',
+                                                }}
                                             />
+                                            <Form.Label className="placeholder1">{t('signup.username')}</Form.Label>
                                             <Form.Control.Feedback 
                                                 type="invalid"
                                                 className="position-absolute"
@@ -135,10 +141,11 @@ const Signup = () => {
                                                 name="password"
                                                 value={values.password}
                                                 onChange={handleChange}
-                                                placeholder={t('login.password')}
+                                                placeholder=' '
                                                 isInvalid={!!errors.password}
                                                 style={{ height: '50px' }}
                                             />
+                                            <Form.Label className="placeholder1">{t('login.password')}</Form.Label>
                                             <Form.Control.Feedback 
                                                 type="invalid"
                                                 className="position-absolute"
@@ -155,11 +162,12 @@ const Signup = () => {
                                                 value={values.confirmPassword}
                                                 type="password"
                                                 name="confirmPassword"
-                                                placeholder={t('signup.confirmPasswd')}
+                                                placeholder=' '
                                                 onChange={handleChange}
                                                 isInvalid={!!errors.confirmPassword}
                                                 style={{ height: '50px' }}
                                             />
+                                            <Form.Label className="placeholder1">{t('signup.confirmPasswd')}</Form.Label>
                                             <Form.Control.Feedback 
                                                 type="invalid"
                                                 className="position-absolute"

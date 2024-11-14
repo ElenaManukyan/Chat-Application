@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 // import rollbar from '../rollbar';
 import { useRollbar } from '@rollbar/react';
+import './Signup.css';
 
 const LoginForm = () => {
     const [username, setUsername] = useState('');  
@@ -79,9 +80,10 @@ const LoginForm = () => {
                                             value={username}  
                                             onChange={(e) => setUsername(e.target.value)}  
                                             required
-                                            placeholder={t('login.yourNickname')}
+                                            placeholder=' '
                                             style={{ height: '50px' }} 
-                                        />  
+                                        />
+                                        <Form.Label className="placeholder1">{t('login.yourNickname')}</Form.Label>
                                     </Form.Group>  
                                     <Form.Group 
                                         controlId="formPassword" 
@@ -92,9 +94,10 @@ const LoginForm = () => {
                                             value={password}  
                                             onChange={(e) => setPassword(e.target.value)}  
                                             required
-                                            placeholder={t('login.password')}
+                                            placeholder=' '
                                             style={{ height: '50px' }}
-                                        />  
+                                        />
+                                        <Form.Label className="placeholder1">{t('login.password')}</Form.Label>
                                     </Form.Group>
                                     <Button 
                                         variant="primary" 
