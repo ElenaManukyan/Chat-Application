@@ -3,12 +3,9 @@
         "loginAuthErr": "Проблема с авторизацией: неправильный логин/пароль",
         "signupUserUnique": "Такой пользователь уже существует",
         "validation": {
-            "usernameRequired": "Имя пользователя обязательно",
-            "usernameMinLength": "Имя пользователя должно содержать минимум 3 символа",
-            "usernameMaxLength": "Имя пользователя не должно превышать 20 символов",
-            "passwdRequired": "Пароль обязателен",
+            "required": "Обязательное поле",
+            "usernameMinMaxLength": "От 3 до 20 символов",
             "passwdMinLength": "Пароль должен содержать минимум 6 символов",
-            "confirmPasswdRequired": "Подтверждение пароля обязательно",
             "confirmPasswdConfirm": "Пароли должны совпадать"
         },
         "error": "Ошибка",

@@ -24,18 +24,18 @@ const Signup = () => {
     const validationSchema = yup.object().shape({
         username: yup
             .string()
-            .required(`${t('errors.validation.usernameRequired')}`)
-            .min(3, `${t('errors.validation.usernameMinLength')}`)
-            .max(20, `${t('errors.validation.usernameMaxLength')}`),
+            .required(`${t('errors.validation.required')}`)
+            .min(3, `${t('errors.validation.usernameMinMaxLength')}`)
+            .max(20, `${t('errors.validation.usernameMinMaxLength')}`),
 
         password: yup
             .string()
-            .required(`${t('errors.validation.passwdRequired')}`)
+            .required(`${t('errors.validation.required')}`)
             .min(6, `${t('errors.validation.passwdMinLength')}`),
 
         confirmPassword: yup
             .string()
-            .required(`${t('errors.validation.confirmPasswdRequired')}`)
+            .required(`${t('errors.validation.required')}`)
             .oneOf([yup.ref('password'), null], `${t('errors.validation.confirmPasswdConfirm')}`),
     });
 
