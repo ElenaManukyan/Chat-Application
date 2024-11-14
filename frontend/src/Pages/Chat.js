@@ -323,6 +323,7 @@ const Chat = () => {
                                 onChange={(e) => setNewMessage(e.target.value)}
                                 placeholder={t('chat.messages.enterMessage')}
                                 className="me-2"
+                                aria-label="Новое сообщение"
                             />
                             <Button type="submit" variant="primary">{t('chat.messages.sendMessage')}</Button>
                         </Form.Group>
