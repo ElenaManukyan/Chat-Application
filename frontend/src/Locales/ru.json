@@ -5,7 +5,7 @@
         "validation": {
             "required": "Обязательное поле",
             "usernameMinMaxLength": "От 3 до 20 символов",
-            "passwdMinLength": "Пароль должен содержать минимум 6 символов",
+            "passwdMinLength": "Не менее 6 символов",
             "confirmPasswdConfirm": "Пароли должны совпадать"
         },
         "error": "Ошибка",
