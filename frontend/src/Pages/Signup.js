@@ -123,7 +123,7 @@ const Signup = () => {
                                                 }}
                                             />
                                             <Form.Label className="placeholder1">{t('signup.username')}</Form.Label>
-                                            <Form.Control.Feedback 
+                                            <Form.Control.Feedback
                                                 type="invalid"
                                                 className="position-absolute"
                                                 style={{ top: '100%', margin: 0 }}

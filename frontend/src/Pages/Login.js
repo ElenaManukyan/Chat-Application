@@ -43,7 +43,7 @@ const LoginForm = () => {
             })
             .catch((err) => {
                 rollbar.error('Ошибка при авторизации:', `${t('errors.loginAuthErr')}`);
-                console.log(err);
+                //console.log(err);
                 const status = err ? Number(err.slice(-3)) : null;
                 switch (status) {
                     case 401:
@@ -69,7 +69,7 @@ const LoginForm = () => {
                         <Card.Body>
                             <div className="mb-2 mt-2">
                                 <h1 className="text-center" style={{ marginBottom: '20px' }}>{t('login.enter')}</h1>  
-                                {error && <Alert variant="danger">{error}</Alert>}  
+                                {/*error && <Alert variant="danger">{error}</Alert>*/}  
                                 <Form onSubmit={handleSubmit}>  
                                     <Form.Group 
                                         controlId="formUsername"
@@ -81,10 +81,11 @@ const LoginForm = () => {
                                             onChange={(e) => setUsername(e.target.value)}  
                                             required
                                             placeholder=' '
-                                            style={{ height: '50px' }} 
+                                            style={{ height: '50px' }}
+                                            isInvalid={!!error}
                                         />
                                         <Form.Label className="placeholder1">{t('login.yourNickname')}</Form.Label>
-                                    </Form.Group>  
+                                    </Form.Group>
                                     <Form.Group 
                                         controlId="formPassword" 
                                         className="position-relative mb-4"
@@ -96,8 +97,16 @@ const LoginForm = () => {
                                             required
                                             placeholder=' '
                                             style={{ height: '50px' }}
+                                            isInvalid={!!error}
                                         />
                                         <Form.Label className="placeholder1">{t('login.password')}</Form.Label>
+                                        {error ? (<Form.Control.Feedback
+                                                type="invalid"
+                                                className="position-absolute"
+                                                style={{ top: '100%', margin: 0 }}
+                                        >
+                                            {error}
+                                        </Form.Control.Feedback>) : null}
                                     </Form.Group>
                                     <Button 
                                         variant="primary" 
