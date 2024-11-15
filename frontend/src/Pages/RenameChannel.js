@@ -54,7 +54,10 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Group 
+                        className="mb-3" 
+                        controlId="exampleForm.ControlInput1"
+                    >
                         <Form.Control
                             ref={inputRef}
                             type="text"
@@ -63,6 +66,12 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
                             isInvalid={!!errors.name}
                             autoFocus
                         />
+                        <label 
+                            className='visually-hidden'
+                            htmlFor='exampleForm.ControlInput1'
+                        >
+                            Имя канала
+                        </label>
                         <Form.Control.Feedback type="invalid">
                             {errors.name}
                         </Form.Control.Feedback>
