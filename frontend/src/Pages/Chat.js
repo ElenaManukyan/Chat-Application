@@ -260,8 +260,9 @@ const Chat = () => {
                                             width: '20%',
                                             borderRadius: 0,
                                         }}
-                                    />
-
+                                    >
+                                        <span className='visually-hidden'>Управление каналом</span>
+                                    </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         <Dropdown.Item
                                             onClick={() => handleOpenRemoveModal(channel.id)}
