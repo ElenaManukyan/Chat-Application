@@ -68,28 +68,36 @@ const channelsSlice = createSlice({
   },
   reducers: {
     addChannelToStore(state, action) {
-      state.channels.push(action.payload);
+      return {
+        ...state,
+        channels: [...state.channels, action.payload],
+      };
     },
     clearChannelError(state) {
-      state.error = null;
+      return {
+        ...state,
+        error: null,
+      };
     },
     removeChannelFromStore(state, action) {
-      // console.log(`action.payload in removeChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
-      const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload.id));
-      if (index >= 0) {
-        state.channels.splice(index, 1);
-      }
+      const newChannnels = state.channels.filter((channel) => Number(channel.id) !== Number(action.payload.id));
+      return {
+        ...state,
+        channels: newChannnels,
+      };
     },
     renameChannelFromStore(state, action) {
-      //console.log(`action.payload in renameChannelFromStore= ${JSON.stringify(action.payload, null, 2)}`);
-      const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload.id));
-      if (index >= 0) {
-        state.channels[index] = action.payload; // Обновление существующего канала
-      }
+      const updatedChannels = state.channels.map((channel) => Number(channel.id) === Number(action.payload.id) ? { ...channel, ...action.payload } : channel);
+      return {
+        ...state,
+        channels: updatedChannels,
+      };
     },
     setCurrentChannelIdInStore(state, action) {
-      //console.log(`action.payload in setCurrentChannelIdInStore= ${JSON.stringify(action.payload, null, 2)}`);
-      state.currentChannelId = action.payload;
+      return {
+        ...state,
+        currentChannelId: action.payload,
+      };
     },
   },
   extraReducers: (builder) => {

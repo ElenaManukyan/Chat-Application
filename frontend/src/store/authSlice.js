@@ -31,10 +31,16 @@ const authSlice = createSlice({
   },
   reducers: {
     setAuthorized: (state, action) => {
-      state.isAuthorized = action.payload;
+      return {
+        ...state,
+        isAuthorized: action.payload,
+      };
     },
     clearAuthError(state) {
-      state.error = null;
+      return {
+        ...state,
+        error: null,
+      };
     },
   },
   extraReducers: (builder) => {

@@ -13,11 +13,12 @@ const Home = () => {
     <div>
       <h1>Главная страница</h1>
       <div>Добро пожаловать в чат!</div>
-      {console.log('Rendering Home component')}
       <button type="button" onClick={handleLoginClick}>
         Перейти на страницу логина
       </button>
-      <div>Token: {token}</div>
+      <div>
+        Token: {token}
+      </div>
     </div>
   );
 };

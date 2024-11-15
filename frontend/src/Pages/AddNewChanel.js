@@ -50,10 +50,10 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
           {({ errors, touched }) => (
             <FormikForm>
               <Form.Group className="mb-2">
-                <Field name="name" id="channelNameInput" as={Form.Control} isInvalid={touched.name && !!errors.name} />
                 <label className="visually-hidden" htmlFor="channelNameInput">
                   Имя канала
                 </label>
+                <Field name="name" id="channelNameInput" as={Form.Control} isInvalid={touched.name && !!errors.name} />
                 <Form.Control.Feedback type="invalid">
                   <ErrorMessage name="name" />
                 </Form.Control.Feedback>

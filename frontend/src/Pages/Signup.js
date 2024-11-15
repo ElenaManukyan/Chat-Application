@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signup, clearAuthError } from '../store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
-import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
+import {
+    Form, Button, Alert, Container, Row, Col, Card
+} from 'react-bootstrap';
 import * as formik from 'formik';
 import * as yup from 'yup';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useTranslation } from 'react-i18next';
-//import rollbar from '../rollbar';
 import { useRollbar } from '@rollbar/react';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
+import { signup, clearAuthError } from '../store/authSlice';
 
 const Signup = () => {
   const { Formik } = formik;
@@ -47,7 +47,6 @@ const Signup = () => {
       showNotification(`${signupError}`, 'error');
       dispatch(clearAuthError());
     }
-    //console.log(`t('signup.username')= ${t('signup.username')}`);
   }, [signupError, dispatch]);
 
   const handleSubmitClick = async (values) => {
@@ -58,7 +57,6 @@ const Signup = () => {
       })
       .catch((err) => {
         rollbar.error('Ошибка при регистрации:', error);
-        //console.log(err);
         if (Number(err.slice(-3)) === 409) {
           setError(`${t('errors.signupUserUnique')}`);
         } else {

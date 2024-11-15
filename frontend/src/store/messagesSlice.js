@@ -54,10 +54,16 @@ const chatSlice = createSlice({
   },
   reducers: {
     addMessageToStore(state, action) {
-      state.messages.push(action.payload);
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
+      };
     },
     clearMessageError(state) {
-      state.error = null;
+      return {
+        ...state,
+        error: null,
+      };
     },
   },
   extraReducers: (builder) => {

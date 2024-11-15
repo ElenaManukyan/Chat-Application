@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
+import {
+    Form, Button, Container, Row, Col, Card
+} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { setAuthorized, login, clearAuthError } from '../store/authSlice';
-import { useTranslation } from 'react-i18next';
-import { showNotification } from '../DefaulltComponents/NotificationComponent';
-// import rollbar from '../rollbar';
 import { useRollbar } from '@rollbar/react';
+import { useTranslation } from 'react-i18next';
+import { setAuthorized, login, clearAuthError } from '../store/authSlice';
+import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
 
 const LoginForm = () => {

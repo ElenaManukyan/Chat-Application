@@ -1,20 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage, fetchMessages, removeMessage } from '../store/messagesSlice';
-import AddChannelForm from './AddNewChanel';
-import { Container, Row, Col, Button, Spinner, Alert, ButtonGroup } from 'react-bootstrap';
+import {
+    Container, Row, Col, Button, Spinner, Alert, ButtonGroup, Form
+} from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
-import { addChannel, removeChannel, editChannel, fetchChannels } from '../store/channelsSlice';
+import { useTranslation } from 'react-i18next';
+import leoProfanity from 'leo-profanity';
+import { useRollbar } from '@rollbar/react';
+import { addMessage, fetchMessages, removeMessage, clearMessageError } from '../store/messagesSlice';
+import AddChannelForm from './AddNewChanel';
+import {
+    addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdInStore
+} from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
-import { useTranslation } from 'react-i18next';
-import { clearMessageError } from '../store/messagesSlice';
-import { clearChannelError, setCurrentChannelIdInStore } from '../store/channelsSlice';
-import leoProfanity from 'leo-profanity';
-import { useRollbar } from '@rollbar/react';
-import { Plus } from 'react-bootstrap-icons';
-import { Form } from 'react-bootstrap';
 
 const Chat = () => {
   const dispatch = useDispatch();
