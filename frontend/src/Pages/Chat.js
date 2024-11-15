@@ -223,8 +223,8 @@ const Chat = () => {
                             Number(channel.id) < 3 ? (
                                 <Button
                                     key={channel.id}
-                                    variant="light"
-                                    className={`w-100 text-start ${Number(currentChannelId) === Number(channel.id) ? 'active' : ''}`}
+                                    variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                                    className={`w-100 rounded-0 text-start`}
                                     style={{ 
                                         padding: '6px 12px',
                                         borderRadius: 0,
@@ -238,12 +238,11 @@ const Chat = () => {
                                     as={ButtonGroup}
                                     key={channel.id}
                                     onClick={() => handleChannelClick(Number(channel.id))}
-                                    className={`w-100 ${Number(currentChannelId) === Number(channel.id) ? 'active' : ''}`}
                                 >
                                     <Button
-                                        variant="light"
+                                        variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
                                         title={`# ${channel.name}`}
-                                        className={`text-start flex-grow-1 ${Number(currentChannelId) === Number(channel.id) ? 'active' : ''}`}
+                                        className={`w-100 rounded-0 text-start text-truncate`}
                                         style={{ 
                                             width: '80%',
                                             borderRadius: 0,
@@ -253,9 +252,8 @@ const Chat = () => {
                                     </Button>
                                     <Dropdown.Toggle
                                         split
-                                        variant="light"
+                                        variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
                                         id={`dropdown-split-basic-${channel.id}`}
-                                        className={`${Number(currentChannelId) === Number(channel.id) ? 'active' : ''}`}
                                         style={{ 
                                             width: '20%',
                                             borderRadius: 0,
