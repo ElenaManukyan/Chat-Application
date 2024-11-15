@@ -7,7 +7,6 @@ import { useRollbar } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
-
   const rollbar = useRollbar();
   const { t } = useTranslation();
 
@@ -20,13 +19,13 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
       .notOneOf(existingChannels, `${t('errors.validation.unique')}`),
   });
 
-  useEffect(() => {  
-    if (isOpen) {  
-      const inputElement = document.getElementById('channelNameInput');  
-      if (inputElement) {  
-        inputElement.focus();  
-      }  
-    }  
+  useEffect(() => {
+    if (isOpen) {
+      const inputElement = document.getElementById('channelNameInput');
+      if (inputElement) {
+        inputElement.focus();
+      }
+    }
   }, [isOpen]);
 
   return (
@@ -35,29 +34,26 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
         <Modal.Title>{t('chat.channels.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-      <Formik  
-          initialValues={{ name: '' }}  
-          validationSchema={validationSchema}  
+        <Formik
+          initialValues={{ name: '' }}
+          validationSchema={validationSchema}
           onSubmit={async (values, { resetForm }) => {
             try {
               await onSubmit(values.name); // Тут onSubmit должен возвращать промис
-              resetForm();       
+              resetForm();
               onClose();
             } catch (error) {
               rollbar.error(`${t('errors.addChannelErr')}`, error);
-            }      
-          }}  
+            }
+          }}
         >
           {({ errors, touched }) => (
             <FormikForm>
               <Form.Group className="mb-2">
-                <Field  
-                  name="name"  
-                  id="channelNameInput"  
-                  as={Form.Control}  
-                  isInvalid={touched.name && !!errors.name}  
-                /> 
-                <label className="visually-hidden" htmlFor="channelNameInput">Имя канала</label>
+                <Field name="name" id="channelNameInput" as={Form.Control} isInvalid={touched.name && !!errors.name} />
+                <label className="visually-hidden" htmlFor="channelNameInput">
+                  Имя канала
+                </label>
                 <Form.Control.Feedback type="invalid">
                   <ErrorMessage name="name" />
                 </Form.Control.Feedback>
