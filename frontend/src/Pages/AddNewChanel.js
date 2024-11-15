@@ -1,6 +1,7 @@
-// import React from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
-import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
+import {
+  Formik, Field, Form as FormikForm, ErrorMessage
+} from 'formik';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
@@ -50,9 +51,9 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
           {({ errors, touched }) => (
             <FormikForm>
               <Form.Group className="mb-2">
-                <label className="visually-hidden" htmlFor="channelNameInput">
+                <Form.Label className="visually-hidden">
                   Имя канала
-                </label>
+                </Form.Label>
                 <Field name="name" id="channelNameInput" as={Form.Control} isInvalid={touched.name && !!errors.name} />
                 <Form.Control.Feedback type="invalid">
                   <ErrorMessage name="name" />

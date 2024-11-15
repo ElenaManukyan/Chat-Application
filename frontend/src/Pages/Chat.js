@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Container, Row, Col, Button, Spinner, Alert, ButtonGroup, Form
+  Container, Row, Col, Button, Spinner, Alert, ButtonGroup, Form,
 } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
 import { useRollbar } from '@rollbar/react';
-import { addMessage, fetchMessages, removeMessage, clearMessageError } from '../store/messagesSlice';
+import {
+  addMessage, fetchMessages, removeMessage, clearMessageError,
+} from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
 import {
-    addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdInStore
+  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdInStore
 } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
@@ -51,12 +53,13 @@ const Chat = () => {
   }, [channelError, dispatch]);
 
   useEffect(() => {
-    dispatch(fetchChannels()); //.then(setFocus);
-    dispatch(fetchMessages()); //.then(setFocus);
+    dispatch(fetchChannels());
+    dispatch(fetchMessages());
   }, [dispatch]);
 
   // ПОСЛЕ ДОБАВЛЕНИЯ КАНАЛА В НОВОМ ЧАТЕ НЕ УСТАНАВЛИВАЕТСЯ ФОКУС
   // НА ИНПУТЕ НОВОГО ЧАТА!!!
+  
   useEffect(() => {
     if (inputRef.current && !isModalOpen) {
       inputRef.current.focus();
