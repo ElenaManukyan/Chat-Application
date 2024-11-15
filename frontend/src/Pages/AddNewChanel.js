@@ -4,18 +4,20 @@ import { Formik, Field, Form as FormikForm, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
+import { useTranslation } from 'react-i18next';
 
 const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
 
   const rollbar = useRollbar();
+  const { t } = useTranslation();
 
   const validationSchema = yup.object().shape({
     name: yup
       .string()
-      .min(3, 'Имя должно содержать минимум 3 символа')
-      .max(20, 'Имя должно содержать не более 20 символов')
-      .required('Имя обязательно')
-      .notOneOf(existingChannels, 'Имя канала должно быть уникальным'),
+      .min(3, `${t('errors.validation.usernameMinMaxLength')}`)
+      .max(20, `${t('errors.validation.usernameMinMaxLength')}`)
+      .required(`${t('errors.validation.required')}`)
+      .notOneOf(existingChannels, `${t('errors.validation.unique')}`),
   });
 
   useEffect(() => {  
@@ -30,7 +32,7 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
   return (
     <Modal show={isOpen} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('chat.channels.addChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
       <Formik  
@@ -42,14 +44,13 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
               resetForm();       
               onClose();
             } catch (error) {
-              rollbar.error('Ошибка при добавлении канала:', error);
+              rollbar.error(`${t('errors.addChannelErr')}`, error);
             }      
           }}  
         >
           {({ errors, touched }) => (
             <FormikForm>
               <Form.Group className="mb-2">
-                <Form.Label>Имя канала</Form.Label>
                 <Field  
                   name="name"  
                   id="channelNameInput"  
@@ -62,10 +63,10 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
               </Form.Group>
               <div className="d-flex justify-content-end">
                 <Button variant="secondary" onClick={onClose} className="me-2">
-                  Отменить
+                  {t('chat.channels.cancel')}
                 </Button>
                 <Button type="submit" variant="primary">
-                  Отправить
+                  {t('chat.messages.sendMessage')}
                 </Button>
               </div>
             </FormikForm>

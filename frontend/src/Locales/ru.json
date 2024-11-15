@@ -6,7 +6,8 @@
             "required": "Обязательное поле",
             "usernameMinMaxLength": "От 3 до 20 символов",
             "passwdMinLength": "Не менее 6 символов",
-            "confirmPasswdConfirm": "Пароли должны совпадать"
+            "confirmPasswdConfirm": "Пароли должны совпадать",
+            "unique": "Должно быть уникальным"
         },
         "error": "Ошибка",
         "authErr": "Ошибка авторизации",
@@ -52,7 +53,11 @@
             "channelIsRemoved": "Канал удалён",
             "channels": "Каналы",
             "remove": "Удалить",
-            "rename": "Переименовать"
+            "rename": "Переименовать канал",
+            "cancel": "Отменить",
+            "addChannel": "Добавить канал",
+            "removeChannel": "Удалить канал",
+            "areYouSure": "Уверены?"
         }
     }
 }
