@@ -202,13 +202,17 @@ const Chat = () => {
                                 height: '20px',
                                 padding: 0,
                                 borderRadius: '2px',
+                                verticalAlign: 'baseline',
+                                fontSize: '16px',
+                                lineHeight: '20px',
                             }}
                         >
-                            <Plus 
+                            +
+                            {/*<Plus 
                                 style={{
                                     verticalAlign: 'baseline',
                                 }}
-                            />
+                            />*/}
                         </Button>
                     </div>
                     <ButtonGroup 
