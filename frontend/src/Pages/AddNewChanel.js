@@ -57,6 +57,7 @@ const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
                   as={Form.Control}  
                   isInvalid={touched.name && !!errors.name}  
                 /> 
+                <label className="visually-hidden" htmlFor="channelNameInput">Имя канала</label>
                 <Form.Control.Feedback type="invalid">
                   <ErrorMessage name="name" />
                 </Form.Control.Feedback>
