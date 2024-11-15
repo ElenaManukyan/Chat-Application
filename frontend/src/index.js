@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { Provider, useDispatch } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './store/store';
 import { Notification } from './DefaulltComponents/NotificationComponent';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +17,8 @@ import { addChannelToStore } from './store/channelsSlice';
 import { removeChannelFromStore } from './store/channelsSlice';
 import { renameChannelFromStore } from './store/channelsSlice';
 import { setCurrentChannelIdInStore } from './store/channelsSlice';
+import './index.css';
+import App from './App';
 
 const socket = io();
 
