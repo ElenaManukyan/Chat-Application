@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Form, Button, Alert, Container, Row, Col, Card
+  Form, Button, Alert, Container, Row, Col, Card,
 } from 'react-bootstrap';
 import * as formik from 'formik';
 import * as yup from 'yup';
@@ -88,7 +88,9 @@ const Signup = () => {
                   confirmPassword: '',
                 }}
               >
-                {({ handleSubmit, handleChange, values, touched, errors }) => (
+                {({
+                  handleSubmit, handleChange, values, errors,
+                }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="formUsername" className="position-relative mb-4">
                       <Form.Control

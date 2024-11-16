@@ -12,7 +12,7 @@ import {
 } from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
 import {
-  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdStore
+  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdStore,
 } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
@@ -79,7 +79,7 @@ const Chat = () => {
     const message = {
       body: cleanMessage,
       channelId: currentChannelId,
-      username: username,
+      username,
     };
 
     await dispatch(addMessage(message));
@@ -109,14 +109,13 @@ const Chat = () => {
   if (status === 'failed') {
     return (
       <Alert variant="danger">
-        {t('errors.error')}: {error}
+        {t('errors.error')}:
+        <span>{error}</span>
       </Alert>
     );
   }
 
-  const getMessageCountText = (count) => {
-    return t('chat.messages.count', { count });
-  };
+  const getMessageCountText = (count) => t('chat.messages.count', { count });
 
   const handleAddChannel = async (channelName) => {
     try {
@@ -134,39 +133,39 @@ const Chat = () => {
       } else {
         showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
       }
-    } catch (error) {
-      rollbar.error('Error during channel addition:', error);
-      console.error('Error during channel addition:', error);
+    } catch (err) {
+      rollbar.error('Error during channel addition:', err);
+      console.error('Error during channel addition:', err);
     }
   };
 
-  const handleOpenRenameChannelModal = (channelId) => {
+  const handleOpenRenameChannelModal = (chId) => {
     setModalRenameOpen(true);
-    setChannelId(channelId);
-    const currentChannelName = channels.filter((channel) => channel.id === channelId)[0].name;
+    setChannelId(chId);
+    const currentChannelName = channels.filter((channel) => channel.id === chId)[0].name;
     setCurrChannelName(currentChannelName);
   };
 
-  const handleRenameChannel = async (channelId, editedChannel) => {
-    await dispatch(editChannel({ id: channelId, editedChannel })); // Изменение здесь
+  const handleRenameChannel = async (chId, editedChannel) => {
+    await dispatch(editChannel({ id: chId, editedChannel })); // Изменение здесь
     showNotification(`${t('chat.channels.channelIsRenamed')}`, 'success');
   };
 
-  const handleDeleteChannel = async (channelId) => {
+  const handleDeleteChannel = async (chId) => {
     try {
-      const toDeletemessages = messages.filter((message) => Number(message.channelId) === Number(channelId));
-      toDeletemessages.forEach((message) => dispatch(removeMessage(message.id)));
-      await dispatch(removeChannel(channelId));
+      const delMessages = messages.filter((message) => Number(message.channelId) === Number(chId));
+      delMessages.forEach((message) => dispatch(removeMessage(message.id)));
+      await dispatch(removeChannel(chId));
       showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
       handleChannelClick(1);
-    } catch (error) {
-      rollbar.error('Ошибка при удалении канала:', error);
+    } catch (err) {
+      rollbar.error('Ошибка при удалении канала:', err);
     }
   };
 
-  const handleOpenRemoveModal = (channelId) => {
+  const handleOpenRemoveModal = (chId) => {
     setModalRemoveOpen(true);
-    setChannelId(channelId);
+    setChannelId(chId);
   };
 
   const handleCloseRemoveModal = () => setModalRemoveOpen(false);
@@ -209,11 +208,6 @@ const Chat = () => {
               }}
             >
               +
-              {/*<Plus 
-                                style={{
-                                    verticalAlign: 'baseline',
-                                }}
-                            />*/}
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">

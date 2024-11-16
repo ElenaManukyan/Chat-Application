@@ -68,45 +68,59 @@ const chatSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchMessages.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(fetchMessages.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.messages = action.payload;
-      })
-      .addCase(fetchMessages.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(addMessage.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(addMessage.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        // state.messages.push(action.payload);
-      })
-      .addCase(addMessage.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(removeMessage.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
+      .addCase(fetchMessages.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(fetchMessages.fulfilled, (state, action) => ({
+        ...state,
+        status: 'succeeded',
+        messages: action.payload,
+      }))
+      .addCase(fetchMessages.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(addMessage.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(addMessage.fulfilled, (state) => ({
+        ...state,
+        status: 'succeeded',
+      }))
+      .addCase(addMessage.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(removeMessage.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
       .addCase(removeMessage.fulfilled, (state, action) => {
-        state.status = 'succeeded';
         const index = state.messages.findIndex((message) => Number(message.id) === Number(action.payload.id));
         if (index >= 0) {
-          state.messages.splice(index, 1);
+          return {
+            ...state,
+            status: 'succeeded',
+            messages: [
+              ...state.messages.slice(0, index),
+              ...state.messages.slice(index + 1),
+            ],
+          };
         }
+        return state;
       })
-      .addCase(removeMessage.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      });
+      .addCase(removeMessage.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }));
   },
 });
 

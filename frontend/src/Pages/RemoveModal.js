@@ -3,7 +3,9 @@ import Modal from 'react-bootstrap/Modal';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const RemoveModal = ({ isOpen, onClose, onDelete, channelId }) => {
+const RemoveModal = ({
+  isOpen, onClose, onDelete, channelId,
+}) => {
   const { t } = useTranslation();
 
   return (

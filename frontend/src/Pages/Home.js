@@ -17,7 +17,8 @@ const Home = () => {
         Перейти на страницу логина
       </button>
       <div>
-        Token: {token}
+        Token:
+        <span>{token}</span>
       </div>
     </div>
   );

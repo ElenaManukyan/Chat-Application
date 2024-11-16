@@ -6,8 +6,10 @@ import * as yup from 'yup';
 import { useRollbar } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
 
-const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, existingChannels }) => {
-  const [newChannelName, setNewChannelName] = useState(currChannelName || '');
+const RenameChannel = ({
+  isOpen, onClose, onRename, channelId, currChName, existingChannels,
+}) => {
+  const [newChannelName, setNewChannelName] = useState(currChName || '');
   const [errors, setErrors] = useState({});
   const inputRef = useRef(null);
   const rollbar = useRollbar();
@@ -24,7 +26,7 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
 
   useEffect(() => {
     if (isOpen) {
-      setNewChannelName(currChannelName || '');
+      setNewChannelName(currChName || '');
       if (inputRef.current) {
         setTimeout(() => {
           inputRef.current.focus();
@@ -32,7 +34,7 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
         }, 0);
       }
     }
-  }, [isOpen, currChannelName]);
+  }, [isOpen, currChName]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,9 +58,9 @@ const RenameChannel = ({ isOpen, onClose, onRename, channelId, currChannelName, 
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Control ref={inputRef} type="text" value={newChannelName} onChange={(e) => setNewChannelName(e.target.value)} isInvalid={!!errors.name} autoFocus />
-            <label className="visually-hidden" htmlFor="exampleForm.ControlInput1">
+            <Form.Label className="visually-hidden">
               Имя канала
-            </label>
+            </Form.Label>
             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
           </Form.Group>
         </Form>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Form, Button, Container, Row, Col, Card
+  Form, Button, Container, Row, Col, Card,
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRollbar } from '@rollbar/react';
@@ -26,11 +26,11 @@ const LoginForm = () => {
       try {
         showNotification(authError, 'error');
         dispatch(clearAuthError());
-      } catch (authError) {
-        rollbar.error('Clear authentification error', authError);
+      } catch (err) {
+        rollbar.error('Clear authentification error', err);
       }
     }
-  }, [authError, dispatch]);
+  }, [authError, dispatch, rollbar]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,7 +42,6 @@ const LoginForm = () => {
       })
       .catch((err) => {
         rollbar.error('Ошибка при авторизации:', `${t('errors.loginAuthErr')}`);
-        //console.log(err);
         const status = err ? Number(err.slice(-3)) : null;
         switch (status) {
           case 401:
@@ -68,7 +67,6 @@ const LoginForm = () => {
                 <h1 className="text-center" style={{ marginBottom: '20px' }}>
                   {t('login.enter')}
                 </h1>
-                {/*error && <Alert variant="danger">{error}</Alert>*/}
                 <Form onSubmit={handleSubmit}>
                   <Form.Group controlId="formUsername" className="position-relative mb-4">
                     <Form.Control type="text" value={username} onChange={(e) => setUsername(e.target.value)} required placeholder=" " style={{ height: '50px' }} isInvalid={!!error} />

@@ -80,14 +80,22 @@ const channelsSlice = createSlice({
       };
     },
     removeChannelFromStore(state, action) {
-      const newChannnels = state.channels.filter((channel) => Number(channel.id) !== Number(action.payload.id));
+      const newChannnels = state.channels.filter(function(channel) {
+        return Number(channel.id) !== Number(action.payload.id);
+      });
       return {
         ...state,
         channels: newChannnels,
       };
     },
     renameChannelFromStore(state, action) {
-      const updatedChannels = state.channels.map((channel) => Number(channel.id) === Number(action.payload.id) ? { ...channel, ...action.payload } : channel);
+      const updatedChannels = state.channels.map(function(channel) {
+        if(Number(channel.id) === Number(action.payload.id)) {
+          return { ...channel, ...action.payload };
+        } else {
+          return channel
+        }
+      });
       return {
         ...state,
         channels: updatedChannels,
@@ -102,64 +110,63 @@ const channelsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(addChannel.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(addChannel.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        // state.channels.push(action.payload);
-      })
-      .addCase(addChannel.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(editChannel.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(editChannel.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        /*
-        const index = state.channels.findIndex(channel => Number(channel.id) === Number(action.payload.id));
-        if (index >= 0) {
-          state.channels[index] = action.payload; // Обновление существующего канала
-        }
-          */
-      })
-      .addCase(editChannel.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(removeChannel.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(removeChannel.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        /*
-        const index = state.channels.findIndex((channel) => Number(channel.id) === Number(action.payload));
-        if (index >= 0) {
-          state.channels.splice(index, 1);
-        }
-          */
-      })
-      .addCase(removeChannel.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-      .addCase(fetchChannels.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(fetchChannels.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.channels = action.payload;
-      })
-      .addCase(fetchChannels.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      });
+      .addCase(addChannel.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(addChannel.fulfilled, (state) => ({
+        ...state,
+        status: 'succeeded',
+      }))
+      .addCase(addChannel.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(editChannel.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(editChannel.fulfilled, (state) => ({
+        ...state,
+        status: 'succeeded',
+      }))
+      .addCase(editChannel.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(removeChannel.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(removeChannel.fulfilled, (state) => ({
+        ...state,
+        status: 'succeeded',
+      }))
+      .addCase(removeChannel.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(fetchChannels.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
+      .addCase(fetchChannels.fulfilled, (state, action) => ({
+        ...state,
+        status: 'succeeded',
+        channels: action.payload,
+      }))
+      .addCase(fetchChannels.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }));
   },
 });
 

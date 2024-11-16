@@ -30,7 +30,7 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    setAuthorized: (state, action) => {
+    setAuthorized(state, action) {
       return {
         ...state,
         isAuthorized: action.payload,
@@ -46,36 +46,54 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
+        return {
+          ...state,
+          status: 'loading',
+          error: null,
+        };
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.status = 'succeeded';
         localStorage.setItem('token', action.payload.token);
-        state.token = action.payload.token;
         localStorage.setItem('username', action.payload.username);
-        state.username = action.payload.username;
-        state.isAuthorized = true;
+        return {
+          ...state,
+          status: 'succeeded',
+          token: action.payload.token,
+          username: action.payload.username,
+          isAuthorized: true,
+        };
       })
       .addCase(login.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
+        return {
+          ...state,
+          status: 'failed',
+          error: action.payload,
+        };
       })
       .addCase(signup.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
+        return {
+          ...state,
+          status: 'loading',
+          error: null,
+        };
       })
       .addCase(signup.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.token = action.payload.token;
         localStorage.setItem('token', action.payload.token);
-        state.username = action.payload.username;
         localStorage.setItem('username', action.payload.username);
-        state.isAuthorized = true;
+        return {
+          ...state,
+          status: 'succeeded',
+          token: action.payload.token,
+          username: action.payload.username,
+          isAuthorized: true,
+        };
       })
       .addCase(signup.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
+        return {
+          ...state,
+          status: 'failed',
+          error: action.payload,
+        };
       });
   },
 });
