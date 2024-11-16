@@ -212,8 +212,7 @@ const Chat = () => {
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">
-            {channels.map((channel) =>
-              Number(channel.id) < 3 ? (
+            {channels.map((channel) => Number(channel.id) < 3 ? (
                 <Button
                   key={channel.id}
                   variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
@@ -259,8 +258,7 @@ const Chat = () => {
                     <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              )
-            )}
+              ),)}
           </ButtonGroup>
           <AddChannelForm
             isOpen={isModalOpen}
@@ -286,13 +284,14 @@ const Chat = () => {
         <Col xs={10} lg={10} className="d-flex flex-column p-0">
           <div className="w-100" style={{ padding: '16px' }}>
             <h5>
-              #{(
+              #
+              {(
                 channels.find((channel) => Number(channel.id) === currentChannelId)?.name
               )}
             </h5>
-            <div>{getCountText(messages.filter((m) => {
-              return Number(m.channelId) === currentChannelId.length;
-            }))}</div>
+            <div>
+              {getCountText(messages.filter((m) => Number(m.channelId) === currentChannelId.length))}
+            </div>
           </div>
           <div className="border-top h-100" style={{ borderColor: 'lightgray' }}>
             {messages.map((message) => {
@@ -306,7 +305,7 @@ const Chat = () => {
                 );
               }
               return null;
-              })}
+            })}
           </div>
           <Form onSubmit={handleMessageSubmit}>
             <Form.Group className="d-flex align-items-center" style={{ padding: '16px 48px' }}>
