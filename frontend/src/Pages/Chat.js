@@ -12,7 +12,7 @@ import {
 } from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
 import {
-  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrChannelIdStore,
+  addChannel, removeChannel, editChannel, fetchChannels, clearChError, setCurrChIdStore,
 } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
@@ -48,7 +48,7 @@ const Chat = () => {
   useEffect(() => {
     if (channelError) {
       showNotification(`${channelError}`, 'error');
-      dispatch(clearChannelError());
+      dispatch(clearChError());
     }
   }, [channelError, dispatch]);
 
@@ -87,7 +87,7 @@ const Chat = () => {
   };
 
   const handleChannelClick = async (id) => {
-    await dispatch(setCurrChannelIdStore(id));
+    await dispatch(setCurrChIdStore(id));
   };
 
   const handleOpenModal = () => {
@@ -110,7 +110,8 @@ const Chat = () => {
     return (
       <Alert variant="danger">
         {t('errors.error')}
-        :<span>{error}</span>
+        :
+        <span>{error}</span>
       </Alert>
     );
   }
@@ -285,15 +286,12 @@ const Chat = () => {
             <div>{getMessageCountText(messages.filter((message) => Number(message.channelId) === currentChannelId).length)}</div>
           </div>
           <div className="border-top h-100" style={{ borderColor: 'lightgray' }}>
-            {Array.isArray(messages)
-              ? messages.map((message) =>
-                  Number(message.channelId) === Number(currentChannelId) ? (
-                    <div key={message.id} className="message">
-                      <strong>{message.username}</strong>: {message.body}
-                    </div>
-                  ) : null,
-                )
-              : null}
+            {messages.map((message) =>
+              Number(message.channelId) === Number(currentChannelId) ? (
+                <div key={message.id} className="message">
+                  <strong>{message.username}</strong>: {message.body}
+                </div>
+              ) : null)}
           </div>
           <Form onSubmit={handleMessageSubmit}>
             <Form.Group className="d-flex align-items-center" style={{ padding: '16px 48px' }}>

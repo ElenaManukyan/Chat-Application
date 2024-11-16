@@ -9,7 +9,7 @@ import { io } from 'socket.io-client';
 import i18n from './i18n';
 import { addMessageToStore } from './store/messagesSlice';
 import {
-  addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChannelIdStore,
+  addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChIdStore,
 } from './store/channelsSlice';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
@@ -42,7 +42,7 @@ const init = () => {
 
     if (Number(state.channels.currentChannelId) === Number(removedChannelId)) {
       const firstChannelId = state.channels.channels[0].id;
-      store.dispatch(setCurrChannelIdStore(firstChannelId));
+      store.dispatch(setCurrChIdStore(firstChannelId));
     }
 
     store.dispatch(removeChannelFromStore(payload));
