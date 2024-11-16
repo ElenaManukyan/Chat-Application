@@ -212,54 +212,55 @@ const Chat = () => {
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">
-            {channels.map((channel) => { 
-              return Number(channel.id) < 3 ? (
-              <Button
-                key={channel.id}
-                variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                className="w-100 rounded-0 text-start"
-                style={{
-                  padding: '6px 12px',
-                  borderRadius: 0,
-                }}
-                onClick={() => handleChannelClick(Number(channel.id))}
-              >
-                {`# ${channel.name}`}
-              </Button>
-            ) : (
-                <Dropdown
-                  as={ButtonGroup}
+            {channels.map((channel) => (
+              Number(channel.id) < 3 ? (
+                <Button
                   key={channel.id}
+                  variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                  className="w-100 rounded-0 text-start"
+                  style={{
+                    padding: '6px 12px',
+                    borderRadius: 0,
+                  }}
                   onClick={() => handleChannelClick(Number(channel.id))}
                 >
-                  <Button
-                    variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                    title={`# ${channel.name}`}
-                    className="w-100 rounded-0 text-start text-truncate"
-                    style={{
-                      width: '80%',
-                      borderRadius: 0,
-                    }}
+                  {`# ${channel.name}`}
+                </Button>
+              ) : (
+                  <Dropdown
+                    as={ButtonGroup}
+                    key={channel.id}
+                    onClick={() => handleChannelClick(Number(channel.id))}
                   >
-                    {`# ${channel.name}`}
-                  </Button>
-                  <Dropdown.Toggle
-                    split
-                    variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                    id={`dropdown-split-basic-${channel.id}`}
-                    style={{
-                      width: '20%',
-                      borderRadius: 0,
-                    }}
-                  >
-                    <span className="visually-hidden">Управление каналом</span>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleOpenRemoveModal(channel.id)}>{t('chat.channels.remove')}</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-            )})}
+                    <Button
+                      variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                      title={`# ${channel.name}`}
+                      className="w-100 rounded-0 text-start text-truncate"
+                      style={{
+                        width: '80%',
+                        borderRadius: 0,
+                      }}
+                    >
+                      {`# ${channel.name}`}
+                    </Button>
+                    <Dropdown.Toggle
+                      split
+                      variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                      id={`dropdown-split-basic-${channel.id}`}
+                      style={{
+                        width: '20%',
+                        borderRadius: 0,
+                      }}
+                    >
+                      <span className="visually-hidden">Управление каналом</span>
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <Dropdown.Item onClick={() => handleOpenRemoveModal(channel.id)}>{t('chat.channels.remove')}</Dropdown.Item>
+                      <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+              )
+            ))}
           </ButtonGroup>
           <AddChannelForm
             isOpen={isModalOpen}
