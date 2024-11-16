@@ -103,7 +103,7 @@ const chatSlice = createSlice({
         error: null,
       }))
       .addCase(removeMessage.fulfilled, (state, action) => {
-        const index = state.messages.findIndex((message) => Number(message.id) === Number(action.payload.id));
+        const index = state.messages.findIndex((m) => Number(m.id) === Number(action.payload.id));
         if (index >= 0) {
           return {
             ...state,

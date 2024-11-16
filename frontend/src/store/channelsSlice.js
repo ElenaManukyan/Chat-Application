@@ -80,20 +80,18 @@ const channelsSlice = createSlice({
       };
     },
     removeChannelFromStore(state, action) {
-      const newChannnels = state.channels.filter(function(channel) {
-        return Number(channel.id) !== Number(action.payload.id);
-      });
+      const newCh = state.channels.filter((channel) => Number(channel.id) !== Number(action.payload.id));
       return {
         ...state,
-        channels: newChannnels,
+        channels: newCh,
       };
     },
     renameChannelFromStore(state, action) {
-      const updatedChannels = state.channels.map(function(channel) {
-        if(Number(channel.id) === Number(action.payload.id)) {
+      const updatedChannels = state.channels.map((channel) => {
+        if (Number(channel.id) === Number(action.payload.id)) {
           return { ...channel, ...action.payload };
         } else {
-          return channel
+          return channel;
         }
       });
       return {
@@ -101,7 +99,7 @@ const channelsSlice = createSlice({
         channels: updatedChannels,
       };
     },
-    setCurrentChannelIdStore(state, action) {
+    setCurrChannelIdStore(state, action) {
       return {
         ...state,
         currentChannelId: action.payload,
@@ -170,5 +168,7 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { setCurrentChannelIdStore, clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
+export const {
+  setCurrChannelIdStore, clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore,
+} = channelsSlice.actions;
 export default channelsSlice.reducer;

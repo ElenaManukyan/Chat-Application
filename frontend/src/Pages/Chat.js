@@ -12,7 +12,7 @@ import {
 } from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
 import {
-  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdStore,
+  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrChannelIdStore,
 } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
@@ -87,7 +87,7 @@ const Chat = () => {
   };
 
   const handleChannelClick = async (id) => {
-    await dispatch(setCurrentChannelIdStore(id));
+    await dispatch(setCurrChannelIdStore(id));
   };
 
   const handleOpenModal = () => {
@@ -109,8 +109,8 @@ const Chat = () => {
   if (status === 'failed') {
     return (
       <Alert variant="danger">
-        {t('errors.error')}:
-        <span>{error}</span>
+        {t('errors.error')}
+        :<span>{error}</span>
       </Alert>
     );
   }
@@ -211,12 +211,12 @@ const Chat = () => {
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">
-            {channels.map((channel) =>
-              Number(channel.id) < 3 ? (
+            {channels.map((channel) => {
+              return Number(channel.id) < 3 ? (
                 <Button
                   key={channel.id}
                   variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                  className={`w-100 rounded-0 text-start`}
+                  className='w-100 rounded-0 text-start'
                   style={{
                     padding: '6px 12px',
                     borderRadius: 0,
@@ -230,7 +230,7 @@ const Chat = () => {
                   <Button
                     variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
                     title={`# ${channel.name}`}
-                    className={`w-100 rounded-0 text-start text-truncate`}
+                    className='w-100 rounded-0 text-start text-truncate'
                     style={{
                       width: '80%',
                       borderRadius: 0,
@@ -254,11 +254,22 @@ const Chat = () => {
                     <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              ),
+              );
+            }
             )}
           </ButtonGroup>
-          <AddChannelForm isOpen={isModalOpen} onClose={handleCloseModal} onSubmit={handleAddChannel} existingChannels={channels.map((ch) => ch.name)} />
-          <RemoveModal isOpen={isModalRemoveOpen} onClose={handleCloseRemoveModal} onDelete={handleDeleteChannel} channelId={channelId} />
+          <AddChannelForm 
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            onSubmit={handleAddChannel}
+            existingChannels={channels.map((ch) => ch.name)}
+          />
+          <RemoveModal
+            isOpen={isModalRemoveOpen}
+            onClose={handleCloseRemoveModal}
+            onDelete={handleDeleteChannel}
+            channelId={channelId}
+          />
           <RenameChannel
             isOpen={isModalRenameOpen}
             onClose={handleCloseRenameModal}

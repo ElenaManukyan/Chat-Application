@@ -8,7 +8,9 @@ import { io } from 'socket.io-client';
 // import './i18n';
 import i18n from './i18n';
 import { addMessageToStore } from './store/messagesSlice';
-import { addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrentChannelIdStore } from './store/channelsSlice';
+import {
+  addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChannelIdStore,
+} from './store/channelsSlice';
 import reportWebVitals from './reportWebVitals';
 import store from './store/store';
 import { Notification } from './DefaulltComponents/NotificationComponent';
@@ -40,7 +42,7 @@ const init = () => {
 
     if (Number(state.channels.currentChannelId) === Number(removedChannelId)) {
       const firstChannelId = state.channels.channels[0].id;
-      store.dispatch(setCurrentChannelIdStore(firstChannelId));
+      store.dispatch(setCurrChannelIdStore(firstChannelId));
     }
 
     store.dispatch(removeChannelFromStore(payload));

@@ -45,13 +45,11 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(login.pending, (state) => {
-        return {
-          ...state,
-          status: 'loading',
-          error: null,
-        };
-      })
+      .addCase(login.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
       .addCase(login.fulfilled, (state, action) => {
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('username', action.payload.username);
@@ -63,20 +61,16 @@ const authSlice = createSlice({
           isAuthorized: true,
         };
       })
-      .addCase(login.rejected, (state, action) => {
-        return {
-          ...state,
-          status: 'failed',
-          error: action.payload,
-        };
-      })
-      .addCase(signup.pending, (state) => {
-        return {
-          ...state,
-          status: 'loading',
-          error: null,
-        };
-      })
+      .addCase(login.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }))
+      .addCase(signup.pending, (state) => ({
+        ...state,
+        status: 'loading',
+        error: null,
+      }))
       .addCase(signup.fulfilled, (state, action) => {
         localStorage.setItem('token', action.payload.token);
         localStorage.setItem('username', action.payload.username);
@@ -88,13 +82,11 @@ const authSlice = createSlice({
           isAuthorized: true,
         };
       })
-      .addCase(signup.rejected, (state, action) => {
-        return {
-          ...state,
-          status: 'failed',
-          error: action.payload,
-        };
-      });
+      .addCase(signup.rejected, (state, action) => ({
+        ...state,
+        status: 'failed',
+        error: action.payload,
+      }));
   },
 });
 
