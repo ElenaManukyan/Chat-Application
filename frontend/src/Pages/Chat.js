@@ -24,7 +24,7 @@ const Chat = () => {
   const messages = useSelector((state) => state.messages.messages);
   const status = useSelector((state) => state.messages.status);
   const username = useSelector((state) => state.auth.username);
-  const currentChannelId = useSelector((state) => state.channels.currentChannelId);
+  const currentChId = useSelector((state) => state.channels.currentChannelId);
   const [newMessage, setNewMessage] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalRemoveOpen, setModalRemoveOpen] = useState(false);
@@ -78,7 +78,7 @@ const Chat = () => {
 
     const message = {
       body: cleanMessage,
-      channelId: currentChannelId,
+      channelId: currentChId,
       username,
     };
 
@@ -212,27 +212,28 @@ const Chat = () => {
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">
-            {channels.map((channel) => Number(channel.id) < 3 ? (
-                <Button
-                  key={channel.id}
-                  variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                  className="w-100 rounded-0 text-start"
-                  style={{
-                    padding: '6px 12px',
-                    borderRadius: 0,
-                  }}
-                  onClick={() => handleChannelClick(Number(channel.id))}
-                >
-                  {`# ${channel.name}`}
-                </Button>
-              ) : (
+            {channels.map((channel) => { 
+              return Number(channel.id) < 3 ? (
+              <Button
+                key={channel.id}
+                variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                className="w-100 rounded-0 text-start"
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: 0,
+                }}
+                onClick={() => handleChannelClick(Number(channel.id))}
+              >
+                {`# ${channel.name}`}
+              </Button>
+            ) : (
                 <Dropdown
                   as={ButtonGroup}
                   key={channel.id}
                   onClick={() => handleChannelClick(Number(channel.id))}
                 >
                   <Button
-                    variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                    variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
                     title={`# ${channel.name}`}
                     className="w-100 rounded-0 text-start text-truncate"
                     style={{
@@ -244,7 +245,7 @@ const Chat = () => {
                   </Button>
                   <Dropdown.Toggle
                     split
-                    variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
+                    variant={`${Number(currentChId) === Number(channel.id) ? 'secondary' : 'light'}`}
                     id={`dropdown-split-basic-${channel.id}`}
                     style={{
                       width: '20%',
@@ -258,7 +259,7 @@ const Chat = () => {
                     <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              ),)}
+            )})}
           </ButtonGroup>
           <AddChannelForm
             isOpen={isModalOpen}
@@ -286,16 +287,16 @@ const Chat = () => {
             <h5>
               #
               {(
-                channels.find((channel) => Number(channel.id) === currentChannelId)?.name
+                channels.find((channel) => Number(channel.id) === currentChId)?.name
               )}
             </h5>
             <div>
-              {getCountText(messages.filter((m) => Number(m.channelId) === currentChannelId.length))}
+              {getCountText(messages.filter((m) => Number(m.channelId) === currentChId.length))}
             </div>
           </div>
           <div className="border-top h-100" style={{ borderColor: 'lightgray' }}>
             {messages.map((message) => {
-              if (Number(message.channelId) === Number(currentChannelId)) {
+              if (Number(message.channelId) === Number(currentChId)) {
                 return (
                   <div key={message.id} className="message">
                     <strong>{message.username}</strong>
