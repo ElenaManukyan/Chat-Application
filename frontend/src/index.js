@@ -16,7 +16,7 @@ import { addMessageToStore } from './store/messagesSlice';
 import { addChannelToStore } from './store/channelsSlice';
 import { removeChannelFromStore } from './store/channelsSlice';
 import { renameChannelFromStore } from './store/channelsSlice';
-import { setCurrentChannelIdInStore } from './store/channelsSlice';
+import { setCurrentChannelIdStore } from './store/channelsSlice';
 import './index.css';
 import App from './App';
 
@@ -45,7 +45,7 @@ const init = () => {
 
     if (Number(state.channels.currentChannelId) === Number(removedChannelId)) {
       const firstChannelId = state.channels.channels[0].id;
-      store.dispatch(setCurrentChannelIdInStore(firstChannelId));
+      store.dispatch(setCurrentChannelIdStore(firstChannelId));
     }
 
     store.dispatch(removeChannelFromStore(payload));

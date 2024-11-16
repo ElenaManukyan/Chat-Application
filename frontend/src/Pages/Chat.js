@@ -12,7 +12,7 @@ import {
 } from '../store/messagesSlice';
 import AddChannelForm from './AddNewChanel';
 import {
-  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdInStore
+  addChannel, removeChannel, editChannel, fetchChannels, clearChannelError, setCurrentChannelIdStore
 } from '../store/channelsSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
@@ -59,7 +59,7 @@ const Chat = () => {
 
   // ПОСЛЕ ДОБАВЛЕНИЯ КАНАЛА В НОВОМ ЧАТЕ НЕ УСТАНАВЛИВАЕТСЯ ФОКУС
   // НА ИНПУТЕ НОВОГО ЧАТА!!!
-  
+
   useEffect(() => {
     if (inputRef.current && !isModalOpen) {
       inputRef.current.focus();
@@ -87,7 +87,7 @@ const Chat = () => {
   };
 
   const handleChannelClick = async (id) => {
-    await dispatch(setCurrentChannelIdInStore(id));
+    await dispatch(setCurrentChannelIdStore(id));
   };
 
   const handleOpenModal = () => {

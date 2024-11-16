@@ -93,7 +93,7 @@ const channelsSlice = createSlice({
         channels: updatedChannels,
       };
     },
-    setCurrentChannelIdInStore(state, action) {
+    setCurrentChannelIdStore(state, action) {
       return {
         ...state,
         currentChannelId: action.payload,
@@ -163,5 +163,5 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { setCurrentChannelIdInStore, clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
+export const { setCurrentChannelIdStore, clearChannelError, addChannelToStore, removeChannelFromStore, renameChannelFromStore } = channelsSlice.actions;
 export default channelsSlice.reducer;

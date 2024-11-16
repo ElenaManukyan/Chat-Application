@@ -1,13 +1,15 @@
 import { Modal, Button, Form } from 'react-bootstrap';
 import {
-  Formik, Field, Form as FormikForm, ErrorMessage
+  Formik, Field, Form as FormikForm, ErrorMessage,
 } from 'formik';
 import * as yup from 'yup';
 import React, { useEffect } from 'react';
 import { useRollbar } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
 
-const AddChannelForm = ({ isOpen, onClose, onSubmit, existingChannels }) => {
+const AddChannelForm = ({
+  isOpen, onClose, onSubmit, existingChannels
+}) => {
   const rollbar = useRollbar();
   const { t } = useTranslation();
 
