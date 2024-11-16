@@ -116,7 +116,7 @@ const Chat = () => {
     );
   }
 
-  const getMessageCountText = (count) => t('chat.messages.count', { count });
+  const getCountText = (count) => t('chat.messages.count', { count });
 
   const handleAddChannel = async (channelName) => {
     try {
@@ -212,12 +212,12 @@ const Chat = () => {
             </Button>
           </div>
           <ButtonGroup vertical className="w-100">
-            {channels.map((channel) => {
-              return Number(channel.id) < 3 ? (
+            {channels.map((channel) =>
+              Number(channel.id) < 3 ? (
                 <Button
                   key={channel.id}
                   variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
-                  className='w-100 rounded-0 text-start'
+                  className="w-100 rounded-0 text-start"
                   style={{
                     padding: '6px 12px',
                     borderRadius: 0,
@@ -227,11 +227,15 @@ const Chat = () => {
                   {`# ${channel.name}`}
                 </Button>
               ) : (
-                <Dropdown as={ButtonGroup} key={channel.id} onClick={() => handleChannelClick(Number(channel.id))}>
+                <Dropdown
+                  as={ButtonGroup}
+                  key={channel.id}
+                  onClick={() => handleChannelClick(Number(channel.id))}
+                >
                   <Button
                     variant={`${Number(currentChannelId) === Number(channel.id) ? 'secondary' : 'light'}`}
                     title={`# ${channel.name}`}
-                    className='w-100 rounded-0 text-start text-truncate'
+                    className="w-100 rounded-0 text-start text-truncate"
                     style={{
                       width: '80%',
                       borderRadius: 0,
@@ -255,11 +259,10 @@ const Chat = () => {
                     <Dropdown.Item onClick={() => handleOpenRenameChannelModal(channel.id)}>{t('chat.channels.rename')}</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
-              );
-            }
+              )
             )}
           </ButtonGroup>
-          <AddChannelForm 
+          <AddChannelForm
             isOpen={isModalOpen}
             onClose={handleCloseModal}
             onSubmit={handleAddChannel}
@@ -282,16 +285,28 @@ const Chat = () => {
         </Col>
         <Col xs={10} lg={10} className="d-flex flex-column p-0">
           <div className="w-100" style={{ padding: '16px' }}>
-            <h5>#{channels.find((channel) => Number(channel.id) === currentChannelId)?.name}</h5>
-            <div>{getMessageCountText(messages.filter((message) => Number(message.channelId) === currentChannelId).length)}</div>
+            <h5>
+              #{(
+                channels.find((channel) => Number(channel.id) === currentChannelId)?.name
+              )}
+            </h5>
+            <div>{getCountText(messages.filter((m) => {
+              return Number(m.channelId) === currentChannelId.length;
+            }))}</div>
           </div>
           <div className="border-top h-100" style={{ borderColor: 'lightgray' }}>
-            {messages.map((message) =>
-              Number(message.channelId) === Number(currentChannelId) ? (
-                <div key={message.id} className="message">
-                  <strong>{message.username}</strong>: {message.body}
-                </div>
-              ) : null)}
+            {messages.map((message) => {
+              if (Number(message.channelId) === Number(currentChannelId)) {
+                return (
+                  <div key={message.id} className="message">
+                    <strong>{message.username}</strong>
+                    :
+                    <span>{message.body}</span>
+                  </div>
+                );
+              }
+              return null;
+              })}
           </div>
           <Form onSubmit={handleMessageSubmit}>
             <Form.Group className="d-flex align-items-center" style={{ padding: '16px 48px' }}>
