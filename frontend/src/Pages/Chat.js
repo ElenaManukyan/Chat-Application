@@ -102,9 +102,12 @@ const Chat = () => {
     }
   };
 
+  // ЛОАДЕР ЗДЕСЬ!!
+  /*
   if (status === 'loading') {
     return <Spinner animation="border" />;
   }
+    */
 
   if (status === 'failed') {
     return (
