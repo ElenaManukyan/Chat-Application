@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Container, Row, Col, Button, Alert, ButtonGroup, Form,
+  InputGroup,
 } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
@@ -184,19 +185,12 @@ const Chat = () => {
   return (
     <Container className="mt-4">
       <Row style={{ height: '90vh', boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)', borderRadius: '8px' }}>
-        <Col xs={2} lg={2} className="border-end" style={{ borderColor: 'lightgray' }}>
+        <Col xs={4} lg={2} className="border-end" style={{ borderColor: 'lightgray', padding: '0' }}>
           <div
-            className="d-flex justify-content-between align-items-center"
-            style={{
-              marginTop: '4px',
-              marginBottom: '8px',
-              paddingTop: '24px',
-              paddingLeft: '24px',
-              paddingBottom: '24px',
-              paddingRight: '8px',
-            }}
+            className="d-flex mt-1 justify-content-between align-items-center mb-2 ps-4 pe-2 p-4"
+            
           >
-            <h5 className="mb-0">{t('chat.channels.channels')}</h5>
+            <b className="mb-0">{t('chat.channels.channels')}</b>
             <Button
               onClick={handleOpenModal}
               variant="outline-primary"
@@ -286,23 +280,47 @@ const Chat = () => {
             existingChannels={channels.map((ch) => ch.name)}
           />
         </Col>
-        <Col xs={10} lg={10} className="d-flex flex-column p-0">
-          <div className="w-100" style={{ padding: '16px' }}>
-            <h5>
-              #
+        <Col
+          xs={8}
+          lg={10}
+          className="d-flex flex-column p-0"
+          style={{
+            height: '90vh',
+          }}
+        >
+          <div
+            className="w-100"
+            style={{
+              padding: '16px',
+              flex: '0 0 auto',
+            }}
+          >
+            <p className='m-0'>
+              <b>#
               {(
                 channels.find((channel) => Number(channel.id) === currentChId)?.name
               )}
-            </h5>
-            <div>
-              {getCountText(messages.filter((m) => Number(m.channelId) === currentChId.length))}
-            </div>
+              </b>
+            </p>
+            <span className='text-muted'>
+              {getCountText(messages.filter((m) => Number(m.channelId) === currentChId).length)}
+            </span>
           </div>
-          <div className="border-top h-100" style={{ borderColor: 'lightgray' }}>
+          <div
+            className="border-top"
+            style={{
+              borderColor: 'lightgray',
+              overflowY: 'auto',
+              flex: '1 1 auto',
+              padding: '0 48px',
+            }}
+          >
             {messages.map((message) => {
               if (Number(message.channelId) === Number(currentChId)) {
                 return (
-                  <div key={message.id} className="message">
+                  <div
+                    key={message.id}
+                  >
                     <strong>{message.username}</strong>
                     :
                     <span>{message.body}</span>
@@ -312,8 +330,16 @@ const Chat = () => {
               return null;
             })}
           </div>
-          <Form onSubmit={handleMessageSubmit}>
-            <Form.Group className="d-flex align-items-center" style={{ padding: '16px 48px' }}>
+          <Form
+            onSubmit={handleMessageSubmit}
+            style={{
+              flex: '0 0 auto',
+            }}
+          >
+            <InputGroup
+              className="d-flex align-items-center"
+              style={{ padding: '16px 48px' }}
+            >
               <Form.Control
                 ref={inputRef}
                 type="text"
@@ -324,9 +350,9 @@ const Chat = () => {
                 aria-label="Новое сообщение"
               />
               <Button type="submit" variant="primary">
-                {t('chat.messages.sendMessage')}
+                ➔
               </Button>
-            </Form.Group>
+            </InputGroup>
           </Form>
         </Col>
       </Row>

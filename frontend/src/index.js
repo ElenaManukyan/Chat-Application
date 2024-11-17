@@ -11,7 +11,6 @@ import { addMessageToStore } from './store/messagesSlice';
 import {
   addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChIdStore,
 } from './store/channelsSlice';
-import reportWebVitals from './reportWebVitals';
 import store from './store/store';
 import { Notification } from './DefaulltComponents/NotificationComponent';
 import './index.css';
