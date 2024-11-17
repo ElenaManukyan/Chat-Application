@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Container, Row, Col, Button, Spinner, Alert, ButtonGroup, Form,
+  Container, Row, Col, Button, Alert, ButtonGroup, Form,
 } from 'react-bootstrap';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
