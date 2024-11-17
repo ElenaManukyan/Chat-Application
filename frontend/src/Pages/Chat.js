@@ -54,8 +54,8 @@ const Chat = () => {
   }, [channelError, dispatch]);
 
   useEffect(() => {
-    //const accessToken = process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN;
-    //console.log('ROLLBAR_ACCESS_TOKEN', accessToken);
+    // const accessToken = process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN;
+    // console.log('ROLLBAR_ACCESS_TOKEN', accessToken);
 
     dispatch(fetchChannels());
     dispatch(fetchMessages());
@@ -191,7 +191,6 @@ const Chat = () => {
         <Col xs={4} lg={2} className="border-end" style={{ borderColor: 'lightgray', padding: '0' }}>
           <div
             className="d-flex mt-1 justify-content-between align-items-center mb-2 ps-4 pe-2 p-4"
-            
           >
             <b className="mb-0">{t('chat.channels.channels')}</b>
             <Button
@@ -298,14 +297,15 @@ const Chat = () => {
               flex: '0 0 auto',
             }}
           >
-            <p className='m-0'>
-              <b>#
-              {(
-                channels.find((channel) => Number(channel.id) === currentChId)?.name
-              )}
+            <p className="m-0">
+              <b>
+                #
+                {(
+                  channels.find((channel) => Number(channel.id) === currentChId)?.name
+                )}
               </b>
             </p>
-            <span className='text-muted'>
+            <span className="text-muted">
               {getCountText(messages.filter((m) => Number(m.channelId) === currentChId).length)}
             </span>
           </div>
