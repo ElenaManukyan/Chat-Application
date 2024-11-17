@@ -54,6 +54,9 @@ const Chat = () => {
   }, [channelError, dispatch]);
 
   useEffect(() => {
+    const accessToken = process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN;
+    console.log('ROLLBAR_ACCESS_TOKEN', accessToken);
+
     dispatch(fetchChannels());
     dispatch(fetchMessages());
   }, [dispatch]);
