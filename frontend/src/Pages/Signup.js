@@ -94,52 +94,52 @@ const Signup = () => {
                 {({
                   handleSubmit, handleChange, values, errors,
                 }) => (
-                <Form noValidate onSubmit={handleSubmit}>
-                  <Form.Group controlId="formUsername" className="position-relative mb-4">
-                    <Form.Control
-                      type="text"
-                      name="username"
-                      value={values.username}
-                      onChange={handleChange}
-                      placeholder=" "
-                      isInvalid={!!errors.username}
-                      style={{
-                        height: '50px',
-                      }}
-                    />
-                    <Form.Label className="placeholder1">{t('signup.username')}</Form.Label>
-                    <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
-                      {errors.username}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <Form.Group controlId="formPassword" className="position-relative mb-4">
-                    <Form.Control type="password" name="password" value={values.password} onChange={handleChange} placeholder=" " isInvalid={!!errors.password} style={{ height: '50px' }} />
-                    <Form.Label className="placeholder1">{t('login.password')}</Form.Label>
-                    <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
-                      {errors.password}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <Form.Group controlId="formConfirmPassword" className="position-relative">
-                    <Form.Control
-                      value={values.confirmPassword}
-                      type="password"
-                      name="confirmPassword"
-                      placeholder=" "
-                      onChange={handleChange}
-                      isInvalid={!!errors.confirmPassword}
-                      style={{ height: '50px' }}
-                    />
-                    <Form.Label className="placeholder1">{t('signup.confirmPasswd')}</Form.Label>
-                    <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
-                      {errors.confirmPassword}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                  <div className="d-grid">
-                    <Button variant="primary" type="submit" className="mt-4" style={{ height: '50px' }}>
-                      {t('signup.signup')}
-                    </Button>
-                  </div>
-                </Form>
+                  <Form noValidate onSubmit={handleSubmit}>
+                    <Form.Group controlId="formUsername" className="position-relative mb-4">
+                      <Form.Control
+                        type="text"
+                        name="username"
+                        value={values.username}
+                        onChange={handleChange}
+                        placeholder=" "
+                        isInvalid={!!errors.username}
+                        style={{
+                          height: '50px',
+                        }}
+                      />
+                      <Form.Label className="placeholder1">{t('signup.username')}</Form.Label>
+                      <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
+                        {errors.username}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="formPassword" className="position-relative mb-4">
+                      <Form.Control type="password" name="password" value={values.password} onChange={handleChange} placeholder=" " isInvalid={!!errors.password} style={{ height: '50px' }} />
+                      <Form.Label className="placeholder1">{t('login.password')}</Form.Label>
+                      <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
+                        {errors.password}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group controlId="formConfirmPassword" className="position-relative">
+                      <Form.Control
+                        value={values.confirmPassword}
+                        type="password"
+                        name="confirmPassword"
+                        placeholder=" "
+                        onChange={handleChange}
+                        isInvalid={!!errors.confirmPassword}
+                        style={{ height: '50px' }}
+                      />
+                      <Form.Label className="placeholder1">{t('signup.confirmPasswd')}</Form.Label>
+                      <Form.Control.Feedback type="invalid" className="position-absolute" style={{ top: '100%', margin: 0 }}>
+                        {errors.confirmPassword}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                    <div className="d-grid">
+                      <Button variant="primary" type="submit" className="mt-4" style={{ height: '50px' }}>
+                        {t('signup.signup')}
+                      </Button>
+                    </div>
+                  </Form>
                 )}
               </Formik>
             </Card.Body>
