@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { setAuthorized, login, clearAuthError, getAuthError } from '../store/authSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
+import routes from '../routes';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -27,7 +28,7 @@ const LoginForm = () => {
         showNotification(authError, 'error');
         dispatch(clearAuthError());
       } catch (err) {
-        rollbar.error('Clear authentification error', err);
+        rollbar.error(`${t('errors.rollbar.errAuth')}`, err);
       }
     }
   }, [authError, dispatch, rollbar]);
@@ -38,10 +39,10 @@ const LoginForm = () => {
       .unwrap()
       .then(() => {
         dispatch(setAuthorized(true));
-        navigate('/');
+        navigate(routes.main());
       })
       .catch((err) => {
-        rollbar.error('Ошибка при авторизации:', `${t('errors.loginAuthErr')}`);
+        rollbar.error(`${t('errors.rollbar.errAuth')}`, `${t('errors.loginAuthErr')}`);
         const status = err ? Number(err.slice(-3)) : null;
         switch (status) {
           case 401:
@@ -54,7 +55,7 @@ const LoginForm = () => {
   };
 
   const handleSignupClick = () => {
-    navigate('/signup');
+    navigate(routes.signup());
   };
 
   return (

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
+import routes from '../routes';
 
 export const getIsAuthorized = (state) => state.auth.isAuthorized;
 export const getUsername = (state) => state.auth.username;
@@ -10,7 +11,7 @@ export const getAuthStatus = (state) => state.auth.status;
 
 export const login = createAsyncThunk('auth/login', async (data, { rejectWithValue }) => {
   try {
-    const response = await axios.post('/api/v1/login', data);
+    const response = await axios.post(routes.getLogin(), data);
     return response.data;
   } catch (error) {
     return rejectWithValue(error.message || i18next.t('errors.authErr'));
@@ -19,7 +20,7 @@ export const login = createAsyncThunk('auth/login', async (data, { rejectWithVal
 
 export const signup = createAsyncThunk('auth/signup', async ({ username, password }, { rejectWithValue }) => {
   try {
-    const response = await axios.post('/api/v1/signup', { username, password });
+    const response = await axios.post(routes.getSignup(), { username, password });
     return response.data;
   } catch (error) {
     return rejectWithValue(error.message || i18next.t('errors.signupErr'));

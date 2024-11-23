@@ -15,13 +15,16 @@ import store from './store/store';
 import { Notification } from './DefaulltComponents/NotificationComponent';
 import './index.css';
 import App from './App';
+import rollbarConfig from './rollbar';
 
 const socket = io();
 
+/*
 const rollbarConfig = {
   accessToken: '5c1bb74732e54c9a9054a8c03f8aaa96',
   environment: 'testenv',
 };
+*/
 
 const init = () => {
   // subscribe new messages

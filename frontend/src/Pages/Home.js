@@ -2,12 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getToken } from '../store/authSlice';
+import routes from '../routes';
 
 const Home = () => {
   const navigate = useNavigate();
   const token = useSelector(getToken);
   const handleLoginClick = () => {
-    navigate('/login');
+    navigate(routes.login());
   };
 
   return (

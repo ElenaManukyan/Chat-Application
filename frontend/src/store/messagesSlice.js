@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
+import routes from '../routes';
 
 export const getMessages = (state) => state.messages.messages;
 export const getMessagesStatus = (state) => state.messages.status;
@@ -9,7 +10,7 @@ export const getMessagesError = (state) => state.messages.error;
 export const fetchMessages = createAsyncThunk('chat/fetchMessages', async (_, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('/api/v1/messages', {
+    const response = await axios.get(routes.getMessages(), {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -24,7 +25,7 @@ export const addMessage = createAsyncThunk('chat/addMessage', async (newMessage,
   try {
     const token = localStorage.getItem('token');
     // console.log(`token fetchData= ${JSON.stringify(token, null, 2)}`);
-    const response = await axios.post('/api/v1/messages', newMessage, {
+    const response = await axios.post(routes.getMessages(), newMessage, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +39,7 @@ export const addMessage = createAsyncThunk('chat/addMessage', async (newMessage,
 export const removeMessage = createAsyncThunk('chat/removeMessage', async (id, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.delete(`/api/v1/messages/${id}`, {
+    const response = await axios.delete(`${routes.getMessages()}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { setAuthorized, getIsAuthorized } from '../store/authSlice';
+import routes from '../routes';
 
 const NavbarComponent = () => {
   const navigate = useNavigate();
@@ -24,14 +25,14 @@ const NavbarComponent = () => {
     // Логика выхода из системы
     dispatch(setAuthorized(false));
     localStorage.clear(); // Remove all data
-    navigate('/login');
+    navigate(routes.login());
   };
 
   const handleBrandClick = () => {
     if (token) {
-      navigate('/');
+      navigate(routes.main());
     } else {
-      navigate('/login');
+      navigate(routes.login());
     }
   };
 

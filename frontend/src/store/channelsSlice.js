@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
+import routes from '../routes';
 
 export const getChannels = (state) => state.channels.channels;
 export const getCurrentChannelId = (state) => state.channels.currentChannelId;
@@ -9,7 +10,7 @@ export const getChannelError = (state) => state.channels.error;
 export const addChannel = createAsyncThunk('channels/addChannel', async (newChannel, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.post('/api/v1/channels', newChannel, {
+    const response = await axios.post(routes.getChannels(), newChannel, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -23,7 +24,7 @@ export const addChannel = createAsyncThunk('channels/addChannel', async (newChan
 export const editChannel = createAsyncThunk('channels/editChannel', async ({ id, editedChannel }, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.patch(`/api/v1/channels/${id}`, editedChannel, {
+    const response = await axios.patch(`${routes.getChannels()}/${id}`, editedChannel, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -37,7 +38,7 @@ export const editChannel = createAsyncThunk('channels/editChannel', async ({ id,
 export const removeChannel = createAsyncThunk('channels/removeChannel', async (id, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.delete(`/api/v1/channels/${id}`, {
+    const response = await axios.delete(`${routes.getChannels()}/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -51,7 +52,7 @@ export const removeChannel = createAsyncThunk('channels/removeChannel', async (i
 export const fetchChannels = createAsyncThunk('chat/fetchChannels', async (_, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('/api/v1/channels', {
+    const response = await axios.get(routes.getChannels(), {
       headers: {
         Authorization: `Bearer ${token}`,
       },

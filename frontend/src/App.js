@@ -10,6 +10,7 @@ import NotFound from './Pages/NotFound';
 import Signup from './Pages/Signup';
 import NavbarComponent from './DefaulltComponents/Navbar';
 import { setAuthorized, getToken } from './store/authSlice';
+import routes from './routes';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,10 +29,10 @@ const App = () => {
     <Router>
       <NavbarComponent />
       <Routes>
-        <Route path="/" element={token ? <Chat /> : <Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path={routes.main()} element={token ? <Chat /> : <Navigate to={routes.login()} replace />} />
+        <Route path={routes.login()} element={<Login />} />
+        <Route path={routes.home()} element={<Home />} />
+        <Route path={routes.signup()} element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

@@ -12,6 +12,7 @@ import { useRollbar } from '@rollbar/react';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
 import { signup, clearAuthError, getAuthStatus, getAuthError } from '../store/authSlice';
+import routes from '../routes';
 
 const Signup = () => {
   const { Formik } = formik;
@@ -53,7 +54,7 @@ const Signup = () => {
     dispatch(signup({ username: values.username, password: values.password }))
       .unwrap()
       .then(() => {
-        navigate('/');
+        navigate(routes.main());
       })
       .catch((err) => {
         rollbar.error('Ошибка при регистрации:', error);
@@ -66,7 +67,7 @@ const Signup = () => {
   };
 
   const handleClickLogin = () => {
-    navigate('/login');
+    navigate(routes.login());
   };
 
   return (
