@@ -84,10 +84,7 @@ const Chat = () => {
       return;
     }
 
-    leoProfanity.loadDictionary('ru');
-    let cleanMessage = leoProfanity.clean(newMessage);
-    leoProfanity.loadDictionary('en');
-    cleanMessage = leoProfanity.clean(cleanMessage);
+    const cleanMessage = leoProfanity.clean(newMessage);
 
     const message = {
       body: cleanMessage,
@@ -136,10 +133,7 @@ const Chat = () => {
 
   const handleAddChannel = async (channelName) => {
     try {
-      leoProfanity.loadDictionary('ru');
-      let cleanChannelName = leoProfanity.clean(channelName);
-      leoProfanity.loadDictionary('en');
-      cleanChannelName = leoProfanity.clean(cleanChannelName);
+      const cleanChannelName = leoProfanity.clean(channelName);
 
       const newChannel = { name: cleanChannelName };
       const resultAction = await dispatch(addChannel(newChannel));
