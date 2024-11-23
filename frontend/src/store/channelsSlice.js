@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
 
+export const getChannels = (state) => state.channels.channels;
+export const getCurrentChannelId = (state) => state.channels.currentChannelId;
+export const getChannelError = (state) => state.channels.error;
+
 export const addChannel = createAsyncThunk('channels/addChannel', async (newChannel, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');

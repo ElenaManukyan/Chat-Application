@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
-import { signup, clearAuthError } from '../store/authSlice';
+import { signup, clearAuthError, getAuthStatus, getAuthError } from '../store/authSlice';
 
 const Signup = () => {
   const { Formik } = formik;
@@ -39,8 +39,8 @@ const Signup = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.auth.status);
-  const signupError = useSelector((state) => state.auth.error);
+  const status = useSelector(getAuthStatus);
+  const signupError = useSelector(getAuthError);
 
   useEffect(() => {
     if (signupError) {

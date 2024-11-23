@@ -2,6 +2,10 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
 
+export const getMessages = (state) => state.messages.messages;
+export const getMessagesStatus = (state) => state.messages.status;
+export const getMessagesError = (state) => state.messages.error;
+
 export const fetchMessages = createAsyncThunk('chat/fetchMessages', async (_, { rejectWithValue }) => {
   try {
     const token = localStorage.getItem('token');

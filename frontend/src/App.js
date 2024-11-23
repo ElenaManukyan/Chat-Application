@@ -9,11 +9,11 @@ import Home from './Pages/Home';
 import NotFound from './Pages/NotFound';
 import Signup from './Pages/Signup';
 import NavbarComponent from './DefaulltComponents/Navbar';
-import { setAuthorized } from './store/authSlice';
+import { setAuthorized, getToken } from './store/authSlice';
 
 const App = () => {
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const token = useSelector(getToken);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');

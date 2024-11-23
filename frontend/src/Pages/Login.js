@@ -7,7 +7,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRollbar } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
-import { setAuthorized, login, clearAuthError } from '../store/authSlice';
+import { setAuthorized, login, clearAuthError, getAuthError } from '../store/authSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
 
@@ -18,7 +18,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const authError = useSelector((state) => state.auth.error);
+  const authError = useSelector(getAuthError);
   const rollbar = useRollbar();
 
   useEffect(() => {

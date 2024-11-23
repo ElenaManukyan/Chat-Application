@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { setAuthorized } from '../store/authSlice';
+import { setAuthorized, getIsAuthorized } from '../store/authSlice';
 
 const NavbarComponent = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthorized = useSelector((state) => state.auth.isAuthorized);
+  const isAuthorized = useSelector(getIsAuthorized);
   const token = localStorage.getItem('token');
   const { t } = useTranslation();
 

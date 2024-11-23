@@ -9,34 +9,49 @@ import { useTranslation } from 'react-i18next';
 import leoProfanity from 'leo-profanity';
 import { useRollbar } from '@rollbar/react';
 import {
-  addMessage, fetchMessages, removeMessage, clearMessageError,
+  addMessage,
+  fetchMessages,
+  removeMessage,
+  clearMessageError,
+  getMessages,
+  getMessagesStatus,
+  getMessagesError,
 } from '../store/messagesSlice';
-import AddChannelForm from './AddNewChanel';
+import AddChannelForm from './AddNewChannel';
 import {
-  addChannel, removeChannel, editChannel, fetchChannels, clearChError, setCurrChIdStore,
+  addChannel,
+  removeChannel,
+  editChannel,
+  fetchChannels,
+  clearChError,
+  setCurrChIdStore,
+  getChannels,
+  getCurrentChannelId,
+  getChannelError,
 } from '../store/channelsSlice';
+import { getUsername } from '../store/authSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import RemoveModal from './RemoveModal';
 import RenameChannel from './RenameChannel';
 
 const Chat = () => {
   const dispatch = useDispatch();
-  const channels = useSelector((state) => state.channels.channels);
-  const messages = useSelector((state) => state.messages.messages);
-  const status = useSelector((state) => state.messages.status);
-  const username = useSelector((state) => state.auth.username);
-  const currentChId = useSelector((state) => state.channels.currentChannelId);
+  const channels = useSelector(getChannels);
+  const messages = useSelector(getMessages);
+  const status = useSelector(getMessagesStatus);
+  const username = useSelector(getUsername);
+  const currentChId = useSelector(getCurrentChannelId);
   const [newMessage, setNewMessage] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [isModalRemoveOpen, setModalRemoveOpen] = useState(false);
   const [isModalRenameOpen, setModalRenameOpen] = useState(false);
   const [channelId, setChannelId] = useState(null);
   const [currChannelName, setCurrChannelName] = useState('');
-  const error = useSelector((state) => state.messages.error);
+  // const error = useSelector((state) => state.messages.error);
   const inputRef = useRef(null);
   const { t } = useTranslation();
-  const messageError = useSelector((state) => state.messages.error);
-  const channelError = useSelector((state) => state.channels.error);
+  const messageError = useSelector(getMessagesError);
+  const channelError = useSelector(getChannelError);
   const rollbar = useRollbar();
 
   useEffect(() => {
@@ -54,15 +69,9 @@ const Chat = () => {
   }, [channelError, dispatch]);
 
   useEffect(() => {
-    // const accessToken = process.env.REACT_APP_ROLLBAR_ACCESS_TOKEN;
-    // console.log('ROLLBAR_ACCESS_TOKEN', accessToken);
-
     dispatch(fetchChannels());
     dispatch(fetchMessages());
   }, [dispatch]);
-
-  // ПОСЛЕ ДОБАВЛЕНИЯ КАНАЛА В НОВОМ ЧАТЕ НЕ УСТАНАВЛИВАЕТСЯ ФОКУС
-  // НА ИНПУТЕ НОВОГО ЧАТА!!!
 
   useEffect(() => {
     if (inputRef.current && !isModalOpen) {
@@ -118,7 +127,7 @@ const Chat = () => {
       <Alert variant="danger">
         {t('errors.error')}
         :
-        <span>{error}</span>
+        <span>{messageError}</span>
       </Alert>
     );
   }
@@ -142,8 +151,8 @@ const Chat = () => {
         showNotification(`${t('chat.channels.channelNotCreate')}`, 'error');
       }
     } catch (err) {
-      rollbar.error('Error during channel addition:', err);
-      console.error('Error during channel addition:', err);
+      rollbar.error(`${t('errors.rollbar.errChannelAdd')}`, err);
+      console.error(`${t('errors.rollbar.errChannelAdd')}`, err);
     }
   };
 
@@ -167,7 +176,7 @@ const Chat = () => {
       showNotification(`${t('chat.channels.channelIsRemoved')}`, 'success');
       handleChannelClick(1);
     } catch (err) {
-      rollbar.error('Ошибка при удалении канала:', err);
+      rollbar.error(`${t('error.rollbar.errChannelDelete')}`, err);
     }
   };
 
@@ -251,7 +260,7 @@ const Chat = () => {
                       borderRadius: 0,
                     }}
                   >
-                    <span className="visually-hidden">Управление каналом</span>
+                    <span className="visually-hidden">{t('chat.channels.channelManagement')}</span>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleOpenRemoveModal(channel.id)}>{t('chat.channels.remove')}</Dropdown.Item>
@@ -350,7 +359,7 @@ const Chat = () => {
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder={t('chat.messages.enterMessage')}
                 className="me-2"
-                aria-label="Новое сообщение"
+                aria-label={t('chat.messages.newMessage')}
               />
               <Button type="submit" variant="primary">
                 ➔

@@ -9,6 +9,10 @@
             "confirmPasswdConfirm": "Пароли должны совпадать",
             "unique": "Должно быть уникальным"
         },
+        "rollbar": {
+            "errChannelAdd": "Ошибка во время добавления канала:",
+            "errChannelDelete": "Ошибка при удалении канала:"
+        },
         "error": "Ошибка",
         "authErr": "Ошибка авторизации",
         "signupErr": "Ошибка регистрации",
@@ -44,7 +48,8 @@
             "count_few": "{{count}} сообщения",
             "count_many": "{{count}} сообщений",
             "enterMessage": "Введите сообщение...",
-            "sendMessage": "Отправить"
+            "sendMessage": "Отправить",
+            "newMessage": "Новое сообщение"
         },
         "channels": {
             "channelCreate": "Канал создан",
@@ -57,7 +62,8 @@
             "cancel": "Отменить",
             "addChannel": "Добавить канал",
             "removeChannel": "Удалить канал",
-            "areYouSure": "Уверены?"
+            "areYouSure": "Уверены?",
+            "channelManagement": "Управление каналом"
         }
     }
 }

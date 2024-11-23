@@ -2,6 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import i18next from 'i18next';
 
+export const getIsAuthorized = (state) => state.auth.isAuthorized;
+export const getUsername = (state) => state.auth.username;
+export const getToken = (state) => state.auth.token;
+export const getAuthError = (state) => state.auth.error;
+export const getAuthStatus = (state) => state.auth.status;
+
 export const login = createAsyncThunk('auth/login', async (data, { rejectWithValue }) => {
   try {
     const response = await axios.post('/api/v1/login', data);
