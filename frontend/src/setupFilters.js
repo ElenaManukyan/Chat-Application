@@ -1,6 +1,6 @@
 import leoProfanity from 'leo-profanity';
 
-const setupFilters = () => {  
+const setupFilters = () => {
   const russianWords = leoProfanity.getDictionary('ru');
   const englishWords = leoProfanity.getDictionary('en');
 

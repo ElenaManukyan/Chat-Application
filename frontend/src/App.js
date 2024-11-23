@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Routes, Route, Navigate,
+} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Chat from './Pages/Chat';
 import Login from './Pages/Login';
@@ -27,7 +29,10 @@ const App = () => {
     <Router>
       <NavbarComponent />
       <Routes>
-        <Route path={routes.main()} element={token ? <Chat /> : <Navigate to={routes.login()} replace />} />
+        <Route
+          path={routes.main()}
+          element={token ? <Chat /> : <Navigate to={routes.login()} replace />}
+        />
         <Route path={routes.login()} element={<Login />} />
         <Route path={routes.home()} element={<Home />} />
         <Route path={routes.signup()} element={<Signup />} />

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Button, Container, Row, Col, Card } from 'react-bootstrap';
+import {
+  Form, Button, Container, Row, Col, Card,
+} from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useRollbar } from '@rollbar/react';
 import { useTranslation } from 'react-i18next';
-import { setAuthorized, login, clearAuthError, getAuthError } from '../store/authSlice';
+import {
+  setAuthorized, login, clearAuthError, getAuthError,
+} from '../store/authSlice';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
 import routes from '../routes';
@@ -29,7 +33,7 @@ const LoginForm = () => {
         rollbar.error(`${t('errors.rollbar.errAuth')}`, err);
       }
     }
-  }, [authError, dispatch, rollbar]);
+  }, [authError, dispatch, rollbar, t]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

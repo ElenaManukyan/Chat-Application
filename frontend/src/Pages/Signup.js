@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Form, Button, Alert, Container, Row, Col, Card } from 'react-bootstrap';
+import {
+  Form, Button, Alert, Container, Row, Col, Card,
+} from 'react-bootstrap';
 import * as formik from 'formik';
 import * as yup from 'yup';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,7 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { useRollbar } from '@rollbar/react';
 import { showNotification } from '../DefaulltComponents/NotificationComponent';
 import './Signup.css';
-import { signup, clearAuthError, getAuthStatus, getAuthError } from '../store/authSlice';
+import {
+  signup, clearAuthError, getAuthStatus, getAuthError,
+} from '../store/authSlice';
 import routes from '../routes';
 
 const Signup = () => {
@@ -87,7 +91,9 @@ const Signup = () => {
                   confirmPassword: '',
                 }}
               >
-                {({ handleSubmit, handleChange, values, errors }) => (
+                {({
+                    handleSubmit, handleChange, values, errors
+                  }) => (
                   <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="formUsername" className="position-relative mb-4">
                       <Form.Control
