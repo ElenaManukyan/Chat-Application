@@ -8,9 +8,7 @@ import rollbarConfig from './rollbar';
 import { Notification } from './DefaulltComponents/NotificationComponent';
 import i18n from './i18n';
 import { addMessageToStore } from './store/messagesSlice';
-import {
-  addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChIdStore,
-} from './store/channelsSlice';
+import { addChannelToStore, removeChannelFromStore, renameChannelFromStore, setCurrChIdStore } from './store/channelsSlice';
 import store from './store/store';
 import setupFilters from './setupFilters';
 
@@ -62,6 +60,6 @@ function initializeApp() {
       </Provider>
     </React.StrictMode>
   );
-};
+}
 
 export default initializeApp;
