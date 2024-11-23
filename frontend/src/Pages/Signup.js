@@ -92,9 +92,9 @@ const Signup = () => {
                 }}
               >
                 {({
-                    handleSubmit, handleChange, values, errors
-                  }) => (
-                  <Form noValidate onSubmit={handleSubmit}>
+                  handleSubmit, handleChange, values, errors,
+                }) => (
+                <Form noValidate onSubmit={handleSubmit}>
                     <Form.Group controlId="formUsername" className="position-relative mb-4">
                       <Form.Control
                         type="text"
