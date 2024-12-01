@@ -31,6 +31,7 @@ This is a simplified version of a real-time messaging application inspired by Sl
 2. **Install dependencies.** For the backend:
    ```bash
    npm install
+   
    For the frontend:
    ```bash
    cd frontend
