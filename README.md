@@ -26,7 +26,7 @@ This is a simplified version of a real-time messaging application inspired by Sl
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/ElenaManukyan/Chat-Application.git
-   cd frontend-project-12
+   cd Chat-Application
 
 2. **Install dependencies.** For the backend:
    ```bash
