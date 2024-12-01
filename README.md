@@ -42,6 +42,7 @@ This is a simplified version of a real-time messaging application inspired by Sl
    npm run build
 4. **Start the server:**
    ```bash
+   cd ..
    npm run start
 5. **Start the frontend part:**
    ```bash
