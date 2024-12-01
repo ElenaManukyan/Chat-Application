@@ -2,7 +2,7 @@
 
 ## Tests:
 [![Actions Status](https://github.com/ElenaManukyan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ElenaManukyan/frontend-project-12/actions)
-## Link to website:
+## Demonstration:
 [https://frontend-project-12-yffa.onrender.com](https://frontend-project-12-yffa.onrender.com)
 
 ## Overview
