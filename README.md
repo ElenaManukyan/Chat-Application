@@ -22,10 +22,6 @@ This is a simplified version of a real-time messaging application inspired by Sl
 
 ## Installation and Setup
 
-### Prerequisites:
-- Node.js version 14.x or higher.
-- NPM version 6.x or higher.
-
 ### Steps to Run:
 1. **Clone the repository:**
    ```bash
