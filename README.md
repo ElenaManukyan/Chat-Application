@@ -1,4 +1,4 @@
-💬 # Slack Clone Chat Application
+# 💬 Slack Clone Chat Application
 
 ## Tests:
 [![Actions Status](https://github.com/ElenaManukyan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ElenaManukyan/frontend-project-12/actions)
