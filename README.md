@@ -3,13 +3,13 @@
 ## Tests:
 [![Actions Status](https://github.com/ElenaManukyan/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ElenaManukyan/frontend-project-12/actions)
 
-🚀 ## Demonstration:
+## 🚀 Demonstration:
 [https://frontend-project-12-yffa.onrender.com](https://frontend-project-12-yffa.onrender.com)
 
 ## Description
 This is a simplified version of a real-time messaging application inspired by Slack. The project demonstrates the use of modern frontend development technologies such as **React**, **Redux Toolkit**, **WebSockets**, and **REST API**.  
 
-🌟 ## Features:
+## 🌟 Features:
 - 💬 Chat and channel functionality.
 - ⚡ Real-time message exchange using WebSockets.
 - 🔐 User authentication and authorization.
@@ -20,7 +20,7 @@ This is a simplified version of a real-time messaging application inspired by Sl
 
 ---
 
-⚙️ ## Installation and Setup
+## ⚙️ Installation and Setup
 
 ```
 # Clone the repository
@@ -44,7 +44,7 @@ This is a simplified version of a real-time messaging application inspired by Sl
 ```
 The application should open at: ```http://127.0.0.1:5001```
 
-🛠 ## Technologies
+## 🛠 Technologies
 
 ### Backend:
 * **Socket.IO** — for WebSocket communication.
